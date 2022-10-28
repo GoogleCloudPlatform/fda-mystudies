@@ -142,7 +142,11 @@ public class DashBoardAndProfileDAOImpl implements DashBoardAndProfileDAO {
 
   @Override
   public String updateProfileDetails(UserBO userBO, String userId) {
+
     logger.info("DashBoardAndProfileDAOImpl - updateProfileDetails() - Starts");
+
+
+    logger.entry("begin updateProfileDetails()");
 
     Session session = null;
     Query query = null;

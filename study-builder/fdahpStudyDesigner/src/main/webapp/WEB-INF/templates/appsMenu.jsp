@@ -20,7 +20,9 @@
 
 <!-- Start left Content here -->
 <!-- ============================================================== -->
-<div class="col-sm-2 col-lc p-none">
+
+<div class="col-sm-2.5 col-lc p-none">
+
   <div class="left-content-container">
     <ul class="menuNav">
       <li>
@@ -37,12 +39,16 @@
 	                <c:if test="${appBo.appStatus eq 'Draft'}"> paused_txt </c:if>
 	                pr-sm"> ${appBo.appStatus} </span>
 	      <c:if test="${appBo.appStatus eq 'Active'}">
-          <span class="study_status right-border pr-sm pl-sm ${appBo.isAppPublished?'post-launch_txt':'pre-launch_txt'}"> <c:if test="${appBo.isAppPublished}">Published </c:if><c:if test="${not appBo.isAppPublished}">Not<span  class="visibility_hidden">_</span>published </c:if></span>
+
+          <span class="study_status right-border pr-sm pl-sm ${appBo.isAppPublished?'post-launch_txt':'pre-launch_txt'}"> <c:if test="${appBo.isAppPublished}">Published </c:if><c:if test="${not appBo.isAppPublished}">Not<span class="visibility_hidden">_</span>published </c:if></span>
+
           <span class="study_status pl-sm ${(appBo.iosAppDistributed || appBo.androidAppDistributed)?'post-launch_txt':'pre-launch_txt'}"> 
           <c:choose>
               <c:when test="${appBo.iosAppDistributed && appBo.androidAppDistributed}">Distributed (2)</c:when>
               <c:when test="${appBo.iosAppDistributed || appBo.androidAppDistributed}">Distributed (1)</c:when>
-          <c:when test="${not appBo.iosAppDistributed && not appBo.androidAppDistributed}">Not<span  class="visibility_hidden">_</span>distributed</c:when>
+
+          <c:when test="${not appBo.iosAppDistributed && not appBo.androidAppDistributed}">Not<span class="visibility_hidden">_</span>distributed</c:when>
+
           </c:choose></span>
           </c:if>
           </div>
@@ -85,20 +91,22 @@
   $(document).ready(function () {
     $("#rowId").addClass('lc-gray-bg');
     $('#createStudyId').show();
-    $("#myNavbar li.studyClass").addClass('active');
+
+    //$("#myNavbar li.studyClass").addClass('active');
     
     <c:if test="${appBo.appStatus == 'Draft' || appBo.appStatus == 'Deactivated'}">
-	 $('.no-border').removeClass("right-border");
-	</c:if>
-
-
+    	 $('.no-border').removeClass("right-border");
+    </c:if>
+   
 
     $('[data-toggle="tooltip"]').tooltip();
     $('.cancelBut').click(function () {
       <c:if test="${empty permission}">
       $('.cancelBut').prop('disabled', true);
       bootbox.confirm({
-        closeButton: false,
+
+        closeButton: true,
+
         message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
         buttons: {
           'cancel': {
@@ -172,7 +180,7 @@
     $('.commonCls1').removeClass('cursor-none-without-event');
     
     </c:if>
-    
+
     $(window).on('load resize', function () {
 
       rtime1 = new Date();

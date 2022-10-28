@@ -132,10 +132,11 @@ class ActivityResult {
 
       var activityResultArray: [[String: Any]] = [[String: Any]]()
       for stepResult in result! {
+        print("stepResult---\(stepResult.key)")
         let activityStepResult = stepResult as ActivityStepResult
 
         activityResultArray.append(
-          (activityStepResult.getActivityStepResultDict())! as [String: Any]
+          (activityStepResult.getActivityActivityViewCStepResultDict())! as [String: Any]
         )
       }
 

@@ -35,7 +35,7 @@ template "devops" {
   data = {
     # During Step 1, set to `true` and re-run the engine after generated devops module has been deployed.
     # Run `terraform init` in the devops module to backup its state to GCS.
-    enable_gcs_backend = true
+    enable_gcs_backend = false
 
     admins_group = "{{.prefix}}-{{.env}}-folder-admins@{{.domain}}"
 
@@ -162,35 +162,27 @@ template "project_secrets" {
         {
           secret_id = "manual-fcm-api-url"
         },
-        # AppId for the mobile app. This needs to be in the app_info table in participant database.
-        {
-          secret_id = "manual-mobile-app-appid"
-        },
-        # bundleID used for the Android App.
-        {
-          secret_id = "manual-android-bundle-id"
-        },
-        # Found under settings > cloud messaging in the android app defined in your firebase project.
-        {
-          secret_id = "manual-android-server-key"
-        },
-        # bundleID used to build and distribute the iOS App.
-        {
-          secret_id = "manual-ios-bundle-id"
-        },
-        # certificate and password generated for APNs.
-        {
-          secret_id = "manual-ios-certificate"
-        },
-        {
-          secret_id = "manual-ios-certificate-password"
-        },
         {
           secret_id = "manual-ios-deeplink-url"
         },
         {
           secret_id = "manual-android-deeplink-url"
         },
+        {
+          secret_id = "manual-region-id"
+        },
+        {
+          secret_id = "manual-consent-enabled"
+        },
+        {
+          secret_id = "manual-fhir-enabled"
+        },
+        {
+          secret_id = "manual-discard-fhir"
+        },
+        {
+          secret_id = "manual-ingest-data-to-bigquery"
+        },		
         {
           secret_id   = "auto-mystudies-sql-default-user-password"
           secret_data = "$${random_password.passwords[\"mystudies_sql_default_user_password\"].result}"
@@ -539,6 +531,10 @@ resource "google_compute_firewall" "fw_allow_k8s_ingress_lb_health_checks" {
     protocol = "tcp"
     ports    = ["8080"]
   }
+  allow {
+    protocol = "tcp"
+    ports    = ["10256"]
+  }
 
   # Load Balancer Health Check IP ranges.
   source_ranges = [
@@ -616,6 +612,10 @@ template "project_apps" {
           "serviceAccount:$${google_service_account.participant_manager_gke_sa.account_id}@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:$${google_service_account.triggers_pubsub_handler_gke_sa.account_id}@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
         ]
+      # BigQuery Permissions
+        "roles/bigquery.admin" = [
+          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",		  
+        ]
       }
       # Binary Authorization resources.
       # Simple configuration for now. Future
@@ -671,38 +671,38 @@ resource "google_compute_global_address" "ingress_static_ip" {
 # to install the Cloud Build app and connect your GitHub repository to your Cloud project.
 #
 # The following content should be initially commented out if the above manual step is not completed.
-locals {
-  apps_dependencies = {
-    "study-builder"                             = ["study-builder/**"]
-    "study-datastore"                           = ["study-datastore/**"]
-    "hydra"                                     = ["hydra/**"]
-    "auth-server"                               = ["auth-server/**", "common-modules/**"]
-    "response-datastore"                        = ["response-datastore/**", "common-modules/**"]
-    "participant-datastore/consent-mgmt-module" = ["participant-datastore/consent-mgmt-module/**", "common-modules/**"]
-    "participant-datastore/user-mgmt-module"    = ["participant-datastore/user-mgmt-module/**", "common-modules/**"]
-    "participant-datastore/enroll-mgmt-module"  = ["participant-datastore/enroll-mgmt-module/**", "common-modules/**"]
-    "participant-manager-datastore"             = ["participant-manager-datastore/**", "common-modules/**"]
-    "participant-manager"                       = ["participant-manager/**"]
-  }
-}
+#7# locals {
+#7#   apps_dependencies = {
+#7#     "study-builder"                             = ["study-builder/**"]
+#7#     "study-datastore"                           = ["study-datastore/**"]
+#7#     "hydra"                                     = ["hydra/**"]
+#7#     "auth-server"                               = ["auth-server/**", "common-modules/**"]
+#7#     "response-datastore"                        = ["response-datastore/**", "common-modules/**"]
+#7#     "participant-datastore/consent-mgmt-module" = ["participant-datastore/consent-mgmt-module/**", "common-modules/**"]
+#7#     "participant-datastore/user-mgmt-module"    = ["participant-datastore/user-mgmt-module/**", "common-modules/**"]
+#7#     "participant-datastore/enroll-mgmt-module"  = ["participant-datastore/enroll-mgmt-module/**", "common-modules/**"]
+#7#     "participant-manager-datastore"             = ["participant-manager-datastore/**", "common-modules/**"]
+#7#     "participant-manager"                       = ["participant-manager/**"]
+#7#   }
+#7# }
 
-resource "google_cloudbuild_trigger" "server_build_triggers" {
-  for_each = local.apps_dependencies
+#7# resource "google_cloudbuild_trigger" "server_build_triggers" {
+#7#   for_each = local.apps_dependencies
 
-  provider = google-beta
-  project  = module.project.project_id
-  name     = replace(each.key, "/", "-")
+#7#   provider = google-beta
+#7#   project  = module.project.project_id
+#7#   name     = replace(each.key, "/", "-")
 
-  included_files = each.value
+#7#   included_files = each.value
 #7#
-  github {
-    owner = "{{.github_owner}}"
-    name  = "{{.github_repo}}"
-    push { branch = "^{{.github_branch}}$" }
-  }
+#7#   github {
+#7#     owner = "{{.github_owner}}"
+#7#     name  = "{{.github_repo}}"
+#7#     push { branch = "^{{.github_branch}}$" }
+#7#   }
 
-  filename = "$${each.key}/cloudbuild.yaml"
-}
+#7#   filename = "$${each.key}/cloudbuild.yaml"
+#7# }
 EOF
     }
   }
@@ -719,83 +719,6 @@ template "project_firebase" {
         "firebase.googleapis.com",
       ]
     }
-    resources = {
-      iam_members = {
-        # Step 5.1: uncomment and re-run the engine once all previous steps have been completed.
-        "roles/datastore.importExportAdmin" = [
-          "serviceAccount:$${google_firebase_project.firebase.project}@appspot.gserviceaccount.com",
-        ]
-        "roles/datastore.user" = [
-          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
-          "serviceAccount:triggers-pubsub-handler-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
-        ]
-        "roles/pubsub.subscriber" = [
-          "serviceAccount:triggers-pubsub-handler-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
-        ]
-      }
-      storage_buckets = [
-        {
-          # Firestore data export
-          name = "{{.prefix}}-{{.env}}-mystudies-firestore-raw-data"
-          # Step 5.2: uncomment and re-run the engine once all previous steps have been completed.
-          iam_members = [{
-            role   = "roles/storage.admin"
-            member = "serviceAccount:$${google_firebase_project.firebase.project}@appspot.gserviceaccount.com"
-          }]
-          # TTL 7 days.
-          lifecycle_rules = [{
-            action = {
-              type = "Delete"
-            }
-            condition = {
-              age        = 7 # 7 days
-              with_state = "ANY"
-            }
-          }]
-        },
-      ]
-      # Terraform-generated service account for use by Cloud Function.
-      service_accounts = [
-        { account_id = "raw-data-export" },
-        { account_id = "bigquery-export" },
-        { account_id = "real-time-triggers" },
-      ]
-      pubsub_topics = [{
-        name = "surveyWriteTrigger"
-        pull_subscriptions = [
-          {
-            name                 = "surveyWriteGlobal"
-            ack_deadline_seconds = 10
-          }
-        ]
-      }]
-    }
-    terraform_addons = {
-      raw_config = <<EOF
-resource "google_firebase_project" "firebase" {
-  provider = google-beta
-  project  = module.project.project_id
-}
-
-# Step 5.3: uncomment and re-run the engine once all previous steps have been completed.
-resource "google_firestore_index" "activities_index" {
-  project    = module.project.project_id
-  collection = "Activities"
-  fields {
-    field_path = "participantId"
-    order      = "ASCENDING"
-  }
-  fields {
-    field_path = "createdTimestamp"
-    order      = "ASCENDING"
-  }
-  fields {
-    field_path = "__name__"
-    order      = "ASCENDING"
-  }
-}
-EOF
-    }
   }
 }
 
@@ -811,60 +734,61 @@ template "project_data" {
         "compute.googleapis.com",
         "servicenetworking.googleapis.com",
         "sqladmin.googleapis.com",
+        "healthcare.googleapis.com",		
       ]
       shared_vpc_attachment = {
         host_project_id = "{{.prefix}}-{{.env}}-networks"
       }
     }
-    # Step 5.4: uncomment and re-run the engine once all previous steps have been completed.
-    terraform_addons = {
-      raw_config = <<EOF
-locals {
-  apps = [
-    "auth-server",
-    "response-datastore",
-    "study-builder",
-    "study-datastore",
-    "participant-consent-datastore",
-    "participant-enroll-datastore",
-    "participant-user-datastore",
-    "participant-manager-datastore",
-    "hydra",
-  ]
-}
+    # Step 5.1: uncomment and re-run the engine once all previous steps have been completed.
+#5#     terraform_addons = {
+#5#       raw_config = <<EOF
+#5# locals {
+#5#   apps = [
+#5#     "auth-server",
+#5#     "response-datastore",
+#5#     "study-builder",
+#5#     "study-datastore",
+#5#     "participant-consent-datastore",
+#5#     "participant-enroll-datastore",
+#5#     "participant-user-datastore",
+#5#     "participant-manager-datastore",
+#5#     "hydra",
+#5#   ]
+#5# }
 
-data "google_secret_manager_secret_version" "db_secrets" {
-  provider = google-beta
-  project  = "{{.prefix}}-{{.env}}-secrets"
-  secret   = each.key
+#5# data "google_secret_manager_secret_version" "db_secrets" {
+#5#   provider = google-beta
+#5#   project  = "{{.prefix}}-{{.env}}-secrets"
+#5#   secret   = each.key
 
-  for_each = toset(concat(
-    ["auto-mystudies-sql-default-user-password"],
-    formatlist("auto-%s-db-user", local.apps),
-    formatlist("auto-%s-db-password", local.apps))
-  )
-}
+#5#   for_each = toset(concat(
+#5#     ["auto-mystudies-sql-default-user-password"],
+#5#     formatlist("auto-%s-db-user", local.apps),
+#5#     formatlist("auto-%s-db-password", local.apps))
+#5#   )
+#5# }
 
-resource "google_sql_user" "db_users" {
-  for_each = toset(local.apps)
+#5# resource "google_sql_user" "db_users" {
+#5#   for_each = toset(local.apps)
 
-  name     = data.google_secret_manager_secret_version.db_secrets["auto-$${each.key}-db-user"].secret_data
-  instance = module.mystudies.instance_name
-  host     = "%"
-  password = data.google_secret_manager_secret_version.db_secrets["auto-$${each.key}-db-password"].secret_data
-  project  = module.project.project_id
-}
-EOF
-    }
+#5#   name     = data.google_secret_manager_secret_version.db_secrets["auto-$${each.key}-db-user"].secret_data
+#5#   instance = module.mystudies.instance_name
+#5#   host     = "%"
+#5#   password = data.google_secret_manager_secret_version.db_secrets["auto-$${each.key}-db-password"].secret_data
+#5#   project  = module.project.project_id
+#5# }
+#5# EOF
+#5#     }
     resources = {
-      # Step 5.5: uncomment and re-run the engine once all previous steps have been completed.
-      cloud_sql_instances = [{
-        name               = "mystudies"
-        type               = "mysql"
-        network_project_id = "{{.prefix}}-{{.env}}-networks"
-        network            = "{{.prefix}}-{{.env}}-network"
-        user_password      = "$${data.google_secret_manager_secret_version.db_secrets[\"auto-mystudies-sql-default-user-password\"].secret_data}"
-      }]
+      # Step 5.2: uncomment and re-run the engine once all previous steps have been completed.
+      #5# cloud_sql_instances = [{
+      #5#   name               = "mystudies"
+      #5#   type               = "mysql"
+      #5#   network_project_id = "{{.prefix}}-{{.env}}-networks"
+      #5#   network            = "{{.prefix}}-{{.env}}-network"
+      #5#   user_password      = "$${data.google_secret_manager_secret_version.db_secrets[\"auto-mystudies-sql-default-user-password\"].secret_data}"
+      #5# }]
       iam_members = {
         "roles/cloudsql.client" = [
           "serviceAccount:bastion@{{.prefix}}-{{.env}}-networks.iam.gserviceaccount.com",
@@ -879,27 +803,82 @@ EOF
           "serviceAccount:participant-manager-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:triggers-pubsub-handler-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
         ]
-        # Step 5.6: uncomment and re-run the engine once all previous steps have been completed.
-        "roles/bigquery.jobUser" = [
-          "serviceAccount:{{.prefix}}-{{.env}}-firebase@appspot.gserviceaccount.com",
+	  # HEALTH CARE API Roles/Permissions
+        "roles/healthcare.consentArtifactEditor" = [
+          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:consent-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:enroll-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:user-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
         ]
+        "roles/healthcare.consentEditor" = [
+          "serviceAccount:consent-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:enroll-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:user-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+        ]
+        "roles/healthcare.consentArtifactReader" = [
+          "serviceAccount:participant-manager-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",  
+        ]
+        "roles/healthcare.consentReader" = [
+          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",  
+        ]
+        "roles/healthcare.consentStoreViewer" = [
+          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",  
+        ]
+        "roles/healthcare.datasetAdmin" = [
+          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+        ]
+        "roles/healthcare.consentStoreAdmin" = [
+          "serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+        ]
+        "roles/healthcare.fhirStoreAdmin" = [
+          "serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+        ]
+        "roles/healthcare.fhirResourceEditor" = [
+          "serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+        ]	
+	    # BigQuery Permissions
+        #6# "roles/bigquery.admin" = [
+        #6#  "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+        #6#  "serviceAccount:user-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+        #6#  "serviceAccount:service-$${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com",  
+        #6# ]
         "roles/bigquery.dataEditor" = [
-          "serviceAccount:{{.prefix}}-{{.env}}-firebase@appspot.gserviceaccount.com",
+          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
         ]
+        "roles/datastore.user" = [
+          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:user-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+        ]
+        #6# "roles/storage.objectAdmin" = [
+        #6#  "serviceAccount:service-$${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com",
+        #6# ]
       }
       storage_buckets = [
         {
           name = "{{.prefix}}-{{.env}}-mystudies-consent-documents"
-          iam_members = [
-            {
-              role   = "roles/storage.objectAdmin"
-              member = "serviceAccount:consent-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
-            },
-            {
-              role   = "roles/storage.objectAdmin"
-              member = "serviceAccount:participant-manager-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
-            }
-          ]
+          #6# iam_members = [
+          #6# {
+          #6#   role   = "roles/storage.objectAdmin"
+          #6# member = "serviceAccount:consent-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
+          #6# },
+          #6# {
+          #6# role   = "roles/storage.objectAdmin"
+          #6# member = "serviceAccount:participant-manager-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
+          #6# },
+          #6# {
+          #6# role   = "roles/storage.objectAdmin"
+          #6# member = "serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
+          #6# },			
+	      # HEALTHCARE API SA role bindling to consent bucket
+          #6# {
+          #6# role   = "roles/storage.objectViewer"
+          #6# member = "serviceAccount:service-$${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com"
+          #6# },			
+          #6# ]
         },
         {
           name = "{{.prefix}}-{{.env}}-mystudies-study-resources"
@@ -919,15 +898,16 @@ EOF
         {
           name = "{{.prefix}}-{{.env}}-mystudies-sql-import"
           # Step 6: uncomment and re-run the engine once all previous steps have been completed.
-          iam_members = [{
-            role   = "roles/storage.objectViewer"
-            member = "serviceAccount:$${module.mystudies.instance_service_account_email_address}"
-          }]
+          #6# iam_members = [{
+          #6#   role   = "roles/storage.objectViewer"
+          #6#   member = "serviceAccount:$${module.mystudies.instance_service_account_email_address}"
+          #6# },
+          #6# {
+          #6#   role   = "roles/storage.objectAdmin"
+          #6#   member = "serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
+          #6# }]
         },
       ]
-      bigquery_datasets = [{
-        dataset_id = "{{.prefix}}_{{.env}}_mystudies_firestore_data"
-      }]
     }
   }
 }
@@ -1015,14 +995,13 @@ data "google_secret_manager_secret_version" "secrets" {
       "manual-terms-url",
       "manual-privacy-url",
       "manual-fcm-api-url",
-      "manual-mobile-app-appid",
-      "manual-android-bundle-id",
-      "manual-android-server-key",
-      "manual-ios-bundle-id",
-      "manual-ios-certificate",
-      "manual-ios-certificate-password",
       "manual-ios-deeplink-url",
       "manual-android-deeplink-url",
+      "manual-region-id",
+      "manual-consent-enabled",
+      "manual-fhir-enabled",
+      "manual-discard-fhir",
+      "manual-ingest-data-to-bigquery",	  
       "auto-auth-server-encryptor-password",
       "auto-hydra-db-password",
       "auto-hydra-db-user",
@@ -1050,15 +1029,22 @@ resource "kubernetes_secret" "shared_secrets" {
   data = {
     consent_bucket_name               = "{{.prefix}}-{{.env}}-mystudies-consent-documents"
     study_resources_bucket_name       = "{{.prefix}}-{{.env}}-mystudies-study-resources"
+    study_export_import_bucket_name   = "{{.prefix}}-{{.env}}-mystudies-sql-import"
     institution_resources_bucket_name = "{{.prefix}}-{{.env}}-mystudies-institution-resources"
     base_url                          = "https://participants.{{.prefix}}-{{.env}}.{{.domain}}"
     studies_base_url                  = "https://studies.{{.prefix}}-{{.env}}.{{.domain}}"
-    firestore_project_id              = "{{.prefix}}-{{.env}}-firebase"
+    data_project_id                   = "{{.prefix}}-{{.env}}-data"
+    firestore_project_id              = "{{.prefix}}-{{.env}}-firebase"	
     log_path                          = data.google_secret_manager_secret_version.secrets["manual-log-path"].secret_data
     org_name                          = data.google_secret_manager_secret_version.secrets["manual-org-name"].secret_data
     terms_url                         = data.google_secret_manager_secret_version.secrets["manual-terms-url"].secret_data
     privacy_url                       = data.google_secret_manager_secret_version.secrets["manual-privacy-url"].secret_data
     fcm_api_url                       = data.google_secret_manager_secret_version.secrets["manual-fcm-api-url"].secret_data
+    region_id                         = data.google_secret_manager_secret_version.secrets["manual-region-id"].secret_data
+    consent_enabled                   = data.google_secret_manager_secret_version.secrets["manual-consent-enabled"].secret_data
+    fhir_enabled                      = data.google_secret_manager_secret_version.secrets["manual-fhir-enabled"].secret_data
+    discard_fhir                      = data.google_secret_manager_secret_version.secrets["manual-discard-fhir"].secret_data
+    ingest_data_to_bigquery           = data.google_secret_manager_secret_version.secrets["manual-ingest-data-to-bigquery"].secret_data	
   }
 }
 

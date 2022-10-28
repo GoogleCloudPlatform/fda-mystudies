@@ -121,6 +121,7 @@
                                                  test="${user.disableIdpUser eq 'Y'}">title="This user may be deleted from the organization directory or from the admin user whitelist for the Study Builder. To activate this user as a Study Builder admin, please contact your IT admin to have the user added to the organization directory."
                                                  </c:if>
                                              <c:if
+
                                                  test="${user.idpUser eq false && empty user.userPassword}">title="Account status: Invitation sent, pending activation"
                                                  </c:if>
                                              <c:if
@@ -136,6 +137,7 @@
                            <c:if
                                test="${user.idpUser eq false && (empty user.userPassword || user.emailChanged eq '1')}">disabled</c:if>
                            <c:if test="${user.disableIdpUser eq 'Y'}">disabled</c:if>>
+
                     <span class="switch-label" data-on="On" data-off="Off"></span>
                     <span class="switch-handle"></span>
                   </label>

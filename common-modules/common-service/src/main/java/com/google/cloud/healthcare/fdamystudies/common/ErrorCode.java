@@ -338,7 +338,7 @@ public enum ErrorCode {
   REGISTRATION_EMAIL_SEND_FAILED(
       500,
       "EC_0075",
-      "Internal Server Error",
+      Constants.INTERNAL_SERVER_ERROR,
       "Sorry, an error occurred and we could not send you the email required to complete account activation. Please try again."),
 
   UNSUPPORTED_SORTBY_VALUE(
@@ -350,13 +350,13 @@ public enum ErrorCode {
   FEEDBACK_ERROR_MESSAGE(
       500,
       "EC_0073",
-      "Internal Server Error",
+      Constants.INTERNAL_SERVER_ERROR,
       "Sorry, an error occurred and your feedback could not be sent to the organization. Please retry in some time."),
 
   CONTACT_US_ERROR_MESSAGE(
       500,
       "EC_0074",
-      "Internal Server Error",
+      Constants.INTERNAL_SERVER_ERROR,
       "Sorry, an error occurred and your inquiry could not be sent to the organization. Please retry in some time."),
 
   TEMP_PASSWORD_INCORRECT(
@@ -380,6 +380,7 @@ public enum ErrorCode {
       Constants.BAD_REQUEST,
       "This is a default location name in use by the system already. Please enter a different location name."),
 
+
   APP_INACTIVE(400, "EC_0089", Constants.BAD_REQUEST, "This app is no longer active."),
 
   IDP_USER_ERROR(
@@ -387,6 +388,7 @@ public enum ErrorCode {
       "EC_0088",
       Constants.BAD_REQUEST,
       "Your account seems to managed via the IT admin console.  Please contact your IT admin for assistance in resetting your password.");
+
 
   private final int status;
   private final String code;
@@ -406,6 +408,7 @@ public enum ErrorCode {
   private static class Constants {
 
     private static final String BAD_REQUEST = "Bad Request";
+    private static final String INTERNAL_SERVER_ERROR = "Internal Server Error";
   }
 
   static class ErrorCodeSerializer extends StdSerializer<ErrorCode> {

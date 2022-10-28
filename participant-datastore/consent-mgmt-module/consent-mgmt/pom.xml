@@ -16,26 +16,59 @@
   <name>ConsentMgmtServicesWs</name>
   <description>Project containing user management services</description>
 
-  <properties>
-    <java.version>1.8</java.version>
-    <junit-jupiter.version>5.5.2</junit-jupiter.version>
-    <wiremock.version>2.26.3</wiremock.version>
-    <clover.version>4.4.1</clover.version>
-    <mockito.version>2.24.0</mockito.version>
-  </properties>
+	<properties>
+		<java.version>1.8</java.version>
+		<junit-jupiter.version>5.5.2</junit-jupiter.version>
+		<wiremock.version>2.26.3</wiremock.version>
+		<clover.version>4.4.1</clover.version>
+		<mockito.version>2.24.0</mockito.version>
+	</properties>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>ch.qos.logback</groupId>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.cloud</groupId>
+			<artifactId>google-cloud-storage</artifactId>
+			<version>1.96.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+				<exclusion>
+					  <groupId>ch.qos.logback</groupId>
           <artifactId>logback-classic</artifactId>
         </exclusion>
         <exclusion>
           <groupId>org.apache.logging.log4j</groupId>
           <artifactId>log4j-to-slf4j</artifactId>
+
         </exclusion>
       </exclusions>
     </dependency>
@@ -186,6 +219,7 @@
       <version>20190722</version>
     </dependency>
 
+
     <dependency>
       <groupId>javax.ws.rs</groupId>
       <artifactId>javax.ws.rs-api</artifactId>
@@ -212,6 +246,23 @@
       <artifactId>spring-cloud-gcp-starter-storage</artifactId>
       <scope>test</scope>
     </dependency>
+    
+   <dependency>
+   <groupId>com.google.apis</groupId>
+   <artifactId>google-api-services-healthcare</artifactId>
+   <version>v1-rev20210806-1.32.1</version>
+   </dependency>
+ <dependency>
+    <groupId>com.google.http-client</groupId>
+    <artifactId>google-http-client</artifactId>
+    <version>1.39.1</version>
+</dependency>
+<dependency>
+    <groupId>com.google.api-client</groupId>
+    <artifactId>google-api-client</artifactId>
+    <version>1.31.2</version>
+</dependency>
+
   </dependencies>
 
   <dependencyManagement>
@@ -290,7 +341,7 @@
             </path>
           </annotationProcessorPaths>
         </configuration>
-      </plugin>	  
+      </plugin>
     </plugins>
   </build>
   <reporting>

@@ -1432,14 +1432,13 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
 }
 
 - (void)stepViewController:(ORKStepViewController *)stepViewController didFinishWithNavigationDirection:(ORKStepViewControllerNavigationDirection)direction {
-    
+ 
     if (stepViewController != nil) {
         if (!stepViewController.readOnlyMode) {
             // Add step result object
             [self setManagedResult:[stepViewController result] forKey:stepViewController.step.identifier];
         }
     }
-    
     // Alert the delegate that the step is finished
     ORKStrongTypeOf(self.delegate) strongDelegate = self.delegate;
     if ([strongDelegate respondsToSelector:@selector(taskViewController:stepViewControllerWillDisappear:navigationDirection:)]) {
@@ -1457,13 +1456,21 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
     [self finishWithReason:ORKTaskViewControllerFinishReasonFailed error:error];
 }
 
+- (void)stepViewControllerResultWillChange:(ORKStepViewController *)stepViewController {
+
+    ORKStrongTypeOf(self.delegate) strongDelegate = self.delegate;
+    if ([strongDelegate
+         respondsToSelector:@selector(taskViewController:didChangeResult:)]) {
+        [strongDelegate taskViewController:self didChangeResult:[self result]];
+    }
+}
 - (void)stepViewControllerResultDidChange:(ORKStepViewController *)stepViewController {
     if (!stepViewController.readOnlyMode) {
         [self setManagedResult:stepViewController.result forKey:stepViewController.step.identifier];
     }
-    
     ORKStrongTypeOf(self.delegate) strongDelegate = self.delegate;
-    if ([strongDelegate respondsToSelector:@selector(taskViewController:didChangeResult:)]) {
+    if ([strongDelegate
+         respondsToSelector:@selector(taskViewController:didChangeResult:)]) {
         [strongDelegate taskViewController:self didChangeResult:[self result]];
     }
 }

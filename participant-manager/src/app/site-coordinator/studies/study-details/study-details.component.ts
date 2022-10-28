@@ -52,7 +52,7 @@ export class StudyDetailsComponent
 
   ngOnInit(): void {
     this.sharedService.updateSearchPlaceHolder(
-      'Search by site ID or participant email',
+      'Search by site name or participant email',
     );
 
     this.subs.add(

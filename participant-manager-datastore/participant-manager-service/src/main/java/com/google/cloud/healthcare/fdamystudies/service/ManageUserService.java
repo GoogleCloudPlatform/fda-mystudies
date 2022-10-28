@@ -38,7 +38,11 @@ public interface ManageUserService {
 
   public void sendUserEmail();
 
+
   public IDPAdminDetailsResponse getIDPAdminDetails(String signedInUserId);
 
   public void updateIdpUsers();
+
+  public void logoutAdminUser(String urAdminAuthId, AuditLogEventRequest auditRequest);
+
 }

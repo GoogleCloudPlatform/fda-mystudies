@@ -83,7 +83,7 @@ extension String {
 }
 
 extension String {
-  var htmlToAttributedString: NSAttributedString? {
+  var htmlToAttriString: NSAttributedString? {
     do {
       guard let data = data(using: .utf8) else {
         return nil
@@ -101,7 +101,7 @@ extension String {
     }
   }
   var htmlToString: String {
-    return htmlToAttributedString?.string ?? ""
+    return htmlToAttriString?.string ?? ""
   }
 }
 
@@ -196,13 +196,12 @@ extension String {
 }
 
 extension NSAttributedString {
-  var attributedString2Html: String? {
+  var attriString2Html: String? {
     do {
       let htmlData = try self.data(from: NSRange(location: 0, length: self.length),
                                    documentAttributes:[.documentType: NSAttributedString.DocumentType.html])
       return String.init(data: htmlData, encoding: String.Encoding.utf8)
     } catch {
-      print("error:", error)
       return nil
     }
   }

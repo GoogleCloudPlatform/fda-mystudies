@@ -148,7 +148,9 @@ public class UserBO implements Serializable {
   @Column(name = "access_level")
   private String accessLevel;
 
+
   @Transient private String disableIdpUser;
+
 
   public String getCreatedBy() {
     return createdBy;

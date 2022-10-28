@@ -6,7 +6,7 @@
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
-<div class="col-sm-10 col-rc white-bg p-none">
+<div class="col-sm-9.5 col-rc white-bg p-none">
   <form:form
       action="/studybuilder/adminStudies/saveOrDoneChecklist.do?${_csrf.parameterName}=${_csrf.token}&_S=${param._S}"
       id="checklistForm" role="form" method="post" autocomplete="off" enctype="multipart/form-data">

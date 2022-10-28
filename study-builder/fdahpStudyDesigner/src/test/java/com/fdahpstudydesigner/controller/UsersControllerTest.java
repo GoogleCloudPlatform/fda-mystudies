@@ -24,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import com.fdahpstudydesigner.bean.AnswerOption;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.common.BaseMockIT;
 import com.fdahpstudydesigner.common.PathMappingUri;
@@ -188,6 +189,7 @@ public class UsersControllerTest extends BaseMockIT {
     userBo.setUserEmail("superunittest@grr.la");
     userBo.setIdpUser(false);
 
+
     MockHttpServletRequestBuilder requestBuilder =
         post(PathMappingUri.ADD_OR_UPDATE_USER_DETAILS.getPath())
             .param("userId", "2")
@@ -259,5 +261,33 @@ public class UsersControllerTest extends BaseMockIT {
     session.setUserId("2");
     sessionAttributesMap.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
     return sessionAttributesMap;
+  }
+
+  @Test
+  public void should() throws Exception {
+    Double minValue = 1.0;
+    Double maxValue = 5.0;
+    int fractionDigits = 1;
+    double n;
+    if (fractionDigits == 0) {
+      n = 0;
+    } else if (fractionDigits == 1) {
+      n = 0.1;
+    } else if (fractionDigits == 2) {
+      n = 0.01;
+    } else if (fractionDigits == 3) { // 1.0 to 2.0
+      n = 0.001;
+    } else {
+      n = 0.0001;
+    }
+    double count;
+    for (double i = minValue; i <= maxValue; i = count) {
+      /*i = Math.round(i * Math.pow(10, fractionDigits)) / Math.pow(10, fractionDigits);*/
+      AnswerOption option = new AnswerOption();
+      count = i + n;
+      /*option.setValueDecimal(count);
+      options.add(option);*/
+      System.out.println(count);
+    }
   }
 }

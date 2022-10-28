@@ -71,8 +71,10 @@ public class UsersServiceImpl implements UsersService {
 
   @Autowired private EmailNotification emailNotification;
 
+
   Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
   String idpEnabled = configMap.get("idpEnabledForSB");
+
 
   @Override
   public String activateOrDeactivateUser(

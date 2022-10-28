@@ -19,6 +19,7 @@
 
 import Foundation
 import UIKit
+import Reachability
 
 class NotificationViewController: UIViewController {
 
@@ -28,12 +29,13 @@ class NotificationViewController: UIViewController {
 
   // MARK: - Properties
   lazy var notificationArray: [Any] = []
+  private var reachability: Reachability!
 
   // MARK: - ViewController LifeCycle
 
   override func viewDidLoad() {
     super.viewDidLoad()
-
+    setupNotifiers()
     self.title = NSLocalizedString(kNotificationsTitleText, comment: "")
     self.labelNoRecord?.isHidden = true
     self.loadLocalNotification()
@@ -45,7 +47,7 @@ class NotificationViewController: UIViewController {
       WCPServices().getNotification(skip: 0, delegate: self)
     }
   }
-
+  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     self.addBackBarButton()
@@ -57,6 +59,42 @@ class NotificationViewController: UIViewController {
   }
 
   // MARK: - Utils
+  func setupNotifiers() {
+    NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                           name: Notification.Name.reachabilityChanged, object: nil);
+    
+    do {
+      self.reachability = try Reachability()
+      try self.reachability.startNotifier()
+    } catch(let error) {
+    }
+  }
+  
+  @objc func reachabilityChanged(note: Notification) {
+    let reachability = note.object as! Reachability
+    switch reachability.connection {
+    case .cellular:
+      setOnline()
+      break
+    case .wifi:
+      setOnline()
+      break
+    case .none:
+      setOffline()
+      break
+    case .unavailable:
+      setOffline()
+      break
+    }
+  }
+  
+  func setOnline() {
+    self.view.hideAllToasts()
+  }
+  
+  func setOffline() {
+    self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude, position: .bottom, title: nil, image: nil, completion: nil)
+  }
 
   private func handleNotificationListResponse() {
     if (Gateway.instance.notification?.count)! > 0 {
@@ -175,6 +213,7 @@ class NotificationViewController: UIViewController {
 
       switch type! as AppNotification.NotificationSubType {
       case .study:
+        NotificationHandler.instance.appOpenFromNotification = true
         viewController?.selectedIndex = 0
         self.navigationController?.pushViewController(viewController!, animated: true)
 
@@ -183,6 +222,12 @@ class NotificationViewController: UIViewController {
         self.navigationController?.pushViewController(viewController!, animated: true)
 
       case .activity:
+        NotificationHandler.instance.appOpenFromNotification = true
+        viewController?.selectedIndex = 0
+        self.navigationController?.pushViewController(viewController!, animated: true)
+        
+      case .announcement:
+        NotificationHandler.instance.appOpenFromNotification = true
         viewController?.selectedIndex = 0
         self.navigationController?.pushViewController(viewController!, animated: true)
         

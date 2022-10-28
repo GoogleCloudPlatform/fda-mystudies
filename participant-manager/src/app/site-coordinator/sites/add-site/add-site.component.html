@@ -22,6 +22,7 @@
         <div class="form-group location-group">
           <div class="form-item">
             <label>Location</label>
+
             <div class="select-wrap select select-fancy select-fancy-noimage">
               <select
                 class="form-item__element form-item__element--select width__100 background__trans cursor__pointer"
@@ -45,6 +46,13 @@
                   value="{{ location.locationId }}"
                 >
                   {{ location.name }}
+                </option>
+                <option
+                  disabled="disabled"
+                  class="cursor__pointer"
+                  *ngIf="manageLocations.locations.length === 0"
+                >
+                  No items are available to select
                 </option>
               </select>
             </div>

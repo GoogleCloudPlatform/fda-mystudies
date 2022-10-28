@@ -19,11 +19,14 @@ export class MobileMenuComponent implements OnInit {
   @Output() keyDown: EventEmitter<string> = new EventEmitter();
   user = {} as Profile;
   showSearchOnClick = false;
+
   updatedPlaceHolder = '';
+
   displayHeaderOnResetpassword = true;
 
   constructor(
     private readonly userService: UserService,
+
     private readonly searchService: SearchService,
     private readonly displayHeader: HeaderDisplayService,
   ) {}
@@ -39,6 +42,7 @@ export class MobileMenuComponent implements OnInit {
         this.updatedPlaceHolder = updatedPlaceHolder;
       },
     );
+
   }
 
   toggleNav(): void {

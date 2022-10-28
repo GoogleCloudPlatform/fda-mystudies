@@ -65,5 +65,7 @@ public interface UsersDAO {
 
   public String deleteByUserId(String userId);
 
+
   public List<UserBO> getIdpUserList();
+
 }

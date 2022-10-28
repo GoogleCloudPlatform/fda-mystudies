@@ -1,10 +1,11 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 
 $(document).ready(function () {
 
@@ -203,6 +204,7 @@ function multiFactorAuth(email, password, phoneNumber) {
   
   
   
+
 var fieldErrors = {
   "email": {
 	"required": "Enter an email",
@@ -215,6 +217,8 @@ var fieldErrors = {
 }
 
 function validateField(elementId) {
+
+  preventDoubleClick();
   var element = document.getElementById(elementId);
   var isValid = element.checkValidity();
   var errorDiv = document.getElementById(elementId + "_error");
@@ -235,4 +239,14 @@ function validateField(elementId) {
 
 function validateform() {
   return validateField("email") && validateField("password");
-}
+}  
+
+
+$(".toggle-password").click(function () {
+
+	    $(this).toggleClass("fa-eye-slash fa-eye");
+	    
+	    var input = $("#password");
+	    input.attr('type') === 'password' ? input.attr('type','text') : input.attr('type','password')
+	});
+	

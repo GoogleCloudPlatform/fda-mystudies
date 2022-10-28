@@ -24,17 +24,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.harvard.R;
@@ -424,15 +424,27 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
       String studyId,
       String notificationText,
       String resourceId) {
-    NotificationModuleSubscriber notificationModuleSubscriber =
-        new NotificationModuleSubscriber(dbServiceSubscriber, realm);
-    notificationModuleSubscriber.generateAnchorDateLocalNotification(
-        startCalender.getTime(),
-        activityId,
-        studyId,
-        CustomSurveyViewTaskActivity.this,
-        notificationText,
-        resourceId);
+    RealmResults<NotificationDbResources> notificationsDbs =
+        dbServiceSubscriber.getNotificationDbResources(
+            activityId, getIntent().getStringExtra(STUDYID), RESOURCES, realm);
+    boolean status = false;
+    for (int i = 0; i < notificationsDbs.size(); i++) {
+      if (notificationsDbs.get(i).getDescription().equalsIgnoreCase(notificationText)) {
+        status = true;
+        break;
+      }
+    }
+    if (!status && notificationText != null && !notificationText.isEmpty()) {
+      NotificationModuleSubscriber notificationModuleSubscriber =
+          new NotificationModuleSubscriber(dbServiceSubscriber, realm);
+      notificationModuleSubscriber.generateAnchorDateLocalNotification(
+          startCalender.getTime(),
+          activityId,
+          studyId,
+          CustomSurveyViewTaskActivity.this,
+          notificationText,
+          resourceId);
+    }
   }
 
   protected void showPreviousStep() {

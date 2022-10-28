@@ -46,6 +46,11 @@ public class NotificationDto implements Serializable {
   @Column(name = "study_id")
   private String studyId;
 
+
+  @Column(name = "platform")
+  private String platform;
+
+
   @Column(name = "notification_text")
   private String notificationText;
 
@@ -106,8 +111,6 @@ public class NotificationDto implements Serializable {
   @Column(name = "app_id")
   private String appId;
 
-  @Column(name = "platform")
-  private String platform;
 
   @Column(name = "schedule_timestamp")
   private String scheduleTimestamp;

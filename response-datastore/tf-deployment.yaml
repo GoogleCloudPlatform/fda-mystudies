@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: response-datastore
-          image: gcr.io/btcsoft-dev-apps/response-datastore:latest
+          image: gcr.io/<PREFIX>-<ENV>-apps/response-datastore:latest
           env:
             # DB ACCESS
             - name: DB_USER
@@ -89,51 +89,37 @@ spec:
                 secretKeyRef:
                   name: shared-secrets
                   key: firestore_project_id
-            - name: PROJECT_ID
+            # GOOGLE HEALTH CARE API               
+            - name: DATA_PROJECT_ID
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: project_id
+                  key: data_project_id
             - name: REGION_ID
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
                   key: region_id
-            - name: CONSENT_DATASET_ID
-              valueFrom:
-                secretKeyRef:
-                  name: shared-secrets
-                  key: consent_dataset_id
             - name: CONSENT_ENABLED
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: consent_enabled 
-            - name: FHIR_DATASET_ID
-              valueFrom:
-                secretKeyRef:
-                  name: shared-secrets
-                  key: fhir_dataset_id
-            - name: DID_DATASET_ID
-              valueFrom:
-                secretKeyRef:
-                  name: shared-secrets
-                  key: did_dataset_id
-            - name: DID_ENABLED
-              valueFrom:
-                secretKeyRef:
-                  name: shared-secrets
-                  key: did_enabled
+                  key: consent_enabled
             - name: FHIR_ENABLED
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: fhir_enabled                 
-            - name: DISCARD_FHIR_RESPONSE
+                  key: fhir_enabled
+            - name: INGEST_DATA_TO_BIGQUERY
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: discard_fhir_response            
+                  key: ingest_data_to_bigquery                   
+            - name: DISCARD_FHIR
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: discard_fhir            
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
           ports:
@@ -155,7 +141,7 @@ spec:
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
           command: ["/cloud_sql_proxy",
-            "-instances=btcsoft-dev-data:us-east1:mystudies=tcp:3306",
+            "-instances=<PREFIX>-<ENV>-data:<LOCATION>:mystudies=tcp:3306",
             "-credential_file=/secrets/gcloud_key/key.json"]
           volumeMounts:
           - name: gcloud-key-volume

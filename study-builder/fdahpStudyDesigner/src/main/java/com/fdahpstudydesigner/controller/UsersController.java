@@ -1,5 +1,9 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+
+
+ * Copyright 2020-2021 Google LLC
+
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -63,7 +67,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import java.util.HashSet;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +78,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.collections.CollectionUtils;
+
 import org.apache.commons.collections.ListUtils;
+
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.slf4j.ext.XLogger;
@@ -99,11 +107,13 @@ public class UsersController {
 
   @Autowired private AppService appService;
 
+
   @Autowired private UsersDAO usersDAO;
 
   Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
   String idpEnabled = configMap.get("idpEnabledForSB");
   String mfaEnabled = configMap.get("mfaEnabledForSB");
+
 
   @RequestMapping("/adminUsersEdit/activateOrDeactivateUser.do")
   public void activateOrDeactivateUser(
@@ -146,11 +156,13 @@ public class UsersController {
     String usrId = null;
     List<AppListBean> appBos = null;
     List<AppsBo> appList = new ArrayList<>();
+
     List<UserBO> userList = null;
     List<IdpAdminList> idpAdminList = new ArrayList<IdpAdminList>();
     Set<String> sbUserList = new HashSet<>();
     Set<String> idpUserList = new HashSet<>();
     List<String> adminList = new ArrayList<String>();
+
 
     try {
       if (FdahpStudyDesignerUtil.isSession(request)) {
@@ -204,6 +216,9 @@ public class UsersController {
           }
 
           if (!"".equals(userId)) {
+
+            usrId = userId;
+
             actionPage = FdahpStudyDesignerConstants.EDIT_PAGE;
             if (null != userBO) {
               studyBOs = studyService.getStudyListByUserId(userBO.getUserId());
@@ -228,6 +243,7 @@ public class UsersController {
             }
           }
 
+
           roleBOList = usersService.getUserRoleList();
           studyBOList = studyService.getAllStudyList();
           appList = appService.getAllApps();
@@ -242,6 +258,7 @@ public class UsersController {
           map.addAttribute("appBos", appBos);
           map.addAttribute("idpEnabled", idpEnabled);
           map.addAttribute("mfaEnabled", mfaEnabled);
+
           mav = new ModelAndView("addOrEditUserPage", map);
         } else {
           mav = new ModelAndView("redirect:/adminUsersView/getUserList.do");
@@ -523,6 +540,7 @@ public class UsersController {
           request.getSession().removeAttribute(FdahpStudyDesignerConstants.ERR_MSG);
         }
 
+
         if (null != request.getSession().getAttribute("sucMsgAppActions")) {
           request.getSession().removeAttribute("sucMsgAppActions");
         }
@@ -530,6 +548,7 @@ public class UsersController {
         if (null != request.getSession().getAttribute("errMsgAppActions")) {
           request.getSession().removeAttribute("errMsgAppActions");
         }
+
 
         if (null != request.getSession().getAttribute("sucMsgViewAssocStudies")) {
           request.getSession().removeAttribute("sucMsgViewAssocStudies");
@@ -651,7 +670,6 @@ public class UsersController {
     UserBO userBO = null;
     List<StudyListBean> studyBOs = null;
     List<RoleBO> roleBOList = null;
-    List<StudyBo> studyBOList = null;
     String actionPage = FdahpStudyDesignerConstants.VIEW_PAGE;
     List<Integer> permissions = null;
     Map<String, String> values = new HashMap<>();
@@ -718,6 +736,7 @@ public class UsersController {
           map.addAttribute("idpEnabled", idpEnabled);
           map.addAttribute("mfaEnabled", mfaEnabled);
 
+
           mav = new ModelAndView("addOrEditUserPage", map);
         } else {
           mav = new ModelAndView("redirect:getUserList.do");
@@ -732,10 +751,14 @@ public class UsersController {
 
   @RequestMapping(value = "/adminUsersView/deleteUser.do")
   public ModelAndView deleteByUserId(HttpServletRequest request) {
-    logger.entry("begin resendActivateDetailsLink()");
+
+    
     ModelAndView mav = new ModelAndView();
     String msg = "";
     UserBO userBo = null;
+
+    logger.entry("begin deleteAdminDetails()");
+
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     try {

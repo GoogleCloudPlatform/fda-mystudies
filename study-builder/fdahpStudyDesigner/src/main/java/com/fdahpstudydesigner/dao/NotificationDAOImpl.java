@@ -34,8 +34,10 @@ import static com.fdahpstudydesigner.common.StudyBuilderConstants.NEW_NOTIFICATI
 import static com.fdahpstudydesigner.common.StudyBuilderConstants.NOTIFICATION_ID;
 import static com.fdahpstudydesigner.common.StudyBuilderConstants.OLD_NOTIFICATION_ID;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.IMP_VALUE;
+
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.NOTIFICATION_ST;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.WORKING_VERSION;
+
 
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.PushNotificationBean;
@@ -290,6 +292,7 @@ public class NotificationDAOImpl implements NotificationDAO {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
+
       StudyBo studyDetails = studyDAO.getStudyByLatestVersion(notificationBO.getCustomStudyId());
 
       if (StringUtils.isEmpty(notificationBO.getNotificationId())) {
@@ -322,6 +325,10 @@ public class NotificationDAOImpl implements NotificationDAO {
           notificationBOUpdate.setNotificationType(FdahpStudyDesignerConstants.NOTIFICATION_ST);
           notificationBOUpdate.setCustomStudyId(notificationBO.getCustomStudyId());
           notificationBOUpdate.setStudyId(notificationBO.getStudyId());
+
+          StudyBo studyDetails =
+              studyDAO.getStudyByLatestVersion(notificationBO.getCustomStudyId());
+
           notificationBOUpdate.setPlatform(studyDetails.getPlatform());
           notificationBOUpdate.setNotificationAction(notificationBO.isNotificationAction());
         } else {
@@ -528,14 +535,18 @@ public class NotificationDAOImpl implements NotificationDAO {
     String searchQuery = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      if (copyVersion.equals(WORKING_VERSION)) {
+
+      if (copyVersion.equals(FdahpStudyDesignerConstants.WORKING_VERSION)) {
+
         searchQuery =
             "From NotificationBO where studyId=:studyId AND notificationType =:notificationType";
         notificationBOs =
             session
                 .createQuery(searchQuery)
                 .setString("studyId", studyId)
-                .setString("notificationType", NOTIFICATION_ST)
+
+                .setString("notificationType", FdahpStudyDesignerConstants.NOTIFICATION_ST)
+
                 .list();
       } else {
         searchQuery =
@@ -544,7 +555,9 @@ public class NotificationDAOImpl implements NotificationDAO {
             session
                 .createQuery(searchQuery)
                 .setString("customStudyId", customStudyId)
-                .setString("notificationType", NOTIFICATION_ST)
+
+                .setString("notificationType", FdahpStudyDesignerConstants.NOTIFICATION_ST)
+
                 .list();
       }
     } catch (Exception e) {

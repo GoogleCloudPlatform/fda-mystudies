@@ -222,8 +222,9 @@ public enum UserMgmntEvent implements AuditLogEvent {
       STUDY_BUILDER,
       PARTICIPANT_USER_DATASTORE,
       null,
-      "User records for app (with App ID '${AppID}') deactivated on Participant Datastore and "
-          + "deleted from Auth Server, after the app was deactivated via the Study Builder.",
+
+      "User records for app (with App ID '${AppID}') deactivated on Participant Datastore and deleted from Auth Server, after the app was deactivated via the Study Builder.",
+
       "APP_USER_ACCOUNTS_DELETED");
 
   private final Optional<PlatformComponent> source;

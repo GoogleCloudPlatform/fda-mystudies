@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@page session="true" %>
@@ -71,7 +72,7 @@
     <script src="/studybuilder/vendor/modernizr/modernizr.js"></script>
 
     <!-- Vendor -->
-    <script src="/studybuilder/vendor/jquery/jquery-3.1.1.min.js"></script>
+    <script src="/studybuilder/vendor/jquery/jquery-3.6.0.min.js"></script>
     <script src="/studybuilder/vendor/boostrap/bootstrap.min.js"></script>
     <script src="/studybuilder/js/validator.min.js"></script>
     <script src="/studybuilder/vendor/animation/wow.min.js"></script>
@@ -122,8 +123,8 @@
               <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
               <c:if test="${isValidToken}">
                 <div class="lg-space-txt col-xs-12  text-center boxcenter mb-xlg white__text">Set up your Study Builder account</div>
-                <div class=" col-md-6 boxcenter">
-                <div class="col-xs-6">
+                <div class=" row boxcenter">
+                <div class="col-md-6">
                   <div class="mb-lg form-group">
                     <input type="text" class="input-field wow_input" id=""
                            name="firstName" placeholder="First Name"
@@ -133,7 +134,7 @@
                   </div>
                 </div>
 
-                <div class="col-xs-6">
+                <div class="col-md-6">
                   <div class="mb-lg form-group">
                     <input type="text" class="input-field wow_input" id=""
                            name="lastName" placeholder="Last Name"
@@ -142,7 +143,7 @@
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
-                <div class="col-xs-6">
+                <div class="col-md-6">
                   <div class="mb-lg form-group">
                     <input type="text"
                            class="input-field wow_input validateUserEmail
@@ -152,12 +153,14 @@
                            name="userEmail" placeholder="Email Address"
                            value="${userBO.userEmail}" oldVal="${userBO.userEmail}"
                            pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,24}$"
+
                            data-pattern-error="Email address is invalid" data-error="Please fill out this field"  maxlength="100"
                            required readonly="readonly" autocomplete="off"<c:if test="${not empty idpUser}">disabled</c:if>/>
+
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
-                <div class="col-xs-6">
+                <div class="col-md-6">
                   <div class="mb-lg form-group">
                     <input type="text" class="input-field wow_input"
                            id="" name="phoneNumber" placeholder="Phone"
@@ -167,20 +170,23 @@
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
-               
-                <div class="col-xs-6">
+
+                <div class="col-md-6">
+
                   <div class="mb-lg form-group">
                     <input type="password" class="input-field wow_input"
                            id="password" maxlength="64" data-minlength="8"
                            placeholder="Password*" required
                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,64}"
+
                            autocomplete="off" data-pattern-error="Password is invalid" data-error="Please fill out this field"/>
+
                     <div class="help-block with-errors red-txt"></div>
                     <span class="arrowLeftSugg"></span>
 
                   </div>
                 </div>
-                <div class="col-xs-6">
+                <div class="col-md-6">
                   <div class="mb-lg form-group">
                     <input type="password" class="input-field wow_input"
                            id="cfnPassword" name="" maxlength="64"
@@ -190,11 +196,13 @@
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
-                <div class="col-xs-12">
+
+                <div class="col-md-12 text-center">
                   <div class="mb-lg form-group text-center">
                     <span class="checkbox checkbox-inline"><input
                         type="checkbox" id="inlineCheckbox" value="option1"
-                        required="required"  data-error="Please check this box if you want to proceed"> <label for="inlineCheckbox">
+                        required="required" data-error="Please check this box if you want to proceed" > <label for="inlineCheckbox">
+
                       <span class="white__text">I agree to the
                         <a
                             href="/studybuilder/terms.do"
@@ -207,9 +215,12 @@
                         </a>
                         associated with using this portal
                       </span>
-                      <div class="help-block with-errors red-txt"></div>
+
+                       <div class="help-block with-errors red-txt"></div>
                     </label>
                     </span>
+                   
+
                   </div>
                 </div>
                 <div class="clearfix"></div>
@@ -217,9 +228,11 @@
                     class="mb-lg form-group text-center col-md-4 col-lg-4 boxcenter">
                   <button type="button" class="btn lg-btn" id="signPasswordBut">Submit</button>
                 </div>
-          
+
+             
               </c:if>
-           
+             
+
               <c:if test="${not isValidToken}">
                 <p class="passwordExp text-center">
                   <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
@@ -231,7 +244,9 @@
               <input type="hidden" name="securityToken" value="${securityToken}"/>
               <input type="password" name="password" id="hidePass"
                      style="display: none;"/>
-               </form:form>
+
+                      </form:form>
+
           </div>
           <!--container-->
           <jsp:include page="../templates/copyright.jsp">

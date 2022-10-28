@@ -16,7 +16,7 @@ This directory contains all the code necessary to build the **FDA MyStudies** iO
 ![Example screens](../documentation/images/mobile-screens.png "Example screens")
 
 # Requirements
-The **FDA MyStudies** iOS application requires [Xcode 11](https://developer.apple.com/xcode/) or newer, and can be run on iOS versions 13 and above.
+The **FDA MyStudies** iOS application requires [Xcode 13](https://developer.apple.com/xcode/) or newer, and can be run on iOS versions 13 and above.
 
 # Platform integration
 The **FDA MyStudies** mobile application fetches all study, schedule, activity, eligibility, consent and notification information from the [`Study datastore`](../study-datastore/) and posts pseudonymized participant response data to the [`Response datastore`](../response-datastore/). Consent forms and any other identifiable data is posted to the [`Participant datastore`](../participant-datastore/). Email and password authentication is handled by the MyStudies [`Auth server`](../auth-server/) using OAuth 2.0.
@@ -35,25 +35,21 @@ The **FDA MyStudies** mobile application fetches all study, schedule, activity, 
     -    Update `HYDRA_CLIENT_ID` with the `client_id` you configured during [`Hydra`](/hydra/) deployment (the mobile applications share a `client_id` with each other, the `Auth server` and the `Participant manager`) 
     -    Update `API_KEY` with the `bundle_id` and `app_token` that you configured [`study-datastore/src/main/resources/authorizationResource.properties`](../study-datastore/src/main/resources/authorizationResource.properties) during [`Study datastore`](/study-datastore/) deployment with format `<value of ios.bundleid>:<value of ios.apptoken>`
     -    Update `APP_ID` variable with the `AppId` that will be configured by the study administrator in the [`Study builder`](../study-builder/) user interface
-    -    Set `APP_TYPE` to either “gateway” or “standalone”
-    -    Update `STUDY_ID` key with the `StudyId` configured by the study administrator in the [`Study builder`](../study-builder/) user interface (not required for *Gateway* applications)
-1. Configure Firebase Cloud Messaging (FCM) for push notifications
-    -   Go to the [Firebase console](https://console.firebase.google.com/) and select the project you configured for Cloud Firestore during [Response datastore](../response-datastore) deployment.
-    -   [Register your app](https://firebase.google.com/docs/cloud-messaging/ios/client#register-app) with Firebase and download the `GoogleService-Info.plist`. Move this config file into the root of your Xcode project.
-    -   Upload your APNs authentication key to Firebase.
-    -   Add [Firebase SDKs](https://firebase.google.com/docs/cloud-messaging/ios/client#add-sdks) and [Initialize Firebase](https://firebase.google.com/docs/cloud-messaging/ios/client#initialize_firebase_in_your_app) in your app.
-1. Configure your [`Participant datastore`](/participant-datastore/) instance to interface with your mobile application (skip this step if following the semi-automated [deployment guide](/deployment/README.md) - you will complete an automated version of this task when you return to that guide)
-    -    Make a copy of the [`participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql`](../participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql) and update the values to match your iOS configuration
-    -   Optionally, configure the Android fields to match your Android configuration (not necessary if you are not configuring an Android application, or if you have already completed this step during Android configuration)
-    -    Run your updated [`mystudies_app_info_update_db_script.sql`](../participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql) script on the `mystudies_participant_datastore` database that you created during [`Participant datastore`](/participant-datastore/) deployment ([instructions](https://cloud.google.com/sql/docs/mysql/import-export/importing#importing_a_sql_dump_file))   
-1. *Optional.* Customize images and text
+    -    Set the boolean `IsStandaloneStudyApp` value to  “gateway” or “standalone” in  [`iOS/MyStudies/MyStudies/Branding/Generic/Branding.plist`](MyStudies/MyStudies/Branding/Generic/Branding.plist)
+    -    Update `StandaloneStudyId` key in [`iOS/MyStudies/MyStudies/Branding/Generic/Branding.plist`](MyStudies/MyStudies/Branding/Generic/Branding.plist) with the `StudyId` configured by the study administrator in the [`Study builder`](../study-builder/) user interface (not required for *Gateway* applications)
+1. If you haven't already created the Firebase project then, [add Firebase to your Xcode project](https://firebase.google.com/docs/ios/setup) and make sure that Google Analytics is enabled in your Firebase project:
+    -    If you're creating a new Firebase project, enable Google Analytics during the project creation workflow.
+    -    If you're using an existing Firebase project that doesn't have Google Analytics enabled, go to the [Integrations](https://console.firebase.google.com/project/_/settings/integrations) tab of your settings > Project settings to enable it.
+    -    When you enable Google Analytics in your project, your Firebase apps are linked to Google Analytics data streams.
+    -    Add a Firebase [configuration file](https://firebase.google.com/docs/ios/setup#add-config-file) into the root of your Xcode project for using firebase services.
+1. Enable push notifications by creating [push notification certificates](https://help.apple.com/developer-account/#/dev82a71386a) in encrypted `.p12` format (for more information, visit [Establishing a Certificate-Based Connection to APNs](https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/establishing_a_certificate-based_connection_to_apns))
+1. Enable push notification by [token based connection](https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/establishing_a_token-based_connection_to_apns) with an authentication token signing key, specified as a text file (with a .p8 file extension).
+2. Enable [FCM based push notification](https://firebase.google.com/docs/cloud-messaging/ios/client#upload_your_apns_authentication_key) by uploading your APNs authentication key to Firebase.
+3. *Optional.* Customize images and text
     -    Replace icons and images in [`iOS/MyStudies/MyStudies/Assets/Assets.xcassets`](MyStudies/MyStudies/Assets/Assets.xcassets/)
     -    Update user-facing text in the [`iOS/MyStudies/MyStudies/Branding/Generic/Branding.plist`](MyStudies/MyStudies/Branding/Generic/Branding.plist) file, fields to consider include:
          -    `ProductTitleName` - Application name that is shown to the user
          -    `WebsiteButtonTitle` - Text of the link that is shown on the overview screen
-         -    `WebsiteLink` - Destination of the link that is shown on the overview screen
-         -    `TermsAndConditionURL` - Destination for the terms and conditions link
-         -    `PrivacyPolicyURL` - Destination for the privacy policy link
          -    `NavigationTitleName` - The navigation bar title that is shown to users
     -    Update introductory information presented to users in the [`iOS/MyStudies/MyStudies/Utils/Resources/Plists/UI/GatewayOverview.plist`](MyStudies/MyStudies/Utils/Resources/Plists/UI/GatewayOverview.plist) file
     -    Additional resource documents can be made available to users by adding PDF files to [`iOS/MyStudies/MyStudies/Assets/OtherAssets/`](MyStudies/MyStudies/Assets/OtherAssets/) and creating a corresponding entry in [`iOS/MyStudies/MyStudies/Models/Resource/Resources.plist`](MyStudies/MyStudies/Models/Resource/Resources.plist)
@@ -63,4 +59,4 @@ The **FDA MyStudies** mobile application fetches all study, schedule, activity, 
 Instructions for building and deploying iOS applications can be found [here](https://help.apple.com/xcode/mac/current/#/devdc0193470).
 
 ***
-<p align="center">Copyright 2020 Google LLC</p>
+<p align="center">Copyright 2022 Google LLC</p>

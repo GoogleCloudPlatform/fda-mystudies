@@ -24,10 +24,10 @@
                 android:id="@+id/rel_first_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 android:paddingLeft="20dp"
+                android:paddingTop="18dp"
                 android:paddingRight="20dp"
-                android:paddingTop="18dp">
+                android:visibility="gone">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/first_name_label"
@@ -62,10 +62,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rel_first_name"
-                android:visibility="gone"
                 android:paddingLeft="20dp"
+                android:paddingTop="18dp"
                 android:paddingRight="20dp"
-                android:paddingTop="18dp">
+                android:visibility="gone">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/last_name_label"
@@ -97,8 +97,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rel_last_name"
                 android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:paddingTop="18dp">
+                android:paddingTop="18dp"
+                android:paddingRight="20dp">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/email_label"
@@ -109,10 +109,10 @@
                     android:id="@+id/edittxt_email"
                     style="@style/signUpEditText"
                     android:hint="@string/enter_email"
-                    android:singleLine="true"
                     android:imeOptions="actionNext"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
+                    android:singleLine="true"
                     android:textCursorDrawable="@drawable/custom_cursor_drawable" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -130,8 +130,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rel_email"
                 android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:paddingTop="18dp">
+                android:paddingTop="18dp"
+                android:paddingRight="20dp">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/password_label"
@@ -141,12 +141,12 @@
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/edittxt_password"
                     style="@style/signUpEditText"
-                    android:hint="@string/add_password"
-                    android:inputType="textPassword"
-                    android:imeOptions="actionNext"
-                    android:singleLine="true"
-                    android:maxLength="64"
                     android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!#$%&amp;'()*+,-.:;&lt;&gt;=?@[]^_{}|~"
+                    android:hint="@string/add_password"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPassword"
+                    android:maxLength="64"
+                    android:singleLine="true"
                     android:textCursorDrawable="@drawable/custom_cursor_drawable" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -164,8 +164,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rel_password"
                 android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:paddingTop="18dp">
+                android:paddingTop="18dp"
+                android:paddingRight="20dp">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/confirm_password_label"
@@ -175,16 +175,16 @@
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/edittxt_confirm_password"
                     style="@style/signUpEditText"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!#$%&amp;'()*+,-.:;&lt;&gt;=?@[]^_{}|~"
                     android:hint="@string/enter_confirm_password"
+                    android:imeOptions="actionDone"
                     android:inputType="textPassword"
                     android:maxLength="64"
-                    android:imeOptions="actionDone"
                     android:singleLine="true"
-                    android:textCursorDrawable="@drawable/custom_cursor_drawable"
-                    android:layout_alignParentTop="true"
-                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!#$%&amp;'()*+,-.:;&lt;&gt;=?@[]^_{}|~"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true" />
+                    android:textCursorDrawable="@drawable/custom_cursor_drawable" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/hrline6"
@@ -199,12 +199,12 @@
                 android:id="@+id/rel_use_touch_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
                 android:layout_below="@+id/rel_confirm_password"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
                 android:paddingLeft="20dp"
-                android:paddingRight="20dp"
                 android:paddingTop="18dp"
+                android:paddingRight="20dp"
                 android:visibility="gone">
 
                 <Switch
@@ -229,8 +229,8 @@
                         style="@style/TextType2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
                         android:text="@string/touch_txt"
                         android:textColor="@color/colorPrimaryBlack" />
@@ -251,9 +251,9 @@
                 android:id="@+id/rel_agree"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
                 android:layout_below="@+id/rel_use_touch_id"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
                 android:layout_marginTop="18dp"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp">
@@ -277,12 +277,27 @@
                     android:textColor="@color/colorPrimaryBlack" />
             </RelativeLayout>
 
+            <TextView
+                android:id="@+id/offlineIndicatior"
+                android:layout_width="200dp"
+                android:layout_height="30dp"
+                android:layout_above="@+id/submitButton"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="22dp"
+                android:background="@drawable/oval_black_black"
+                android:gravity="center"
+                android:text="You are offline"
+                android:textColor="@color/white"
+                android:visibility="gone"
+                android:textSize="16dp">
+            </TextView>
+
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/submitButton"
                 style="@style/TextType2"
+                android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="15dp"
-                android:layout_alignParentBottom="true"
                 android:background="@drawable/rectangle_black_white"
                 android:gravity="center"
                 android:text="@string/submit"

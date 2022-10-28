@@ -103,9 +103,14 @@ input[type="checkbox"]:checked + label::before {
 .chk_box_hidden:before {
   visibility: hidden;
 }
+
 .chk_box_hidden2:before {
   display: none;
 }
+
+// @media only screen and (max-width: 500px) and (min-width: 320px) {
+
+// }
 
 @media only screen and (max-width: 360px) and (min-width: 320px) {
   .yel__tabs li a {
@@ -157,6 +162,7 @@ input[type="checkbox"]:checked + label::before {
   .scrollable-element::-webkit-scrollbar {
     width: 1px;
   }
+
   .scrollable-element::-webkit-scrollbar-track {
     box-shadow: inset 0 0 6px transparent;
   }
@@ -167,12 +173,7 @@ input[type="checkbox"]:checked + label::before {
   }
 
   .overflow__auto {
-    padding-bottom: 20px;
+    overflow: auto;
+    margin-bottom: 30px;
   }
-}
-table.custom-table-css > :not(:first-child) {
-  border-top: 0px;
-}
-.table.custom-table-css > :not(caption) > * > * {
-  box-shadow: none;
 }

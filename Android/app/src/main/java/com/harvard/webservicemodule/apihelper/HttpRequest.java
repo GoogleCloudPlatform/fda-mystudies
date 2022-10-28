@@ -28,7 +28,6 @@ import com.harvard.usermodule.model.Apps;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
-import io.realm.Realm;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -58,6 +57,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import io.realm.Realm;
 import org.json.JSONObject;
 
 public class HttpRequest {
@@ -203,7 +203,8 @@ public class HttpRequest {
         Apps apps = dbServiceSubscriber.getApps(realm);
         if (apps == null) {
           httppost.addHeader(APP_NAME_KEY, FdaApplication.getInstance().getString(R.string.app_name));
-        } else {
+        }
+        else {
           httppost.addHeader(APP_NAME_KEY, dbServiceSubscriber.getApps(realm).getAppName());
         }
         dbServiceSubscriber.closeRealmObj(realm);
@@ -240,11 +241,11 @@ public class HttpRequest {
           }
         }
       } catch (ConnectTimeoutException | SocketTimeoutException e) {
-        responseModel.setServermsg("No internet connection/cannot connect to server");
+        responseModel.setServermsg("No internet connection or the server cannot be connected.");
         responseData = "timeout";
         Logger.log(e);
       } catch (Exception e) {
-        responseModel.setServermsg("No internet connection/cannot connect to server");
+        responseModel.setServermsg("No internet connection or the server cannot be connected.");
         responseData = "";
         Logger.log(e);
       }
@@ -317,7 +318,8 @@ public class HttpRequest {
       Apps apps = dbServiceSubscriber.getApps(realm);
       if (apps == null) {
         conn.setRequestProperty(APP_NAME_KEY, FdaApplication.getInstance().getString(R.string.app_name));
-      } else {
+      }
+      else {
         conn.setRequestProperty(APP_NAME_KEY, apps.getAppName());
       }
       dbServiceSubscriber.closeRealmObj(realm);
@@ -399,11 +401,11 @@ public class HttpRequest {
         }
       }
     } catch (ConnectException e) {
-      responseModel.setServermsg("No internet connection/cannot connect to server");
+      responseModel.setServermsg("No internet connection or the server cannot be connected.");
       responseData = "timeout";
       Logger.log(e);
     } catch (Exception e) {
-      responseModel.setServermsg("No internet connection/cannot connect to server");
+      responseModel.setServermsg("No internet connection or the server cannot be connected.");
       responseData = "";
       Logger.log(e);
     }

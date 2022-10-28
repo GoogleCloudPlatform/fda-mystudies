@@ -22,9 +22,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -72,8 +69,8 @@ import java.util.HashMap;
 
 public class SurveyActivity extends AppCompatActivity
     implements View.OnClickListener,
-    ActivityCompat.OnRequestPermissionsResultCallback,
-    ApiCall.OnAsyncRequestComplete {
+        ActivityCompat.OnRequestPermissionsResultCallback,
+        ApiCall.OnAsyncRequestComplete {
   private RelativeLayout dashboardButtonLayout;
   private AppCompatImageView dashboardButton;
   private AppCompatTextView dashboardButtonLabel;
@@ -199,27 +196,24 @@ public class SurveyActivity extends AppCompatActivity
     drawer.addDrawerListener(
         new DrawerLayout.DrawerListener() {
           @Override
-          public void onDrawerSlide(View drawerView, float slideOffset) {
-          }
+          public void onDrawerSlide(View drawerView, float slideOffset) {}
 
           @Override
           public void onDrawerOpened(View drawerView) {
             Bundle eventProperties = new Bundle();
             eventProperties.putString(
-                    CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                    getString(R.string.survey_side_menu));
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.survey_side_menu));
             analyticsInstance.logEvent(
-                    CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             checkSignOrSignOutScenario();
           }
 
           @Override
-          public void onDrawerClosed(View drawerView) {
-          }
+          public void onDrawerClosed(View drawerView) {}
 
           @Override
-          public void onDrawerStateChanged(int newState) {
-          }
+          public void onDrawerStateChanged(int newState) {}
         });
   }
 
@@ -459,7 +453,7 @@ public class SurveyActivity extends AppCompatActivity
                     "Authorization",
                     "Bearer "
                         + SharedPreferenceHelper.readPreference(
-                        SurveyActivity.this, getString(R.string.auth), ""));
+                            SurveyActivity.this, getString(R.string.auth), ""));
                 header.put("correlationId", "" + FdaApplication.getRandomString());
                 header.put("appId", "" + BuildConfig.APP_ID);
                 header.put("mobilePlatform", "ANDROID");
@@ -470,7 +464,7 @@ public class SurveyActivity extends AppCompatActivity
                         Urls.AUTH_SERVICE
                             + "/"
                             + SharedPreferenceHelper.readPreference(
-                            SurveyActivity.this, getString(R.string.userid), "")
+                                SurveyActivity.this, getString(R.string.userid), "")
                             + Urls.LOGOUT,
                         LOGOUT_REPSONSECODE,
                         SurveyActivity.this,
@@ -731,6 +725,10 @@ public class SurveyActivity extends AppCompatActivity
 
   @Override
   public void asyncResponseFailure(int responseCode, String errormsg, String statusCode) {
+    if (responseCode == LOGOUT_REPSONSECODE) {
+      AppController.getHelperProgressDialog().dismissDialog();
+      Toast.makeText(this, errormsg, Toast.LENGTH_SHORT).show();
+    }
   }
 
   private class ClearNotification extends AsyncTask<String, Void, String> {
@@ -757,7 +755,7 @@ public class SurveyActivity extends AppCompatActivity
       NotificationManagerCompat notificationManager =
           NotificationManagerCompat.from(SurveyActivity.this);
       notificationManager.cancelAll();
-      Toast.makeText(SurveyActivity.this, R.string.signed_out, Toast.LENGTH_SHORT).show();
+      //      Toast.makeText(SurveyActivity.this, R.string.signed_out, Toast.LENGTH_SHORT).show();
       signout();
     }
 
@@ -774,6 +772,18 @@ public class SurveyActivity extends AppCompatActivity
     startActivity(mainIntent);
     finish();
   }
+
+  //  @Override
+  //  protected void onResume() {
+  //    super.onResume();
+  //
+  //    if(AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_standalone))) {
+  //      IntentFilter filter = new IntentFilter();
+  //      filter.addAction(BuildConfig.APPLICATION_ID);
+  //      versionReceiver = new VersionReceiver();
+  //      registerReceiver(versionReceiver, filter);
+  //    }
+  //  }
 
   @Override
   protected void onStart() {
@@ -803,6 +813,22 @@ public class SurveyActivity extends AppCompatActivity
     }
   }
 
+  //  @Override
+  //  protected void onPause() {
+  //    super.onPause();
+  //
+  //    try {
+  //      unregisterReceiver(versionReceiver);
+  //    } catch (Exception e) {
+  //      e.printStackTrace();
+  //    }
+  //    try {
+  //      alertDialog.dismiss();
+  //    } catch (Exception e) {
+  //      e.printStackTrace();
+  //    }
+  //  }
+
   public class VersionReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -816,7 +842,8 @@ public class SurveyActivity extends AppCompatActivity
         if (currVer.equals(latestVer) || currVer.compareTo(latestVer) > 0) {
           isUpgrade(false, latestVersion, force);
         } else {
-          AppController.getHelperSharedPreference().writePreference(SurveyActivity.this, "versionalert", "done");
+          AppController.getHelperSharedPreference()
+              .writePreference(SurveyActivity.this, "versionalert", "done");
           isUpgrade(true, latestVersion, force);
         }
       } else {
@@ -846,8 +873,7 @@ public class SurveyActivity extends AppCompatActivity
         positiveButton = "Yes";
         negativeButton = "Skip";
       }
-      alertDialogBuilder =
-          new AlertDialog.Builder(SurveyActivity.this, R.style.MyAlertDialogStyle);
+      alertDialogBuilder = new AlertDialog.Builder(SurveyActivity.this, R.style.MyAlertDialogStyle);
       alertDialogBuilder.setTitle("Upgrade");
       alertDialogBuilder
           .setMessage(msg)
@@ -881,9 +907,9 @@ public class SurveyActivity extends AppCompatActivity
                   dialog.dismiss();
                   if (force) {
                     Toast.makeText(
-                        SurveyActivity.this,
-                        "Please update the app to continue using",
-                        Toast.LENGTH_SHORT)
+                            SurveyActivity.this,
+                            "Please update the app to continue using",
+                            Toast.LENGTH_SHORT)
                         .show();
                     moveTaskToBack(true);
                     if (Build.VERSION.SDK_INT < 21) {
@@ -912,9 +938,9 @@ public class SurveyActivity extends AppCompatActivity
       } else {
         if (force) {
           Toast.makeText(
-              SurveyActivity.this,
-              "Please update the app to continue using",
-              Toast.LENGTH_SHORT)
+                  SurveyActivity.this,
+                  "Please update the app to continue using",
+                  Toast.LENGTH_SHORT)
               .show();
           moveTaskToBack(true);
           if (Build.VERSION.SDK_INT < 21) {

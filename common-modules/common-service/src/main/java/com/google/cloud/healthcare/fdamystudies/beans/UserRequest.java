@@ -57,9 +57,11 @@ public class UserRequest {
   @Email
   private String fromEmail;
 
+
   @Column(name = "idp_user", nullable = false)
   @Type(type = "yes_no")
   private Boolean idpUser = false;
 
   @ToString.Exclude private String phoneNumber;
+
 }

@@ -19,7 +19,7 @@ terraform {
     google-beta = "~> 3.0"
   }
   backend "gcs" {
-    bucket = "btcsoft-dev-terraform-state"
+    bucket = "example-dev-terraform-state"
     prefix = "kubernetes"
   }
 }
@@ -27,9 +27,9 @@ terraform {
 data "google_client_config" "default" {}
 
 data "google_container_cluster" "gke_cluster" {
-  name     = "btcsoft-dev-gke-cluster"
-  location = "us-east1"
-  project  = "btcsoft-dev-apps"
+  name     = "example-dev-gke-cluster"
+  location = "us-central1"
+  project  = "example-dev-apps"
 }
 
 provider "kubernetes" {
@@ -80,7 +80,7 @@ locals {
 # Data sources from Secret Manager.
 data "google_secret_manager_secret_version" "secrets" {
   provider = google-beta
-  project  = "btcsoft-dev-secrets"
+  project  = "example-dev-secrets"
   secret   = each.key
 
   for_each = toset(concat(
@@ -97,29 +97,8 @@ data "google_secret_manager_secret_version" "secrets" {
       "manual-terms-url",
       "manual-privacy-url",
       "manual-fcm-api-url",
-      "manual-mobile-app-appid",
-      "manual-android-bundle-id",
-      "manual-android-server-key",
-      "manual-ios-bundle-id",
-      "manual-ios-certificate",
-      "manual-ios-certificate-password",
       "manual-ios-deeplink-url",
       "manual-android-deeplink-url",
-      "manual-idp-enabled-pm",
-      "manual-idp-enabled-sb",
-      "manual-mfa-enabled-pm",
-      "manual-mfa-enabled-sb",
-      "manual-idp-auth-domain",
-      "manual-idp-api-key",
-      "manual-project-id",
-      "manual-region-id",
-      "manual-consent-dataset-id",
-      "manual-consent-enabled",
-      "manual-fhir-enabled",
-      "manual-did-enabled",
-      "manual-fhir-dataset-id",
-      "manual-did-dataset-id",
-	  "manual_discard_fhir_response_enabled",
       "auto-auth-server-encryptor-password",
       "auto-hydra-db-password",
       "auto-hydra-db-user",
@@ -145,33 +124,18 @@ resource "kubernetes_secret" "shared_secrets" {
   }
 
   data = {
-    consent_bucket_name               = "btcsoft-dev-mystudies-consent-documents"
-    study_resources_bucket_name       = "btcsoft-dev-mystudies-study-resources"
-    study_export_import_bucket_name   = "btcsoft-dev-mystudies-sql-import"
-    institution_resources_bucket_name = "btcsoft-dev-mystudies-institution-resources"
-    base_url                          = "https://participants.btcsoft-dev.boston-technology.com"
-    studies_base_url                  = "https://studies.btcsoft-dev.boston-technology.com"
-    firestore_project_id              = "btcsoft-dev-firebase"
+    consent_bucket_name               = "example-dev-mystudies-consent-documents"
+    study_resources_bucket_name       = "example-dev-mystudies-study-resources"
+    study_export_import_bucket_name   = "example-dev-mystudies-sql-import"
+    institution_resources_bucket_name = "example-dev-mystudies-institution-resources"
+    base_url                          = "https://participants.example-dev.example.com"
+    studies_base_url                  = "https://studies.example-dev.example.com"
+    firestore_project_id              = "example-dev-firebase"
     log_path                          = data.google_secret_manager_secret_version.secrets["manual-log-path"].secret_data
     org_name                          = data.google_secret_manager_secret_version.secrets["manual-org-name"].secret_data
     terms_url                         = data.google_secret_manager_secret_version.secrets["manual-terms-url"].secret_data
     privacy_url                       = data.google_secret_manager_secret_version.secrets["manual-privacy-url"].secret_data
     fcm_api_url                       = data.google_secret_manager_secret_version.secrets["manual-fcm-api-url"].secret_data
-	idp_enabled_pm                    = data.google_secret_manager_secret_version.secrets["manual-idp-enabled-pm"].secret_data
-	idp_enabled_sb                    = data.google_secret_manager_secret_version.secrets["manual-idp-enabled-sb"].secret_data
-    mfa_enabled_pm                    = data.google_secret_manager_secret_version.secrets["manual-mfa-enabled-pm"].secret_data
-	mfa_enabled_sb                    = data.google_secret_manager_secret_version.secrets["manual-mfa-enabled-sb"].secret_data
-    idp_auth_domain                   = data.google_secret_manager_secret_version.secrets["manual-idp-auth-domain"].secret_data
-    idp_api_key                       = data.google_secret_manager_secret_version.secrets["manual-idp-api-key"].secret_data
-    project_id                        = data.google_secret_manager_secret_version.secrets["manual-project-id"].secret_data
-    region_id                         = data.google_secret_manager_secret_version.secrets["manual-region-id"].secret_data
-    consent_dataset_id                = data.google_secret_manager_secret_version.secrets["manual-consent-dataset-id"].secret_data
-    consent_enabled                   = data.google_secret_manager_secret_version.secrets["manual-consent-enabled"].secret_data
-    fhir_dataset_id                   = data.google_secret_manager_secret_version.secrets["manual-fhir-dataset-id"].secret_data
-    did_dataset_id                    = data.google_secret_manager_secret_version.secrets["manual-did-dataset-id"].secret_data
-    did_enabled                       = data.google_secret_manager_secret_version.secrets["manual-did-enabled"].secret_data
-    fhir_enabled                      = data.google_secret_manager_secret_version.secrets["manual-fhir-enabled"].secret_data
-	discard_fhir_response             = data.google_secret_manager_secret_version.secrets["manual_discard_fhir_response_enabled"].secret_data
   }
 }
 
@@ -271,7 +235,7 @@ resource "kubernetes_secret" "email_credentials" {
 resource "google_service_account_key" "apps_service_account_keys" {
   for_each = toset(local.service_account_ids)
 
-  service_account_id = "${each.key}@btcsoft-dev-apps.iam.gserviceaccount.com"
+  service_account_id = "${each.key}@example-dev-apps.iam.gserviceaccount.com"
 }
 
 resource "kubernetes_secret" "apps_gcloud_keys" {

@@ -25,6 +25,9 @@ package com.hphc.mystudies.util;
 
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
+
+import com.google.cloud.storage.BlobInfo;
+
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import com.hphc.mystudies.bean.FailureResponse;
@@ -802,6 +805,23 @@ public class StudyMetaDataUtil {
     }
     LOGGER.exit("getStandardFileNameForResponses() :: ends");
     return fileName;
+  }
+
+  public static String getResources(String bucketName, String filepath, String dataFormat) {
+    try {
+      if (StringUtils.isNotBlank(filepath)) {
+        Storage storage = StorageOptions.getDefaultInstance().getService();
+        Blob blob = storage.get(BlobId.of(bucketName, filepath));
+        if (blob != null) {
+          ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+          blob.downloadTo(outputStream);
+          return dataFormat + java.util.Base64.getEncoder().encodeToString(blob.getContent());
+        }
+      }
+    } catch (Exception e) {
+      LOGGER.error("Unable to getResources", e);
+    }
+    return null;
   }
 
   public static String getResources(String bucketName, String filepath, String dataFormat) {

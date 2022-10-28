@@ -3,10 +3,18 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
+<style>
+.help-block { 
+display: block;
+
+}
+.modal-header .close { padding: 1rem 1rem; margin: -3rem -1rem -1rem auto; }
+</style>
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
-<div class="col-sm-10 col-rc white-bg p-none">
+<div class="col-sm-9.5 col-rc white-bg p-none">
   <form:form
       action="/studybuilder/adminStudies/saveOrUpdateResource.do?${_csrf.parameterName}=${_csrf.token}&_S=${param._S}"
       data-toggle="validator" id="resourceForm" role="form" method="post" autocomplete="off"
@@ -76,7 +84,7 @@
           <div class="form-group">
             <input autofocus="autofocus" type="text" class="form-control" id="resourceTitle"
                    name="title"
-                   value="${fn:escapeXml(resourceBO.title)}" maxlength="50" required data-error="Please fill out this field" 
+                   value="${fn:escapeXml(resourceBO.title)}" maxlength="50" required data-error="Please fill out this field"
                    <c:if test="${isstudyProtocol eq 'isstudyProtocol'}">readonly</c:if>/>
             <div class="help-block with-errors red-txt"></div>
           </div>
@@ -108,7 +116,7 @@
       <div id="richEditor"
            class="mt-lg form-group resetContentType <c:if test="${resourceBO.textOrPdf}">dis-none</c:if>">
         <textarea class="remReqOnSave" id="richText" name="richText"
-                  required data-error="Please fill out this field"  >${resourceBO.richText}</textarea>
+                  required data-error="Please fill out this field">${resourceBO.richText}</textarea>
         <div class="help-block with-errors red-txt"></div>
       </div>
 
@@ -119,8 +127,8 @@
           Upload PDF
         </button>
         <input id="uploadImg" class="dis-none remReqOnSave" type="file" name="pdfFile" accept=".pdf"
-               data-error="Please select a pdf file" required data-error="Please fill out this field" >
-        <input type="hidden" class="remReqOnSave" value="${resourceBO.pdfUrl}" required data-error="Please fill out this field"  id="pdfUrl"
+               data-error="Please select a pdf file" required>
+        <input type="hidden" class="remReqOnSave" value="${resourceBO.pdfUrl}" required data-error="Please fill out this field" id="pdfUrl"
                name="pdfUrl">
         <input type="hidden" value="${resourceBO.pdfName}" id="pdfName" name="pdfName">
         <span class="alert customalert pdfDiv">
@@ -164,7 +172,7 @@
 
         <div class="clearfix"></div>
 
-        <div class="mt-lg resetDate">
+        <div class="mt-md resetDate">
           <div class="gray-xs-f mb-xs">Select time period
             <span class="requiredStar">*</span>
           </div>
@@ -174,7 +182,7 @@
                      name="resourceTypeParm">
               <label for="inlineRadio5">Anchor-date based period</label><br/>
             </span>
-            <div>
+            <div class="row">
               <div class="gray-xs-f col-md-3 col-lg-3 p-none mt-sm">Select anchor date type
                 <span
                     class="requiredStar">*
@@ -182,9 +190,9 @@
               </div>
               <div class="col-md-3 col-lg-3 p-none">
                 <div class="form-group">
-                  <select id="anchorDateId" class="selectpicker disBtn1" required data-error="Please fill out this field" 
+                  <select id="anchorDateId" class="selectpicker disBtn1" required data-error="Please fill out this field"
                           name="anchorDateId">
-                    <option value=''>Select</option>
+                    <option selected value=''>Select</option>
                     <c:forEach items="${anchorTypeList}" var="anchorTypeInfo">
                       <option
                           value="${anchorTypeInfo.id}" ${resourceBO.anchorDateId eq anchorTypeInfo.id ? 'selected' : ''}>${anchorTypeInfo.name}</option>
@@ -209,11 +217,11 @@
             <span class="form-group m-none dis-inline vertical-align-middle">
 
               <input id="xdays" type="text"
-                     class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm resetAncDate"
+                     class="mt-sm form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask resetAncDate"
                      placeholder="X" name="timePeriodFromDays"
                      value="${resourceBO.timePeriodFromDays}"
                      oldxDaysVal="${resourceBO.timePeriodFromDays}"
-                     maxlength="3" required data-error="Please fill out this field"  pattern="[0-9]+"
+                     maxlength="3" required pattern="[0-9]+" data-error="Please fill out this field"
                      data-pattern-error="Please enter valid number"/>
               <span class="help-block with-errors red-txt"></span>
             </span>
@@ -239,10 +247,10 @@
             <span class="form-group m-none dis-inline vertical-align-middle">
 
               <input id="ydays" type="text"
-                     class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm resetAncDate"
+                     class="mt-sm form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask resetAncDate"
                      placeholder="Y"
                      name="timePeriodToDays" value="${resourceBO.timePeriodToDays}"
-                     oldyDaysVal="${resourceBO.timePeriodToDays}" maxlength="3" required data-error="Please fill out this field" />
+                     oldyDaysVal="${resourceBO.timePeriodToDays}" maxlength="3" required data-error="Please fill out this field"/>
 
               <span class="help-block with-errors red-txt"></span>
             </span>
@@ -263,10 +271,10 @@
           <div>
             <span class="form-group m-none dis-inline vertical-align-middle pr-md">
               <input id="StartDate" type="text"
-                     class="form-control disRadBtn1 disBtn2 datepicker remReqOnSave mt-md"
+                     class="mt-sm form-control disRadBtn1 disBtn2 datepicker remReqOnSave"
                      placeholder="Start date" name="startDate"
                      value="${resourceBO.startDate}"
-                     oldStartDateVal="${resourceBO.startDate}" required data-error="Please fill out this field" />
+                     oldStartDateVal="${resourceBO.startDate}" required data-error="Please fill out this field"/>
               <span class="help-block with-errors red-txt"></span>
             </span>
             <span class="gray-xs-f mb-sm pr-md">
@@ -274,9 +282,9 @@
             </span>
             <span class="form-group m-none dis-inline vertical-align-middle">
               <input id="EndDate" type="text"
-                     class="form-control disRadBtn1 disBtn2 datepicker remReqOnSave mt-md"
+                     class="mt-sm form-control disRadBtn1 disBtn2 datepicker remReqOnSave"
                      placeholder="End date" name="endDate" value="${resourceBO.endDate}"
-                     oldEndDateVal="${resourceBO.endDate}" required data-error="Please fill out this field" />
+                     oldEndDateVal="${resourceBO.endDate}" required data-error="Please fill out this field"/>
               <span class="help-block with-errors red-txt"></span>
             </span>
             <div class="help-block with-errors red-txt"></div>
@@ -285,7 +293,7 @@
 
         <div class="clearfix"></div>
 
-        <div class="mt-sm">
+        <div class="mt-lg">
           <div class="gray-xs-f mb-xs">Text for notifying participants about the new resource being
             available&nbsp;<small
                 class="viewAct">(250 characters max)
@@ -336,7 +344,9 @@
            target="_blank">
   <input type="hidden" value="studyResources" name="fileFolder"/>
   <input type="hidden" value="${resourceBO.pdfUrl}" name="fileName"/>
-  <input type="hidden" value="${resourceBO.studyId}" name="studyId"/>
+
+   <input type="hidden" value="${resourceBO.studyId}" name="studyId"/>
+
 </form:form>
 <script type="text/javascript">
   $(document).ready(function () {
@@ -373,7 +383,7 @@
         if ($('#inlineRadio5').is(':checked')) {
           var text = "You have chosen to use a period of visibility based on an anchor date. Please ensure that the Source Questionnaire providing the anchor date response is scheduled appropriately.";
           bootbox.confirm({
-            closeButton: false,
+            closeButton: true,
             message: text,
             buttons: {
               'cancel': {
@@ -442,12 +452,13 @@
     });
 
     $('#saveResourceId').click(function () {
-    	var richTextVal = $('#richText').val();
-      if (null != richTextVal && richTextVal != '' && typeof richTextVal != 'undefined' && richTextVal != '<p><br></p>'){
-        var richText=$('#richText').summernote('code');
-        var escaped = $('#richText').text(richText).html();
-        $('#richText').val(escaped);
-      }
+    	 var richTextVal = $('#richText').val();
+         if (null != richTextVal && richTextVal != '' && typeof richTextVal != 'undefined' && richTextVal != '<p><br></p>'){
+           var richText=$('#richText').summernote('code');
+           var escaped = $('#richText').text(richText).html();
+           $('#richText').val(escaped);
+          }
+
       $('#saveResourceId').prop('disabled', true);
       $("#resourceTitle").parent().find(".help-block").empty();
       $('#resourceForm').validator('destroy').validator();
@@ -486,7 +497,7 @@
     $('.goToResourceListForm').on('click', function () {
       <c:if test="${actionOn ne 'view'}">
       bootbox.confirm({
-        closeButton: false,
+        closeButton: true,
         message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
         buttons: {
           'cancel': {
@@ -570,22 +581,27 @@
       		  $("#uploadImg").parent().addClass('has-error has-danger').find(".help-block").empty().append(
                 		$("<ul><li> </li></ul>").attr("class","list-unstyled").text("File size should not exceed 5MB"));
       		 $("#delete").click();
-      	  }
-    	
-        reader = new FileReader();
-        reader.onload = function () {
+
+      	  	}
+        	reader = new FileReader();
+        	reader.onload = function () {
+
           if ($.inArray($(thisAttr).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
+        	  
             $("#uploadImg").parent().addClass('has-error has-danger').find(".help-block").empty().append(
             		$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please select a pdf file"));
             $("#delete").click();
             
-         	// file should be less than or equal to 5 mb i.e 5000000 bytes
+
+
+            // file should be less than or equal to 5 mb i.e 500000 bytes
+
             if(file.size > 5000000){
       		  $("#uploadImg").parent().addClass('has-error has-danger').find(".help-block").empty().append(
                 		$("<ul><li> </li></ul>").attr("class","list-unstyled").text("File size should not exceed 5MB"));
       		 $("#delete").click();
       	  	}
-         
+
           } else if ($("#uploadImg").val()) {
             $('#pdfClk').attr('href', 'javascript:void(0)').css('cursor', 'default');
             $('.pdfDiv').show();
@@ -647,7 +663,9 @@
       chkDaysValid(false);
     });
 
- var startToday, endToday, datepicker;
+
+    var startToday, endToday, datepicker;
+
     
     <c:if test="${ empty resourceBO.startDate}">
     startToday = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
@@ -678,7 +696,9 @@
     });
 
 
+
     $(".datepicker").on("click", function (e) {
+    	
       $('#StartDate').data("DateTimePicker").minDate(
           new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()));
       var startDate = $("#StartDate").data("DateTimePicker").date();
@@ -943,7 +963,7 @@
         $('.disBtn1').selectpicker('refresh');
         resetValidation($('.resetDate'));
       }
-
+      
       var a = $("#inlineRadio4").val();
       if (a == 1) {
         $(".light-txt").addClass("opacity06");

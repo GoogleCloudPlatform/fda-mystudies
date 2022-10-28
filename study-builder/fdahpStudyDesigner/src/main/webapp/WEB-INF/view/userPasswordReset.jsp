@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@page session="true" %>
@@ -84,7 +85,13 @@
         <div>
           <form:form id="passwordResetForm" data-toggle="validator"
                      role="form" action="addPassword.do" method="post"
-                     autocomplete="off" style="margin-top: 0px !important;margin-bottom: 0px !important;">
+
+                     autocomplete="off" 
+                     style="margin-top: 0px !important;
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;">
+
             <div id="errMsg" class="error_msg">${errMsg}</div>
             <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
             <c:if test="${not isInactiveUser && isValidToken}">
@@ -190,7 +197,7 @@
     </form:form>
 
     <!-- Vendor -->
-    <script src="vendor/jquery/jquery-3.1.1.min.js"></script>
+    <script src="vendor/jquery/jquery-3.6.0.min.js"></script>
     <script src="vendor/boostrap/bootstrap.min.js"></script>
     <script src="vendor/animation/wow.min.js"></script>
     <script src="vendor/datatable/js/jquery.dataTables.min.js"></script>

@@ -117,9 +117,11 @@ public enum MessageCode {
   INVITATION_DELETED_SUCCESSFULLY(
       HttpStatus.OK, "MSG_0045", "The invitation for this admin user has been deleted"),
 
+
   GET_APP_SUCCESS(HttpStatus.OK, "MSG_0046", "App fetched successfully"),
 
   GET_IDP_USERS_SUCCESS(HttpStatus.OK, "MSG_0047", "IdP Users fetched successfully");
+
 
   private final HttpStatus httpStatus;
   private final String code;

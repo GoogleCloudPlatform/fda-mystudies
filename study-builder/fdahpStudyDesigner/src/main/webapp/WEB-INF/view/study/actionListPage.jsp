@@ -11,7 +11,9 @@
     background: #007cba;
     border-color: #007cba !important;
     padding: 4px 20px;
-    width: 230px;
+
+    width: 245px;
+
     height: 38px;
 }
 button#exportId {
@@ -29,13 +31,17 @@ button#exportId {
     position: fixed;
     top: 50% !important;
     left: 50% !important;
-    transform: translate(-40%, -40%); 
+
+    transform: translate(-48%, -20%); 
+
 }
 
 
 </style>
 
-<div class="col-sm-10 col-rc white-bg p-none">
+
+<div class="col-sm-9.5 col-rc white-bg p-none">
+
 
   <!--  Start top tab section-->
   <div class="right-content-head">

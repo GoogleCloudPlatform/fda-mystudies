@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: participant-enroll-datastore
-          image: gcr.io/btcsoft-dev-apps/participant-enroll-datastore:latest
+          image: gcr.io/<PREFIX>-<ENV>-apps/participant-enroll-datastore:latest
           env:
             # DB ACCESS
             - name: DB_INSTANCE_URL
@@ -67,21 +67,17 @@ spec:
                 secretKeyRef:
                   name: shared-secrets
                   key: log_path
-            - name: PROJECT_ID
+            # GOOGLE HEALTH CARE API                  
+            - name: DATA_PROJECT_ID
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: project_id
+                  key: data_project_id
             - name: REGION_ID
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
                   key: region_id
-            - name: CONSENT_DATASET_ID
-              valueFrom:
-                secretKeyRef:
-                  name: shared-secrets
-                  key: consent_dataset_id
             - name: CONSENT_ENABLED
               valueFrom:
                 secretKeyRef:
@@ -108,7 +104,7 @@ spec:
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
           command: ["/cloud_sql_proxy",
-            "-instances=btcsoft-dev-data:us-east1:mystudies=tcp:3306",
+            "-instances=<PREFIX>-<ENV>-data:<LOCATION>:mystudies=tcp:3306",
             "-credential_file=/secrets/gcloud_key/key.json"]
           volumeMounts:
           - name: gcloud-key-volume

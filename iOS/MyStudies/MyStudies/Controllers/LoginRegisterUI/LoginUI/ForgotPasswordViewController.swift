@@ -20,6 +20,7 @@
 import Foundation
 import UIKit
 import FirebaseAnalytics
+import Reachability
 
 let kVerifyViewControllerSegue = "VerifyViewControllerSegue"
 let kVerficationMessageFromForgotPassword =
@@ -38,12 +39,13 @@ class ForgotPasswordViewController: UIViewController {
   override var preferredStatusBarStyle: UIStatusBarStyle {
     return .default
   }
-
+  private var reachability: Reachability!
   // MARK: - ViewController Delegates
 
   override func viewDidLoad() {
     super.viewDidLoad()
 
+    setupNotifiers()
     // Used to set border color for bottom view
     buttonSubmit?.layer.borderColor = kUicolorForButtonBackground
     self.title = NSLocalizedString(kForgotPasswordTitleText, comment: "")
@@ -58,7 +60,7 @@ class ForgotPasswordViewController: UIViewController {
     self.addBackBarButton()
     textFieldEmail?.delegate = self
   }
-
+  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
 
@@ -73,6 +75,47 @@ class ForgotPasswordViewController: UIViewController {
     super.viewDidAppear(animated)
     textFieldEmail?.becomeFirstResponder()
   }
+  
+  // MARK: - Utility functions
+  func setupNotifiers() {
+      NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                             name: Notification.Name.reachabilityChanged, object: nil);
+        
+      do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+          } catch(let error) { }
+  }
+    
+  @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+            setOnline()
+            break
+        case .wifi:
+            setOnline()
+            break
+        case .none:
+            setOffline()
+            break
+        case .unavailable:
+            setOffline()
+            break
+        }
+    }
+  
+    func setOnline() {
+        self.view.hideAllToasts()
+        buttonSubmit?.isEnabled = true
+        buttonSubmit?.layer.opacity = 1
+    }
+  
+    func setOffline() {
+        self.view.makeToast("You are offline", duration: 100, position: .bottom, title: nil, image: nil, completion: nil)
+        buttonSubmit?.isEnabled = false
+        buttonSubmit?.layer.opacity = 0.5
+    }
 
   // MARK: - Utility Methods
 

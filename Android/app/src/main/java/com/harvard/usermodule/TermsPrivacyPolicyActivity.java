@@ -16,13 +16,12 @@
 package com.harvard.usermodule;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatTextView;
-
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
 import com.harvard.R;
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.utils.AppController;
@@ -67,7 +66,8 @@ public class TermsPrivacyPolicyActivity extends AppCompatActivity {
       } else {
         title.setText(getIntent().getStringExtra("title"));
       }
-      AppController.getHelperProgressDialog().showProgress(TermsPrivacyPolicyActivity.this, "", "", false);
+      AppController.getHelperProgressDialog()
+          .showProgress(TermsPrivacyPolicyActivity.this, "", "", false);
       webView.getSettings().setLoadsImagesAutomatically(true);
       webView.getSettings().setJavaScriptEnabled(true);
       webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);

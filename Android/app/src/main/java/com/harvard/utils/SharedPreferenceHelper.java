@@ -20,6 +20,9 @@ import android.content.SharedPreferences;
 import java.util.ArrayList;
 import java.util.Map;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 public class SharedPreferenceHelper {
 
   private static final String PREF_NAME = "AppCredentials";

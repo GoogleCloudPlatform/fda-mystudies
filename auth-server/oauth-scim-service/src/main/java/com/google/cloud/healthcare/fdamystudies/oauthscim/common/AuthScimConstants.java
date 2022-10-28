@@ -103,6 +103,7 @@ public final class AuthScimConstants {
 
   public static final String LOGIN_VIEW_NAME = "login";
 
+
   public static final String IDP_ENABLED = "idpEnabledForPM";
 
   public static final String MFA_ENABLED = "mfaEnabledForPM";

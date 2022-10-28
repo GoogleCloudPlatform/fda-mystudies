@@ -59,7 +59,7 @@ public abstract class BaseTokenIntrospectionFilter implements Filter {
         String.format("begin doFilter() for %s", ((HttpServletRequest) request).getRequestURI()));
     HttpServletRequest req = (HttpServletRequest) request;
     if (validatePathAndHttpMethod(req)) {
-      logger.info(String.format("validate token for %s", req.getRequestURI()));
+      logger.info("validate token for %s", req.getRequestURI());
 
       String auth = req.getHeader("Authorization");
       if (StringUtils.isEmpty(auth)) {
@@ -69,7 +69,7 @@ public abstract class BaseTokenIntrospectionFilter implements Filter {
         validateOAuthToken(request, response, chain, auth);
       }
     } else {
-      logger.info(String.format("skip token validation for %s", req.getRequestURI()));
+      logger.info("skip token validation for %s", req.getRequestURI());
       chain.doFilter(request, response);
     }
   }
@@ -103,7 +103,7 @@ public abstract class BaseTokenIntrospectionFilter implements Filter {
     params.put(TOKEN, token);
     ResponseEntity<JsonNode> oauthResponse = oauthService.introspectToken(params);
     if (oauthResponse.getStatusCode().is2xxSuccessful()) {
-      if (oauthResponse.getBody().get(ACTIVE).booleanValue()) {
+      if (oauthResponse.getBody() != null && oauthResponse.getBody().get(ACTIVE).booleanValue()) {
         chain.doFilter(request, response);
       } else {
         logger.exit("token is invalid, return 401 Unauthorized response");
@@ -111,11 +111,13 @@ public abstract class BaseTokenIntrospectionFilter implements Filter {
         setUnauthorizedResponse(response);
       }
     } else {
-      logger.exit(
-          String.format(
-              "status=%d, active=%b",
-              oauthResponse.getStatusCodeValue(),
-              oauthResponse.getBody().get(ACTIVE).booleanValue()));
+      if (oauthResponse.getBody() != null) {
+        logger.exit(
+            String.format(
+                "status=%d, active=%b",
+                oauthResponse.getStatusCodeValue(),
+                oauthResponse.getBody().get(ACTIVE).booleanValue()));
+      }
       setUnauthorizedResponse(response);
     }
   }

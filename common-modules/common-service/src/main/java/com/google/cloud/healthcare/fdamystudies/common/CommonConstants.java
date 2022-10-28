@@ -25,7 +25,11 @@ public final class CommonConstants {
 
   public static final String DEACTIVATED = "Deactivated";
 
-  public static final String NOT_APPLICABLE = "NA";
+  public static final String NOT_APPLICABLE_NA = "NA";
+
+  public static final String NOT_PROVIDED_STATUS = "Not provided";
+
+  public static final String NOT_APPLICABLE_STATUS = "Not applicable";
 
   public static final String OPEN_STUDY = "OPEN";
 
@@ -104,4 +108,23 @@ public final class CommonConstants {
       "Invalid entries found in the submitted form. Please try again.";
 
   public static final String AUTO_EXPIRATION = "autoExpiration";
+
+
+  public static final String VERSION = "Version";
+  public static final String CONSENT_DATE = "ConsentDate";
+  public static final String PDF_PATH = "PdfPath";
+  public static final String DATA_SHARING = "DataSharingPermission";
+  public static final String STUDY_ID = "StudyId";
+  public static final String SITE_ID = "SiteId";
+  public static final String ENROLLED = "Enrolled";
+  public static final String PARTICIPANT_ID = "ParticipantId";
+  public static final String CONSENT_TYPE = "ConsentType";
+  public static final String PRIMARY = "Primary Consent";
+  public static final String SHARING = "DataSharing Consent";
+
+  public static final String CONSENT_TABLE_NAME = "consent_data";
+
+  public static final String PARTICIPANT_STUDY_ID = "ParticipantStudyInfoId";
+  public static final String IMAGE_PATH = "ImagePath";
+
 }

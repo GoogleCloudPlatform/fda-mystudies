@@ -13,6 +13,18 @@
 .bootstrap-select.btn-group .dropdown-menu {
     min-width: 274px !important;
     }
+    
+    .bootstrap-select {
+    width: auto !important;
+}
+
+ .bootstrap-datetimepicker-widget.dropdown-menu {
+  z-index: 99;
+  max-width:100%;
+  width: auto;
+  font-size:14px;
+}
+
 </style>
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mt-md mb-md">
@@ -31,7 +43,7 @@
     </div>
   </div>
 </div>
-<form:form
+<form:form class="display_contents"
     action="/studybuilder/adminNotificationEdit/saveOrUpdateNotification.do?${_csrf.parameterName}=${_csrf.token}"
     data-toggle="validator" role="form" id="appNotificationFormId" method="post" autocomplete="off">
   <input type="hidden" name="buttonType" id="buttonType">
@@ -57,7 +69,7 @@
           </div>
           <div class="form-group">
             <textarea autofocus="autofocus" class="form-control" maxlength="250" rows="5"
-                      id="notificationText" name="notificationText" required data-error="Please fill out this field" 
+                      id="notificationText" name="notificationText" required data-error="Please fill out this field"
             >${notificationBO.notificationText}</textarea>
             <div class="help-block with-errors red-txt"></div>
           </div>
@@ -74,12 +86,14 @@
                          test="${notificationBO.actionPage eq 'addOrCopy'}">checked</c:if>>
               <label for="inlineRadio1">Schedule this notification
               <span
-               <fmt:formatDate value = "${date}" pattern="z" var="server_timezone"/>
+      <fmt:formatDate value = "${date}" pattern="z" var="server_timezone"/>
           class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
           style="width: 20px;background-position: -164px -68px;"
           data-toggle="tooltip"
           data-placement="top"
-          title="The notification gets delivered to mobile app users at the selected date and time as per server time zone which is ${server_timezone}."></span>
+           data-html="true"
+          title="The notification gets delivered to mobile app users at the selected date and time as per server time zone which is ${server_timezone}.">
+      </span>
               </label>
             </span>
             <span class="radio radio-inline">
@@ -90,6 +104,7 @@
               <label for="inlineRadio2">Send immediately</label>
             </span>
             <div class="help-block with-errors red-txt"></div>
+
             <div class="clearfix"></div>
           </div>
         </div>
@@ -100,10 +115,10 @@
             <span class="requiredStar">*</span>
           </div>
           <div class="form-group date">
-            <input id='datetimepicker' type="text" class="form-control calendar datepicker resetVal" data-error="Please fill out this field" 
-                   name="scheduleDate" value="${notificationBO.scheduleDate}"
+            <input id='datetimepicker' type="text" class="form-control calendar datepicker resetVal"
+                   name="scheduleDate" value="${notificationBO.scheduleDate}" data-error="Please fill out this field"
                    oldValue="${notificationBO.scheduleDate}"
-                   placeholder="MM/DD/YYYY" disabled/>
+                   placeholder="MM/DD/YYYY" disabled data-error="Please fill out this field"/>
             <div class="help-block with-errors red-txt"></div>
           </div>
         </div>
@@ -114,10 +129,10 @@
             <span class="requiredStar">*</span>
           </div>
           <div class="form-group">
-            <input id="timepicker1" class="form-control clock timepicker resetVal" data-error="Please fill out this field" 
+            <input id="timepicker1" class="form-control clock timepicker resetVal"
                    name="scheduleTime"
                    value="${notificationBO.scheduleTime}" oldValue="${notificationBO.scheduleTime}"
-                   placeholder="00:00" disabled/>
+                   placeholder="00:00" disabled data-error="Please fill out this field"/>
             <div class="help-block with-errors red-txt"></div>
           </div>
         </div>
@@ -125,15 +140,19 @@
      <div class=" ">
           <div class="form-group">
             <div class="gray-xs-f mb-xs">App to which the notification must be sent
-            <span class="requiredStar">*</span></div>
+
+             <span class="requiredStar">*</span></div>
 			<c:choose>
-               <c:when test="${notificationBO.actionPage eq 'view' || notificationBO.actionPage eq 'resend'}">
+             <c:when test="${notificationBO.actionPage eq 'view' || notificationBO.actionPage eq 'resend'}">
+
                  <input type="text" id="notificationAppId"
                     value="${notificationBO.appId}" disabled/>
              </c:when>
              <c:otherwise>
-             <select id="appId" class="selectpicker" name="appId" required data-error="Please fill out this field">
-              <option value=''>Select app ID</option>
+
+              <select id="appId" class="selectpicker" name="appId" required data-error="Please fill out this field">
+              <option selected value=''>Select app ID</option>
+
               <c:forEach items="${gatewayAppList}" var="app">
                 <option
                     value="${app}" ${notificationBO.appId eq app ? 'selected' : ''}>${app}</option>
@@ -153,7 +172,7 @@
                 <br><br>
               </c:forEach>
             </c:if>
-            
+
       </div>
     </div>
   </div>
@@ -219,7 +238,6 @@
 	$('[data-toggle="tooltip"]').tooltip();
     $('#rowId').parent().removeClass('white-bg');
     $("#notification").addClass("active");
-
     <c:if test="${notificationBO.notificationSent || notificationBO.actionPage eq 'view'}">
     $('#appNotificationFormId input,textarea').prop('disabled', true);
     if ($('#inlineRadio2').prop('checked')) {
@@ -398,14 +416,16 @@
     });
 
     var today, datepicker;
-    <c:if test="${ empty notificationBO.scheduleDate}">
-    today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
-    </c:if>
-    
-    <c:if test="${not empty notificationBO.scheduleDate}">
-    today=${notificationBO.scheduleDate};
-    </c:if>
-    
+
+   <c:if test="${ empty notificationBO.scheduleDate}">
+   today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+   </c:if>
+   
+   <c:if test="${not empty notificationBO.scheduleDate}">
+   today=${notificationBO.scheduleDate};
+   </c:if>
+   
+
     $('.datepicker').datetimepicker({
       format: 'MM/DD/YYYY',
       ignoreReadonly: true,

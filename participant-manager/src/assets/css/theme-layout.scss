@@ -73,7 +73,9 @@
     padding: 16px;
   }
   .bg__white .form-group {
+
     padding: 15px 15px !important;
+
   }
   form .bg__white .form-group {
     padding: 10px 15px;
@@ -733,3 +735,9 @@
 td.mob_tbl_footer_text_center {
   display: table-cell !important;
 }
+
+
+.ln-brk-anywhere {
+  line-break: anywhere !important;
+}
+

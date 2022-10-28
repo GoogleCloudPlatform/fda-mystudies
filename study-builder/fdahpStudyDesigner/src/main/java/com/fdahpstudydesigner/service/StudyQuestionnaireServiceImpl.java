@@ -288,6 +288,7 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
             }
             if (StringUtils.isNotBlank(questionnaireCustomScheduleBo.getFrequencyEndTime())) {
               questionnaireCustomScheduleBo.setFrequencyEndTime(
+
                   FdahpStudyDesignerUtil.getFormattedDate(
                       questionnaireCustomScheduleBo.getFrequencyEndTime(),
                       FdahpStudyDesignerConstants.UI_SDF_TIME,
@@ -296,6 +297,7 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
             if (StringUtils.isNotBlank(questionnaireCustomScheduleBo.getFrequencyStartTime())) {
               questionnaireCustomScheduleBo.setFrequencyStartTime(
                   FdahpStudyDesignerUtil.getFormattedDate(
+
                       questionnaireCustomScheduleBo.getFrequencyStartTime(),
                       FdahpStudyDesignerConstants.UI_SDF_TIME,
                       FdahpStudyDesignerConstants.SDF_TIME));
@@ -1124,4 +1126,10 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
     logger.entry("begin getQuestionById");
     return studyQuestionnaireDAO.getQuestionById(questionId);
   }
+
+@Override
+public QuestionnairesStepsBo getenabledValues(QuestionsBo questionBo) {
+	
+	return studyQuestionnaireDAO.getenabledValues(questionBo);
+}
 }

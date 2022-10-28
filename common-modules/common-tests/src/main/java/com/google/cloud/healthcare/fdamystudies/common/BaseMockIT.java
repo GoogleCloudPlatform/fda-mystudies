@@ -59,6 +59,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -132,7 +133,7 @@ public class BaseMockIT {
 
   @PostConstruct
   public void logServerPort() {
-    logger.debug(String.format("server port=%d", randomServerPort));
+    logger.debug("server port=%d" + randomServerPort);
   }
 
   protected WireMockServer getWireMockServer() {
@@ -296,7 +297,7 @@ public class BaseMockIT {
                 auditRequests.add(
                     SerializationUtils.clone((AuditLogEventRequest) invocation.getArguments()[0])))
         .when(mockAuditService)
-        .postAuditLogEvent(Mockito.any(AuditLogEventRequest.class));
+        .postAuditLogEvent(ArgumentMatchers.any(AuditLogEventRequest.class));
     WireMock.resetAllRequests();
   }
 
@@ -363,7 +364,7 @@ public class BaseMockIT {
     documentPath = documentPath.replace(" ", "_");
     // write api-docs json to a file
     FileUtils.write(new File(documentPath), jsonObjNode.toPrettyString(), Charset.defaultCharset());
-    logger.info(String.format("Open API documentation created at %s", documentPath));
+    logger.info("Open API documentation created at %s", documentPath);
     return documentPath;
   }
 }

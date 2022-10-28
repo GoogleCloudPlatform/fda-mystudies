@@ -149,4 +149,12 @@ public class QuestionResponseTypeMasterInfoBo implements Serializable {
   public void setResponseType(String responseType) {
     this.responseType = responseType;
   }
+
+  public String getResponseTypeCode() {
+    return responseTypeCode;
+  }
+
+  public void setResponseTypeCode(String responseTypeCode) {
+    this.responseTypeCode = responseTypeCode;
+  }
 }

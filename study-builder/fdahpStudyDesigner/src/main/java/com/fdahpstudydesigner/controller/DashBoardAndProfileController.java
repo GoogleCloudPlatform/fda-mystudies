@@ -75,10 +75,12 @@ public class DashBoardAndProfileController {
 
   @Autowired private AppService appService;
 
+
   Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
   String idpEnabled = configMap.get("idpEnabledForSB");
   String idpAuthDomain = configMap.get("idpAuthDomain");
   String idpApiKey = configMap.get("idpApiKey");
+
 
   @RequestMapping("/adminDashboard/changePassword.do")
   public void changePassword(HttpServletRequest request, HttpServletResponse response) {
@@ -223,10 +225,13 @@ public class DashBoardAndProfileController {
     ModelAndView mav = new ModelAndView();
     UserBO userBO = null;
     List<StudyListBean> studyAndPermissionList = null;
+    List<AppListBean> appBos = null;
     RoleBO roleBO = null;
     String sucMsg = "";
     String errMsg = "";
+
     List<AppListBean> appBos = null;
+
 
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);

@@ -572,7 +572,9 @@ public class UsersDAOImpl implements UsersDAO {
       query =
           session.createSQLQuery(
               " SELECT u.user_id,u.first_name,u.last_name,u.email,r.role_name,u.status,"
+
                   + "u.password,u.email_changed,u.access_level,u.created_by, u.idp_user FROM users u,roles r WHERE r.role_id = u.role_id  "
+
                   + " ORDER BY u.user_id DESC ");
       objList = query.list();
       if ((null != objList) && !objList.isEmpty()) {
@@ -683,6 +685,7 @@ public class UsersDAOImpl implements UsersDAO {
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       Transaction transaction = session.beginTransaction();
+
       query =
           session
               .createSQLQuery(" delete from user_permission_mapping where user_id =:userId ")
@@ -698,6 +701,7 @@ public class UsersDAOImpl implements UsersDAO {
               .createSQLQuery(" delete from users where user_id =:userId ")
               .setParameter("userId", userId);
       query.executeUpdate();
+
       /*query =
           session
               .createSQLQuery(
@@ -705,6 +709,7 @@ public class UsersDAOImpl implements UsersDAO {
                       + " INNER JOIN users t2 ON t1.user_id = t2.user_id where t1.user_id =:userId ")
               .setParameter("userId", userId);
       query.executeUpdate()*/ ;
+
 
       transaction.commit();
       message = FdahpStudyDesignerConstants.SUCCESS;
@@ -721,6 +726,7 @@ public class UsersDAOImpl implements UsersDAO {
     logger.exit("deleteByUserId() - Ends");
     return message;
   }
+
 
   @SuppressWarnings("unchecked")
   @Override
@@ -743,4 +749,5 @@ public class UsersDAOImpl implements UsersDAO {
     logger.exit("getIdpUserList() - Ends");
     return userBOList;
   }
+
 }

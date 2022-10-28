@@ -57,6 +57,9 @@ public class StudyPageBo implements Serializable {
   @Column(name = "modified_on")
   private String modifiedOn;
 
+  @Column(name = "sequence_number")
+  private Integer sequenceNumber;
+
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
@@ -71,8 +74,10 @@ public class StudyPageBo implements Serializable {
 
   @Transient public String signedUrl;
 
+
   @Column(name = "sequence_number")
   private Integer sequenceNumber;
+
 
   public String getCreatedBy() {
     return createdBy;

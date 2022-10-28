@@ -75,11 +75,44 @@ color: #95a2ab;
 	margin-right: 0px !important;
 }
 
+
+.filter_btn::after {
+    float: right;
+    margin: 8px -8px 0px 0px;
+    position: relative;
+}
+
+.dropdown_chk_box button {
+    border-color: #ccc;
+}
+
+.dropdown-menu .divider {
+    height: 1px;
+    margin: 9px 0;
+    overflow: hidden;
+    background-color: #e5e5e5;
+}
+
+.custom_checkbox_dropdown {
+    overflow-x: hidden;
+}
+.option-link label { 
+margin-bottom: 0px;
+}
+
+.select-sub_text {
+    padding-left: 23px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
 </style>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css" />
-  
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js"></script> -->
+<script src="/studybuilder/vendor/bootstrap-multiselect/bootstrap-multiselect.min.js"></script>
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css" /> -->
+<link rel="stylesheet" href="/studybuilder/vendor/bootstrap-multiselect/bootstrap-multiselect.css">  
+
   
 <!-- create Study Section Start -->
 <div id="" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mt-md tit_con">
@@ -101,7 +134,9 @@ color: #95a2ab;
       </div>
       
         <div class="dropdown dropdown_chk_box pl-lg">
-      <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+
+      <button class="btn btn-default dropdown-toggle filter_btn" type="button" data-toggle="dropdown">
+
         <span class="dropdown-text">Filter by apps</span>
         <span class="caret"></span>
       </button>
@@ -132,6 +167,7 @@ color: #95a2ab;
 			 </div> </label>
           </a>
         </li>
+
         </c:forEach>
       </ul>
     </div>

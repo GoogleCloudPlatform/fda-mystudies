@@ -76,4 +76,8 @@ public class AppConstants {
   public static final String EMAIL_NOT_EXISTS = "EMAIL_NOT_EXISTS";
 
   public static final int VERIFICATION_CODE_LENGTH = 6;
+
+
+  public static final String DB_SDF_DATE_TIME = "yyyy-MM-dd HH:mm:ss";
+
 }

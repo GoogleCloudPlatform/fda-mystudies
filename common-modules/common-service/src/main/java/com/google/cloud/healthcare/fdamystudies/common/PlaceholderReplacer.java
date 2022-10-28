@@ -29,9 +29,8 @@ public final class PlaceholderReplacer {
           String result = values.get(placeholderName);
           if (StringUtils.isEmpty(result)) {
             logger.error(
-                String.format(
-                    "missing value for placeholder: '%s' in '%s'",
-                    placeholderName, textWithNamedPlaceholders));
+                "missing value for placeholder: '%s' in '%s'",
+                placeholderName, textWithNamedPlaceholders);
           }
           return result;
         };

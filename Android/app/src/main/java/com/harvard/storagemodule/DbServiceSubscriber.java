@@ -1535,7 +1535,7 @@ public class DbServiceSubscriber {
   }
 
   public void updateActivitiesWsVersion(
-          String activityId, String studyId, Realm realm, final String version) {
+      String activityId, String studyId, Realm realm, final String version) {
     final ActivitiesWS activitiesWS = getActivityObj(activityId, studyId, realm);
     realm.executeTransaction(new Realm.Transaction() {
       @Override
@@ -1545,6 +1545,19 @@ public class DbServiceSubscriber {
         }
       }
     });
+  }
+
+  public void deleteStepRecord(Context context, String stepId) {
+    realm = AppController.getRealmobj(context);
+    StepRecordCustom stepRecordCustom = realm.where(StepRecordCustom.class)
+        .equalTo("stepId", stepId).findFirst();
+
+    realm.beginTransaction();
+    if (stepRecordCustom != null) {
+      stepRecordCustom.deleteFromRealm();
+    }
+    realm.commitTransaction();
+    closeRealmObj(realm);
   }
 
   public void saveActivityStartTime(ActivitiesWS activitiesWS, Realm realm, String startTime) {

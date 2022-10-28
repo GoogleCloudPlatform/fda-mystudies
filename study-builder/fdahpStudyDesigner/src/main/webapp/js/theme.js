@@ -52,7 +52,11 @@ $(document).ready(
 
 			// Password Reset Form section
 			// var prfs = $("#passwordResetForm").height();
+
 			// bth = (wht - prfs) / 2;
+
+			// var bth = (wht - prfs) / 2;
+
 			// $("#passwordResetForm").css("margin-top", bth).css("margin-bottom", bth);
 
 			// Register page

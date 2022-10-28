@@ -230,7 +230,9 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
       if (activeTaskBo != null) {
         query =
             session
-                .createQuery("from ActiveTaskAtrributeValuesBo where activeTaskId=:activeTaskId")
+                .createQuery(
+                    "from ActiveTaskAtrributeValuesBo where activeTaskId=:activeTaskId"
+                        + " ORDER BY activeTaskMasterAttrId")
                 .setParameter("activeTaskId", activeTaskBo.getId());
         activeTaskAtrributeValuesBos = query.list();
         if (StringUtils.isNotEmpty(customStudyId)) {
@@ -606,6 +608,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
               activeTaskBo.getActiveTaskCustomScheduleBo()) {
             if (activeTaskCustomScheduleBo.getActiveTaskId() == null) {
               activeTaskCustomScheduleBo.setActiveTaskId(activeTaskBo.getId());
+
             }
             if ((activeTaskCustomScheduleBo.getFrequencyStartDate() != null)
                 && !activeTaskCustomScheduleBo.getFrequencyStartDate().isEmpty()) {
@@ -615,6 +618,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
                       FdahpStudyDesignerConstants.UI_SDF_DATE,
                       FdahpStudyDesignerConstants.SD_DATE_FORMAT));
             }
+
             if ((activeTaskCustomScheduleBo.getFrequencyEndDate() != null)
                 && !activeTaskCustomScheduleBo.getFrequencyEndDate().isEmpty()) {
               activeTaskCustomScheduleBo.setFrequencyEndDate(

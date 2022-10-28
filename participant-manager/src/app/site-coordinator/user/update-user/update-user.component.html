@@ -332,6 +332,9 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                 [ngClass]="{
                   'custom_not-allowed': user.status === userStatus.Deactivated
                 }"
+                [ngClass]="{
+                  select_disabled: user.status === userStatus.Deactivated
+                }"
                 [disabled]="user.status === userStatus.Deactivated"
                 type="checkbox"
                 [items]="appDetails.apps"

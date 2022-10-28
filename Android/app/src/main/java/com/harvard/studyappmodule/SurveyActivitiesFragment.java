@@ -21,7 +21,9 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
@@ -35,9 +37,9 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -77,6 +79,7 @@ import com.harvard.studyappmodule.events.GetActivityListEvent;
 import com.harvard.studyappmodule.events.GetResourceListEvent;
 import com.harvard.studyappmodule.events.GetUserStudyInfoEvent;
 import com.harvard.studyappmodule.events.GetUserStudyListEvent;
+import com.harvard.studyappmodule.studymodel.ConsentDocumentData;
 import com.harvard.studyappmodule.studymodel.MotivationalNotification;
 import com.harvard.studyappmodule.studymodel.StudyHome;
 import com.harvard.studyappmodule.studymodel.StudyList;
@@ -96,6 +99,7 @@ import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
+import com.harvard.utils.NetworkChangeReceiver;
 import com.harvard.utils.SetDialogHelper;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
@@ -117,6 +121,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -130,8 +136,9 @@ import org.researchstack.backbone.task.Task;
 
 public class SurveyActivitiesFragment extends Fragment
     implements ApiCall.OnAsyncRequestComplete,
-        ActivityCompat.OnRequestPermissionsResultCallback,
-        CustomActivitiesDailyDialogClass.DialogClick {
+    ActivityCompat.OnRequestPermissionsResultCallback,
+    CustomActivitiesDailyDialogClass.DialogClick,
+    NetworkChangeReceiver.NetworkChangeCallback {
   private static final int UPDATE_USERPREFERENCE_RESPONSECODE = 102;
   private static final int PERMISSION_REQUEST_CODE = 1000;
   private static final int GET_PREFERENCES = 112;
@@ -192,7 +199,10 @@ public class SurveyActivitiesFragment extends Fragment
   private ArrayList<AnchorDateSchedulingDetails> arrayList;
   private ActivityData activityDataDB;
   String title = "";
+  private String name = "";
   Intent calculateRunHoldServiceeintent;
+  private NetworkChangeReceiver networkChangeReceiver;
+  private ActivityData activityDataRunId;
 
   @Override
   public void onAttach(Context context) {
@@ -209,6 +219,7 @@ public class SurveyActivitiesFragment extends Fragment
     initializeXmlId(view);
     dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(context);
+    networkChangeReceiver = new NetworkChangeReceiver(this);
     try {
       AppController.getHelperHideKeyboard((Activity) context);
     } catch (Exception e) {
@@ -230,6 +241,16 @@ public class SurveyActivitiesFragment extends Fragment
     } catch (Exception e) {
       Logger.log(e);
     }
+    IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+    context.registerReceiver(networkChangeReceiver, intentFilter);
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    if (networkChangeReceiver != null) {
+      context.unregisterReceiver(networkChangeReceiver);
+    }
   }
 
   private void initializeXmlId(View view) {
@@ -243,7 +264,7 @@ public class SurveyActivitiesFragment extends Fragment
     AppCompatImageView backBtnimg = view.findViewById(R.id.backBtnimg);
     AppCompatImageView menubtnimg = view.findViewById(R.id.menubtnimg);
 
-    if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
+    if (AppConfig.AppType.equalsIgnoreCase(getContext().getString(R.string.app_gateway))) {
       backBtnimg.setVisibility(View.VISIBLE);
       menubtnimg.setVisibility(View.GONE);
     } else {
@@ -253,7 +274,7 @@ public class SurveyActivitiesFragment extends Fragment
   }
 
   private void setTextForView() {
-    titleTv.setText(context.getResources().getString(R.string.study_activities));
+    titleTv.setText(getContext().getResources().getString(R.string.study_activities));
   }
 
   private void setFont() {
@@ -269,13 +290,13 @@ public class SurveyActivitiesFragment extends Fragment
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
+            if (AppConfig.AppType.equalsIgnoreCase(getContext().getString(R.string.app_gateway))) {
               Bundle eventProperties = new Bundle();
               eventProperties.putString(
-                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                      getString(R.string.survey_activities_home));
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  getContext().getString(R.string.survey_activities_home));
               analyticsInstance.logEvent(
-                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
               Intent intent = new Intent(context, StudyActivity.class);
               ComponentName cn = intent.getComponent();
               Intent mainIntent = Intent.makeRestartActivityTask(cn);
@@ -291,9 +312,9 @@ public class SurveyActivitiesFragment extends Fragment
           @Override
           public void onClick(View view) {
             final ArrayList<String> mScheduledTime = new ArrayList<>();
-            mScheduledTime.add(context.getResources().getString(R.string.all));
-            mScheduledTime.add(context.getResources().getString(R.string.surveys1));
-            mScheduledTime.add(context.getResources().getString(R.string.tasks1));
+            mScheduledTime.add(getContext().getResources().getString(R.string.all));
+            mScheduledTime.add(getContext().getResources().getString(R.string.surveys1));
+            mScheduledTime.add(getContext().getResources().getString(R.string.tasks1));
             CustomActivitiesDailyDialogClass c =
                 new CustomActivitiesDailyDialogClass(
                     context,
@@ -307,7 +328,7 @@ public class SurveyActivitiesFragment extends Fragment
             Bundle eventProperties = new Bundle();
             eventProperties.putString(
                 CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                getString(R.string.survey_activities_filter));
+                getContext().getString(R.string.survey_activities_filter));
             analyticsInstance.logEvent(
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
           }
@@ -333,7 +354,8 @@ public class SurveyActivitiesFragment extends Fragment
           .showSwipeListCustomProgress(getActivity(), R.drawable.transparent, false);
     } else {
       AppController.getHelperProgressDialog()
-          .showProgressWithText(getActivity(), "", getString(R.string.activity_loading_msg), false);
+          .showProgressWithText(
+              getActivity(), "", getContext().getString(R.string.activity_loading_msg), false);
     }
 
     GetUserStudyListEvent getUserStudyListEvent = new GetUserStudyListEvent();
@@ -386,6 +408,13 @@ public class SurveyActivitiesFragment extends Fragment
     new CallConsentMetaData().execute();
   }
 
+  @Override
+  public void onNetworkChanged(boolean status) {
+    if (!status) {
+      AppController.offlineAlart(context);
+    }
+  }
+
   private class CallConsentMetaData extends AsyncTask<String, Void, String> {
     String response = null;
     String responseCode = null;
@@ -401,7 +430,8 @@ public class SurveyActivitiesFragment extends Fragment
               + "?studyId="
               + ((SurveyActivity) context).getStudyId();
       if (connectionDetector.isConnectingToInternet()) {
-        responseModel = HttpRequest.getRequest(url, new HashMap<String, String>(), "STUDY_DATASTORE");
+        responseModel =
+            HttpRequest.getRequest(url, new HashMap<String, String>(), "STUDY_DATASTORE");
         responseCode = responseModel.getResponseCode();
         response = responseModel.getResponseData();
         if (responseCode.equalsIgnoreCase("0") && response.equalsIgnoreCase("timeout")) {
@@ -428,7 +458,7 @@ public class SurveyActivitiesFragment extends Fragment
             && !response.equalsIgnoreCase("")) {
           response = response;
         } else {
-          response = getString(R.string.unknown_error);
+          response = getContext().getString(R.string.unknown_error);
         }
       }
       return response;
@@ -446,7 +476,7 @@ public class SurveyActivitiesFragment extends Fragment
           AppController.getHelperProgressDialog().dismissDialog();
           Toast.makeText(
                   context,
-                  context.getResources().getString(R.string.connection_timeout),
+                  getContext().getResources().getString(R.string.connection_timeout),
                   Toast.LENGTH_SHORT)
               .show();
         } else if (Integer.parseInt(responseCode) == HttpURLConnection.HTTP_OK) {
@@ -504,13 +534,14 @@ public class SurveyActivitiesFragment extends Fragment
           AppController.getHelperProgressDialog().dismissDialog();
           Toast.makeText(
                   context,
-                  context.getResources().getString(R.string.unable_to_retrieve_data),
+                  getContext().getResources().getString(R.string.unable_to_retrieve_data),
                   Toast.LENGTH_SHORT)
               .show();
         }
       } else {
         AppController.getHelperProgressDialog().dismissDialog();
-        Toast.makeText(context, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, getContext().getString(R.string.unknown_error), Toast.LENGTH_SHORT)
+            .show();
       }
     }
 
@@ -533,7 +564,7 @@ public class SurveyActivitiesFragment extends Fragment
     eligibilityType = type;
     Toast.makeText(
             context,
-            context.getResources().getString(R.string.please_review_the_updated_consent),
+            getContext().getResources().getString(R.string.please_review_the_updated_consent),
             Toast.LENGTH_SHORT)
         .show();
     StudyList studyList =
@@ -542,6 +573,8 @@ public class SurveyActivitiesFragment extends Fragment
     ConsentBuilder consentBuilder = new ConsentBuilder();
     List<Step> consentStep =
         consentBuilder.createsurveyquestion(context, consent, studyList.getTitle());
+    AppController.getHelperSharedPreference()
+        .writePreference(context, "DataSharingScreen" + studyList.getTitle(), "false");
     Task consentTask = new OrderedTask(StudyFragment.CONSENT, consentStep);
     Intent intent =
         CustomConsentViewTaskActivity.newIntent(
@@ -610,7 +643,7 @@ public class SurveyActivitiesFragment extends Fragment
       if (studyUpdate
           .getStudyUpdateData()
           .getStatus()
-          .equalsIgnoreCase(getString(R.string.paused))) {
+          .equalsIgnoreCase(getContext().getString(R.string.paused))) {
         AppController.getHelperProgressDialog().dismissDialog();
         onItemsLoadComplete();
         Toast.makeText(context, R.string.studyPaused, Toast.LENGTH_SHORT).show();
@@ -618,7 +651,7 @@ public class SurveyActivitiesFragment extends Fragment
       } else if (studyUpdate
           .getStudyUpdateData()
           .getStatus()
-          .equalsIgnoreCase(getString(R.string.closed))) {
+          .equalsIgnoreCase(getContext().getString(R.string.closed))) {
         AppController.getHelperProgressDialog().dismissDialog();
         onItemsLoadComplete();
         Toast.makeText(context, R.string.studyClosed, Toast.LENGTH_SHORT).show();
@@ -663,11 +696,12 @@ public class SurveyActivitiesFragment extends Fragment
           "Authorization",
           "Bearer "
               + AppController.getHelperSharedPreference()
-                  .readPreference(context, context.getResources().getString(R.string.auth), ""));
+              .readPreference(
+                  context, getContext().getResources().getString(R.string.auth), ""));
       header.put(
           "userId",
           AppController.getHelperSharedPreference()
-              .readPreference(context, context.getResources().getString(R.string.userid), ""));
+              .readPreference(context, getContext().getResources().getString(R.string.userid), ""));
       Realm realm = AppController.getRealmobj(context);
       Studies studies =
           dbServiceSubscriber.getStudies(((SurveyActivity) context).getStudyId(), realm);
@@ -718,6 +752,8 @@ public class SurveyActivitiesFragment extends Fragment
                 ((SurveyActivity) context).getStudyId(), realm);
       }
 
+      activityDataRunId = activityData1;
+
       calculateStartAnsEndDateForActivities();
 
     } else if (responseCode == ACTIVTTYINFO_RESPONSECODE) {
@@ -750,12 +786,13 @@ public class SurveyActivitiesFragment extends Fragment
       } else {
         Toast.makeText(context, R.string.unable_to_parse, Toast.LENGTH_SHORT).show();
       }
+
     } else if (responseCode == UPDATE_STUDY_PREFERENCE) {
       // check for notification
-      AppController.getHelperProgressDialog().dismissDialog();
       getResourceListWebservice();
       onItemsLoadComplete();
       checkForNotification();
+      AppController.getHelperProgressDialog().dismissDialog();
     } else if (responseCode == RESOURCE_REQUEST_CODE) {
       // call study info
       callGetStudyInfoWebservice();
@@ -775,6 +812,7 @@ public class SurveyActivitiesFragment extends Fragment
           // remove duplicate and
           dbServiceSubscriber.deleteStudyResourceDuplicateRow(context, studyId);
           dbServiceSubscriber.saveResourceList(context, studyResource);
+          onItemsLoadComplete();
         }
       }
     } else {
@@ -1479,16 +1517,7 @@ public class SurveyActivitiesFragment extends Fragment
     GetUserStudyInfoEvent getUserStudyInfoEvent = new GetUserStudyInfoEvent();
     StudyDatastoreConfigEvent studyDatastoreConfigEvent =
         new StudyDatastoreConfigEvent(
-            "get",
-            url,
-            STUDY_INFO,
-            context,
-            StudyHome.class,
-            null,
-            header,
-            null,
-            false,
-            this);
+            "get", url, STUDY_INFO, context, StudyHome.class, null, header, null, false, this);
 
     getUserStudyInfoEvent.setStudyDatastoreConfigEvent(studyDatastoreConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
@@ -1551,7 +1580,7 @@ public class SurveyActivitiesFragment extends Fragment
           } else {
             Toast.makeText(
                     context,
-                    context.getResources().getString(R.string.survey_message),
+                    getContext().getResources().getString(R.string.survey_message),
                     Toast.LENGTH_SHORT)
                 .show();
           }
@@ -1943,7 +1972,7 @@ public class SurveyActivitiesFragment extends Fragment
                               + activitiesArrayList.get(i).getActivityId()
                               + "_"
                               + runIds.get(
-                                  activityIds.indexOf(activitiesArrayList.get(i).getActivityId())));
+                              activityIds.indexOf(activitiesArrayList.get(i).getActivityId())));
                     }
                   }
                 }
@@ -1983,7 +2012,10 @@ public class SurveyActivitiesFragment extends Fragment
             if (!activitiesArrayList.get(i).getState().equalsIgnoreCase("deleted")) {
               if (starttime != null) {
                 if (AppController.isWithinRange(starttime, endtime)) {
-                  if (activityStatus.getCurrentRunId() == activityStatus.getTotalRun() && activityStatus.getStatus().equalsIgnoreCase(SurveyActivitiesFragment.STATUS_COMPLETED)) {
+                  if (activityStatus.getCurrentRunId() == activityStatus.getTotalRun()
+                      && activityStatus
+                          .getStatus()
+                          .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_COMPLETED)) {
                     completedactivityList.add(activitiesArrayList.get(i));
                     completedActivityStatus.add(activityStatus);
                     completedStatus.add(STATUS_COMPLETED);
@@ -2299,6 +2331,34 @@ public class SurveyActivitiesFragment extends Fragment
       if (completedActivityStatus.isEmpty()) {
         completedActivityStatus.add(new ActivityStatus());
       }
+
+      Collections.sort(
+          currentactivityList,
+          new Comparator<ActivitiesWS>() {
+            @Override
+            public int compare(ActivitiesWS studyList, ActivitiesWS t1) {
+              return studyList.getTitle().compareTo(t1.getTitle());
+            }
+          });
+
+      Collections.sort(
+          upcomingactivityList,
+          new Comparator<ActivitiesWS>() {
+            @Override
+            public int compare(ActivitiesWS studyList, ActivitiesWS t1) {
+              return studyList.getTitle().compareTo(t1.getTitle());
+            }
+          });
+
+      Collections.sort(
+          completedactivityList,
+          new Comparator<ActivitiesWS>() {
+            @Override
+            public int compare(ActivitiesWS studyList, ActivitiesWS t1) {
+              return studyList.getTitle().compareTo(t1.getTitle());
+            }
+          });
+
       currentRunStatusForActivities.addAll(currentActivityStatus);
       currentRunStatusForActivities.addAll(upcomingActivityStatus);
       currentRunStatusForActivities.addAll(completedActivityStatus);
@@ -2337,7 +2397,7 @@ public class SurveyActivitiesFragment extends Fragment
     @Override
     protected void onPostExecute(ArrayList<ActivitiesWS> result) {
       AppController.getHelperProgressDialog()
-          .updateMsg(context.getString(R.string.activity_loading_msg));
+          .updateMsg(getContext().getString(R.string.activity_loading_msg));
 
       SharedPreferenceHelper.writePreference(context, "runsCalculating", "false");
       if (AppController.isMyServiceRunning(context, CalculateRunHoldService.class)) {
@@ -2350,13 +2410,15 @@ public class SurveyActivitiesFragment extends Fragment
 
       AppController.getHelperSharedPreference()
           .writePreference(
-              context, context.getResources().getString(R.string.completedRuns), "" + completed);
+              context,
+              getContext().getResources().getString(R.string.completedRuns),
+              "" + completed);
       AppController.getHelperSharedPreference()
           .writePreference(
-              context, context.getResources().getString(R.string.missedRuns), "" + missed);
+              context, getContext().getResources().getString(R.string.missedRuns), "" + missed);
       AppController.getHelperSharedPreference()
           .writePreference(
-              context, context.getResources().getString(R.string.totalRuns), "" + total);
+              context, getContext().getResources().getString(R.string.totalRuns), "" + total);
 
       double completion = 0;
       MotivationalNotification motivationalNotification =
@@ -2374,27 +2436,27 @@ public class SurveyActivitiesFragment extends Fragment
           fiftyPc = true;
           SetDialogHelper.setNeutralDialog(
               context,
-              context.getResources().getString(R.string.study)
+              getContext().getResources().getString(R.string.study)
                   + " "
                   + title
                   + " "
-                  + context.getResources().getString(R.string.percent_complete1),
+                  + getContext().getResources().getString(R.string.percent_complete1),
               false,
-              context.getResources().getString(R.string.ok),
-              context.getResources().getString(R.string.app_name));
+              getContext().getResources().getString(R.string.ok),
+              getContext().getResources().getString(R.string.app_name));
         } else if (completion >= 50) {
           fiftyPc = true;
         } else if (missed > 0) {
           SetDialogHelper.setNeutralDialog(
               context,
-              context.getResources().getString(R.string.missed_activity)
+              getContext().getResources().getString(R.string.missed_activity)
                   + " "
                   + ((SurveyActivity) context).getTitle1()
                   + " "
-                  + context.getResources().getString(R.string.we_encourage),
+                  + getContext().getResources().getString(R.string.we_encourage),
               false,
-              context.getResources().getString(R.string.ok),
-              context.getResources().getString(R.string.app_name));
+              getContext().getResources().getString(R.string.ok),
+              getContext().getResources().getString(R.string.app_name));
         }
       } else if (!motivationalNotification.isFiftyPc() && !motivationalNotification.isHundredPc()) {
         if (completion >= 100) {
@@ -2402,52 +2464,52 @@ public class SurveyActivitiesFragment extends Fragment
           fiftyPc = true;
           SetDialogHelper.setNeutralDialog(
               context,
-              context.getResources().getString(R.string.study)
+              getContext().getResources().getString(R.string.study)
                   + " "
                   + title
                   + " "
                   + context.getResources().getString(R.string.percent_complete1),
               false,
-              context.getResources().getString(R.string.ok),
-              context.getResources().getString(R.string.app_name));
+              getContext().getResources().getString(R.string.ok),
+              getContext().getResources().getString(R.string.app_name));
         } else if (completion >= 50) {
           fiftyPc = true;
         } else if (motivationalNotification.getMissed() != missed) {
           SetDialogHelper.setNeutralDialog(
               context,
-              context.getResources().getString(R.string.missed_activity)
+              getContext().getResources().getString(R.string.missed_activity)
                   + " "
                   + ((SurveyActivity) context).getTitle1()
                   + " "
-                  + context.getResources().getString(R.string.we_encourage),
+                  + getContext().getResources().getString(R.string.we_encourage),
               false,
-              context.getResources().getString(R.string.ok),
-              context.getResources().getString(R.string.app_name));
+              getContext().getResources().getString(R.string.ok),
+              getContext().getResources().getString(R.string.app_name));
         }
       } else if (!motivationalNotification.isHundredPc()) {
         if (completion >= 100) {
           hundredPc = true;
           SetDialogHelper.setNeutralDialog(
               context,
-              context.getResources().getString(R.string.study)
+              getContext().getResources().getString(R.string.study)
                   + " "
                   + title
                   + " "
-                  + context.getResources().getString(R.string.percent_complete1),
+                  + getContext().getResources().getString(R.string.percent_complete1),
               false,
-              context.getResources().getString(R.string.ok),
-              context.getResources().getString(R.string.app_name));
+              getContext().getResources().getString(R.string.ok),
+              getContext().getResources().getString(R.string.app_name));
         } else if (motivationalNotification.getMissed() != missed) {
           SetDialogHelper.setNeutralDialog(
               context,
-              context.getResources().getString(R.string.missed_activity)
+              getContext().getResources().getString(R.string.missed_activity)
                   + " "
                   + ((SurveyActivity) context).getTitle1()
                   + " "
-                  + context.getResources().getString(R.string.we_encourage),
+                  + getContext().getResources().getString(R.string.we_encourage),
               false,
-              context.getResources().getString(R.string.ok),
-              context.getResources().getString(R.string.app_name));
+              getContext().getResources().getString(R.string.ok),
+              getContext().getResources().getString(R.string.app_name));
         }
 
       } else if (motivationalNotification.getMissed() != missed) {
@@ -2457,10 +2519,10 @@ public class SurveyActivitiesFragment extends Fragment
                 + " "
                 + ((SurveyActivity) context).getTitle1()
                 + " "
-                + context.getResources().getString(R.string.we_encourage),
+                + getContext().getResources().getString(R.string.we_encourage),
             false,
-            context.getResources().getString(R.string.ok),
-            context.getResources().getString(R.string.app_name));
+            getContext().getResources().getString(R.string.ok),
+            getContext().getResources().getString(R.string.app_name));
       }
 
       if (motivationalNotification != null && motivationalNotification.isHundredPc()) {
@@ -2494,29 +2556,38 @@ public class SurveyActivitiesFragment extends Fragment
   }
 
   public void updateStudyState(String completion, String adherence) {
+    ConsentDocumentData consentDocumentData =
+        dbServiceSubscriber.getConsentDocumentFromDB(
+            ((SurveyActivity) context).getStudyId(), realm);
+
     HashMap<String, String> header = new HashMap();
     header.put(
         "Authorization",
         "Bearer "
             + AppController.getHelperSharedPreference()
-                .readPreference(context, context.getResources().getString(R.string.auth), ""));
+                .readPreference(context, getContext().getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
-            .readPreference(context, context.getResources().getString(R.string.userid), ""));
+            .readPreference(context, getContext().getResources().getString(R.string.userid), ""));
 
     JSONObject jsonObject = new JSONObject();
 
     JSONArray studieslist = new JSONArray();
     JSONObject studiestatus = new JSONObject();
 
-    Studies studies = dbServiceSubscriber.getStudies(((SurveyActivity) context).getStudyId(), realm);
+    Studies studies =
+        dbServiceSubscriber.getStudies(((SurveyActivity) context).getStudyId(), realm);
+
     try {
       studiestatus.put("studyId", ((SurveyActivity) context).getStudyId());
       studiestatus.put("siteId", studies.getSiteId());
       studiestatus.put("participantId", studies.getParticipantId());
       studiestatus.put("completion", completion);
       studiestatus.put("adherence", adherence);
+      if (consentDocumentData != null && consentDocumentData.getConsent() != null) {
+        studiestatus.put("userStudyVersion", consentDocumentData.getConsent().getVersion());
+      }
 
     } catch (JSONException e) {
       Logger.log(e);
@@ -2801,7 +2872,7 @@ public class SurveyActivitiesFragment extends Fragment
 
       if (activityObj != null) {
         AppController.getHelperSharedPreference()
-            .writePreference(context, getString(R.string.mapCount), "0");
+            .writePreference(context, getContext().getString(R.string.mapCount), "0");
         stepsBuilder = new StepsBuilder(context, activityObj, branching, realm);
         task =
             ActivityBuilder.create(
@@ -2830,8 +2901,8 @@ public class SurveyActivitiesFragment extends Fragment
                     != PackageManager.PERMISSION_GRANTED)) {
               String[] permission =
                   new String[] {
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
+                      Manifest.permission.ACCESS_FINE_LOCATION,
+                      Manifest.permission.ACCESS_COARSE_LOCATION
                   };
               if (!hasPermissions(permission)) {
                 ActivityCompat.requestPermissions(
@@ -2905,11 +2976,11 @@ public class SurveyActivitiesFragment extends Fragment
         "Authorization",
         "Bearer "
             + AppController.getHelperSharedPreference()
-                .readPreference(context, context.getResources().getString(R.string.auth), ""));
+                .readPreference(context, getContext().getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
-            .readPreference(context, context.getResources().getString(R.string.userid), ""));
+            .readPreference(context, getContext().getResources().getString(R.string.userid), ""));
     header.put("participantId", studies.getParticipantId());
     dbServiceSubscriber.closeRealmObj(realm);
     JSONObject jsonObject = new JSONObject();
@@ -3036,20 +3107,31 @@ public class SurveyActivitiesFragment extends Fragment
     protected String doInBackground(String... params) {
 
       ConnectionDetector connectionDetector = new ConnectionDetector(context);
+      String actvityRunId = null;
+
+      for (int i = 0; i < activityDataRunId.getActivities().size(); i++) {
+        if (anchorDateSchedulingDetails.getSourceActivityId().equalsIgnoreCase(
+            activityDataRunId.getActivities().get(i).getActivityId())) {
+          actvityRunId = activityDataRunId.getActivities().get(i).getActivityRunId();
+        }
+      }
 
       if (connectionDetector.isConnectingToInternet()) {
         Realm realm = AppController.getRealmobj(context);
         HashMap<String, String> header = new HashMap<>();
         header.put(
-            getString(R.string.clientToken),
-            SharedPreferenceHelper.readPreference(context, getString(R.string.clientToken), ""));
+            getContext().getString(R.string.clientToken),
+            SharedPreferenceHelper.readPreference(
+                context, getContext().getString(R.string.clientToken), ""));
         header.put(
             "Authorization",
             "Bearer "
-                + SharedPreferenceHelper.readPreference(context, getString(R.string.auth), ""));
+                + SharedPreferenceHelper.readPreference(
+                context, getContext().getString(R.string.auth), ""));
         header.put(
             "userId",
-            SharedPreferenceHelper.readPreference(context, getString(R.string.userid), ""));
+            SharedPreferenceHelper.readPreference(
+                context, getContext().getString(R.string.userid), ""));
         Studies studies =
             realm
                 .where(Studies.class)
@@ -3074,7 +3156,9 @@ public class SurveyActivitiesFragment extends Fragment
                     + "&questionKey="
                     + anchorDateSchedulingDetails.getSourceKey()
                     + "&activityVersion="
-                    + anchorDateSchedulingDetails.getActivityVersion(),
+                    + anchorDateSchedulingDetails.getActivityVersion()
+                    + "&activityRunId="
+                    + actvityRunId,
                 header,
                 "");
         dbServiceSubscriber.closeRealmObj(realm);
@@ -3121,7 +3205,7 @@ public class SurveyActivitiesFragment extends Fragment
           metadataProcess();
           Toast.makeText(
                   context,
-                  context.getResources().getString(R.string.connection_timeout),
+                  getContext().getResources().getString(R.string.connection_timeout),
                   Toast.LENGTH_SHORT)
               .show();
         } else if (Integer.parseInt(responseCode) == 500) {
@@ -3154,21 +3238,24 @@ public class SurveyActivitiesFragment extends Fragment
                 String key = entry.getKey();
                 String valueobj = gson.toJson(entry.getValue());
                 Map<String, Object> vauleMap = gson.fromJson(String.valueOf(valueobj), type);
-                value = vauleMap.get("value");
-                try {
-                  Date anchordate = AppController.getLabkeyDateFormat().parse("" + value);
-                  value = AppController.getDateFormatForApi().format(anchordate);
-                } catch (ParseException e) {
-                  Logger.log(e);
+                if (key.equalsIgnoreCase("anchorDate")) {
+                  value = vauleMap.get("value");
+                  try {
+                    Date anchordate = AppController.getLabkeyDateFormat().parse("" + value);
+                    value = AppController.getDateFormatForApi().format(anchordate);
+                  } catch (ParseException e) {
+                    Logger.log(e);
+                  }
                 }
+
               }
             }
-
             // updating results back to DB
             StepRecordCustom stepRecordCustom = new StepRecordCustom();
             JSONObject jsonObject2 = new JSONObject();
             jsonObject2.put("answer", "" + value);
             stepRecordCustom.setResult(jsonObject2.toString());
+            stepRecordCustom.setStudyId(anchorDateSchedulingDetails.getStudyId());
             stepRecordCustom.setActivityID(
                 anchorDateSchedulingDetails.getStudyId()
                     + "_STUDYID_"
@@ -3196,7 +3283,8 @@ public class SurveyActivitiesFragment extends Fragment
         }
       } else {
         metadataProcess();
-        Toast.makeText(context, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, getContext().getString(R.string.unknown_error), Toast.LENGTH_SHORT)
+            .show();
       }
     }
   }

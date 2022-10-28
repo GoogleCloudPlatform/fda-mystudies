@@ -14,9 +14,15 @@
   .tool-tip [disabled] {
     pointer-events: none;
   }
+  
+  table.dataTable {
+    border: 0px solid #e2e9f0;
+    margin: 0px !important;
+}
+
 </style>
 <!-- Start right Content here -->
-<div class="col-sm-10 col-rc white-bg p-none">
+<div class="col-sm-9.5 col-rc white-bg p-none">
   <!--  Start top tab section-->
   <div class="right-content-head">
     <div class="text-right">
@@ -77,11 +83,11 @@
              id="formStepId" method="post" data-toggle="validator" role="form">
     <div class="right-content-body pt-none pl-none pr-none">
       <ul class="nav nav-tabs review-tabs gray-bg" id="formTabConstiner">
-        <li class="stepLevel active">
-          <a data-toggle="tab" href="#sla">Step-level attributes</a>
+        <li class="stepLevel active nav-item">
+          <a data-toggle="tab" href="#sla" class="nav-link active ">Step-level attributes</a>
         </li>
-        <li class="formLevel">
-          <a data-toggle="tab" href="#fla">Form-level attributes</a>
+        <li class="formLevel nav-item">
+          <a data-toggle="tab" href="#fla" class="nav-link">Form-level attributes</a>
         </li>
       </ul>
       <div class="tab-content pl-xlg pr-xlg">
@@ -99,7 +105,7 @@
         <input type="hidden" id="questionId" name="questionId"/>
         <input type="hidden" id="actionTypeForFormStep" name="actionTypeForFormStep"/>
 
-        <div id="sla" class="tab-pane fade in active mt-xlg">
+        <div id="sla" class="tab-pane fade show active mt-xlg">
           <div class="row">
             <div class="col-md-6 pl-none">
               <div class="gray-xs-f mb-xs">Step title or key (1 to 15 characters)
@@ -205,7 +211,9 @@
             <div class="form-group mb-none col-md-4 p-none">
               <input type="text" class="form-control"
                      placeholder="Eg: I have more medications to add"
+
                    name="repeatableText" id="repeatableText" data-error="Please fill out this field" 
+
                      value="${fn:escapeXml(questionnairesStepsBo.repeatableText)}"
                      <c:if test="${questionnairesStepsBo.repeatable ne 'Yes'}">disabled</c:if>
                      maxlength="30"
@@ -227,7 +235,8 @@
               </div>
             </div>
             <div class="clearfix"></div>
-            <div class="mt-md mb-lg">
+            <div class="row display_contents mt-md mb-lg">
+              <div class="col-lg-12 pl-none pr-none">
               <table id="content" class="display" cellspacing="0" width="100%">
                 <thead style="display: none"></thead>
                 <c:forEach items="${questionnairesStepsBo.formQuestionMap}" var="entry">
@@ -283,6 +292,7 @@
                   </tr>
                 </c:forEach>
               </table>
+            </div>
             </div>
           </div>
         </div>
@@ -801,7 +811,7 @@
     $(item).prop('disabled', true);
     <c:if test="${actionTypeForQuestionPage ne 'view'}">
     bootbox.confirm({
-      closeButton: false,
+      closeButton: true,
       message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
       buttons: {
         'cancel': {

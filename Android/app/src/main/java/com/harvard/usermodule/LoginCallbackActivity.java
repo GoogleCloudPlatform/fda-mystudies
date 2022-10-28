@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -13,9 +13,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import android.widget.Toast;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.harvard.AppConfig;
 import com.harvard.BuildConfig;
@@ -78,7 +78,7 @@ public class LoginCallbackActivity extends AppCompatActivity
     if (Intent.ACTION_VIEW.equals(appLinkAction) && appLinkData != null) {
       Uri uri = intent.getData();
       Map<String, String> urlParams = AppController.decodeUrl(uri.getEncodedQuery());
-      if (uri != null && urlParams!=null) {
+      if (uri != null && urlParams != null) {
         userId = urlParams.get("userId");
         emailId = urlParams.get("email");
         if (uri.getPath().equalsIgnoreCase(Urls.DEEPLINK_CALLBACK)) {

@@ -32,6 +32,8 @@
     <!-- Vendor CSS -->
 
     <link rel="stylesheet" href="/studybuilder/vendor/boostrap/bootstrap.min.css">
+  
+   
     <link rel="stylesheet"
           href="/studybuilder/vendor/datetimepicker/css/bootstrap-timepicker.min.css">
     <link rel="stylesheet" href="/studybuilder/vendor/scrollbar/jquery.mCustomScrollbar.min.css">
@@ -46,7 +48,8 @@
     <link rel="stylesheet" href="/studybuilder/vendor/dragula/dragula.min.css">
     <link rel="stylesheet" href="/studybuilder/vendor/magnific-popup/magnific-popup.css">
     <link rel="stylesheet" href="/studybuilder/vendor/font-awesome/font-awesome.min.css">
-    <link rel="stylesheet" href="/studybuilder/vendor/select2/bootstrap-select.min.css">
+   <link rel="stylesheet" href="/studybuilder/vendor/select2/bootstrap-select.min.css">
+
     <link rel="stylesheet" href="/studybuilder/vendor/animation/animate.css">
 
     <!-- Theme Responsive CSS -->
@@ -64,15 +67,42 @@
     <link rel="stylesheet" href="/studybuilder/vendor/summernote/summernote-bs4.min.css">
 
 
+<style>
+
+/* after bootstrap from 3.3.7 to 4.6.1 migration dropdown caret icon not worked so added extra CSS here */
+
+.dropdown-toggle::after {
+    display: inline-block !important;
+    margin-left: 0.255em !important;
+    vertical-align: 0.255em !important;
+    content: "" !important;
+    border-top: 0.3em solid !important;
+    border-right: 0.3em solid transparent !important;
+    border-bottom: 0 !important;
+    border-left: 0.3em solid transparent !important;
+}
+
+.dropdown-item.active, .dropdown-item:active {
+    color: #262626 !important;
+    text-decoration: none !important;
+    background-color: #f5f5f5 !important;
+}
+
+
+
+</style>
+
+
     <!-- Head Libs -->
     <script src="/studybuilder/vendor/modernizr/modernizr.js"></script>
 
 
     <!-- Vendor -->
     
-    <script src="/studybuilder/vendor/jquery/jquery-3.1.1.min.js"></script>
-    <script src="/studybuilder/vendor/summernote/popper.min.js"></script>
+    <script src="/studybuilder/vendor/jquery/jquery-3.6.0.min.js"></script>
+    <script src="/studybuilder/vendor/summernote/jquery.popper.min.js"></script>
     <script src="/studybuilder/vendor/boostrap/bootstrap.min.js"></script>
+  
     <script src="/studybuilder/vendor/summernote/summernote.min.js"></script>
     <script src="/studybuilder/vendor/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="/studybuilder/vendor/datetimepicker/js/moment.min.js"></script>
@@ -84,7 +114,8 @@
     <script src="/studybuilder/vendor/datatable/js/dataTables.rowReorder.min.js"></script>
     <script src="/studybuilder/vendor/dragula/react-dragula.min.js"></script>
     <script src="/studybuilder/vendor/magnific-popup/jquery.magnific-popup.min.js"></script>
-    <script src="/studybuilder/vendor/select2/bootstrap-select.min.js"></script>
+   <script src="/studybuilder/vendor/select2/bootstrap-select.min.js"></script>
+
     <script src="/studybuilder/js/jquery.password-validator.js"></script>
     <script src="/studybuilder/js/underscore-min.js"></script>
     <script src="/studybuilder/js/ajaxRequestInterceptor.js"></script>

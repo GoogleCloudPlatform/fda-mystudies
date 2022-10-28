@@ -2,10 +2,15 @@
          pageEncoding="ISO-8859-1" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<style>
+.modal-header .close { padding: 1rem 1rem; margin: -3rem -1rem -1rem auto; }
+</style>
+
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
-<div class="col-sm-10 col-rc white-bg p-none">
+<div class="col-sm-9.5 col-rc white-bg p-none">
   <!--  Start top tab section-->
   <form:form
       action="/studybuilder/adminStudies/studyList.do?_S=${param._S}"
@@ -54,13 +59,13 @@
       <!--  Start body tab section -->
       <div class="right-content-body pt-none pl-none">
         <ul class="nav nav-tabs review-tabs">
-          <li class="shareData active">
-            <a data-toggle="tab"
+          <li class="shareData nav-item">
+            <a data-toggle="tab" class="nav-link active "
                href="#menu1">Data-sharing permission
             </a>
           </li>
-          <li class="consentReview">
-            <a data-toggle="tab" href="#menu2">Consent
+          <li class="consentReview nav-item">
+            <a data-toggle="tab" href="#menu2" class="nav-link">Consent
               document
             </a>
           </li>
@@ -68,11 +73,11 @@
         <div class="tab-content pl-xlg pr-xlg">
           <input type="hidden" id="version" name="version"
                  value="${consentBo.version}">
-          <div id="menu1" class="tab-pane fade in active">
+          <div id="menu1" class="tab-pane fade show active">
             <div class="mt-lg">
-              <div class="gray-xs-f mb-sm">Enable data-sharing permission
-                step for this study? (This will let participants choose whether
-                they want to allow their data to be shared with 3rd parties)
+              <div class="gray-xs-f mb-sm">Enable data-sharing permission step for this study? (This will let participants choose whether they want to allow their data to be shared with 3rd parties. This setting and section cannot be modified after the study is launched)
+                             <span class="ml-xs mr-md sprites_v3 filled-tooltip" data-toggle="tooltip" title="" 
+                  data-original-title="Enabling this step for a study allows participants to choose their preference on data-sharing during their initial enrollment into the study. This section cannot be modified after the study is launched."></span>
               </div>
               <div class="col-md-12 pl-none">
                 <div class="form-group custom-form">
@@ -80,9 +85,9 @@
                       type="radio" id="shareDataPermissionsYes" value="Yes"
                       name="shareDataPermissions"
                     ${consentBo.shareDataPermissions eq 'Yes' ? 'checked' : ''}>
-                    <label for="shareDataPermissionsYes">Yes</label>
-                  </span>
-                  <span class="radio radio-inline"><input type="radio"
+                    <label for="shareDataPermissionsYes">Yes </label>
+            		</span>
+                                  <span class="radio radio-inline"><input type="radio"
                                                           id="shareDataPermissionsNo"
                                                           value="No"
                                                           name="shareDataPermissions"
@@ -109,8 +114,8 @@
             		</span>
                   </div>
                   <div class="form-group custom-form">
-                    <input type="text" class="form-control requiredClass" data-error="Please fill out this field" 
-                           placeholde="" id="titleId" name="title"
+                    <input type="text" class="form-control requiredClass"
+                           placeholde="" id="titleId" name="title" data-error="Please fill out this field"
                            value="${consentBo.title}" maxlength="250"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
@@ -133,8 +138,8 @@
             		</span>
                   </div>
                   <div class="form-group custom-form">
-                    <input type="text" class="form-control requiredClass" data-error="Please fill out this field" 
-                           placeholder="" maxlength="250" name="taglineDescription"
+                    <input type="text" class="form-control requiredClass"
+                           placeholder="" maxlength="250" name="taglineDescription" data-error="Please fill out this field"
                            id="taglineDescriptionId"
                            value="${consentBo.taglineDescription}"/>
                     <div class="help-block with-errors red-txt"></div>
@@ -155,8 +160,8 @@
             		</span>
                   </div>
                   <div class="form-group custom-form">
-                    <input type="text" class="form-control requiredClass" data-error="Please fill out this field" 
-                           placeholder="" maxlength="250" name="shortDescription"
+                    <input type="text" class="form-control requiredClass"
+                           placeholder="" maxlength="250" name="shortDescription" data-error="Please fill out this field"
                            id="shortDescriptionId" value="${consentBo.shortDescription}"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
@@ -176,13 +181,13 @@
             		</span>
                   </div>
                   <div class="form-group custom-form">
-                    <textarea class="form-control requiredClass" rows="5" data-error="Please fill out this field" 
-                              maxlength="500" placeholder="" name="longDescription"
+                    <textarea class="form-control requiredClass" rows="5"
+                              maxlength="500" placeholder="" name="longDescription" data-error="Please fill out this field"
                               id="longDescriptionId">${consentBo.longDescription}</textarea>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
-                <div class="col-md-12 p-none">
+                <div class="col-md-12 p-none" >
                   <div class="gray-xs-f mb-xs">
                     Explanatory text that can be provided in a 'Learn more'
                     section
@@ -193,10 +198,11 @@
 	                   title="<span class='font24 text-weight-light pull-left'></span> Fill out these fields and see how they will display in the mobile app using the Preview action at the bottom of this page.">
             		</span>
                   </div>
+                <div class="col-md-12 p-none" id="learnMoreText" >
                   <div class="form-group">
-                    <textarea id="learnMoreTextId" name="learnMoreText"
-                              required data-error="Please fill out this field" >${consentBo.learnMoreText}</textarea>
-                    <div class="help-block with-errors red-txt"></div>
+                    <textarea class="form-control requiredClass" id="learnMoreTextId" name="learnMoreText" data-error="Please fill out this field"
+                             required>${consentBo.learnMoreText}</textarea>
+                    <div class="help-block with-errors red-txt"></div></div>
                   </div>
                 </div>
                 <div class="col-md-12 pl-none mt-lg mb-xlg">
@@ -220,7 +226,7 @@
                 <div id="consentDocTypeDivId">
                   <span class="radio radio-info radio-inline p-45"><input
                       type="radio" id="inlineRadio1" value="Auto"
-                      name="consentDocType" required 
+                      name="consentDocType" required
                       data-error="Please choose consent document type"
                     ${consentBo.consentDocType=='Auto'?'checked':''}> <label
                       for="inlineRadio1">Auto-created consent document</label>
@@ -258,6 +264,9 @@
             </div>
             <c:if  test="${status ne 'Pre-launch'}"> 
             <div class="pt-lg mt-xs pb-lg">
+
+            <div class="gray-xs mb-sm">
+
         		<span class="checkbox checkbox-inline">
           		<input type="checkbox" id="consentAgain" name="enrollAgain" <c:if test="${consentBo.enrollAgain eq 'true'}">checked</c:if>>	
           		<label for="consentAgain">Enforce e-consent flow again for enrolled participants</label>
@@ -267,12 +276,15 @@
 	                   data-html="true"
 	                   title="<span class='font24 text-weight-light pull-left'></span> Check this box if you want enrolled participants to undergo consent in the mobile app again with the latest version of the consent document. New participants will always see the latest version of the consent document.">
             	</span>	
+
+            	</div>
       		</div>
       		</c:if>
             <div class="mt-xlg">
-              <div class="black-md-f">
-                Consent document
-                <small class="pt-lg mt-xs pb-lg">(last published version: ${lastPublishedVersion})</small>
+              <div class="black-md">
+                Consent document (last published version: ${lastPublishedVersion})
+                <%-- <small class="pt-lg mt-xs pb-lg">(last published version: ${lastPublishedVersion})</small> --%>
+
                 <span id="requiredStarId" class="requiredStar">*</span>
                 <span class="filled-tooltip"
 	                   data-toggle="tooltip" data-placement="top"
@@ -419,20 +431,35 @@
 	$('.studyClass').addClass("active");
     //check the type of page action(view/edit)
     newLearnMoreConsentDocument();
-    if ('${permission}' == 'view') {
+    if ('${permission}' == 'view' ) {
       $('input[name="consentDocType"]').attr('disabled', 'disabled');
       $('#consentReviewFormId input').prop('disabled', true);
       $('#longDescriptionId').prop('disabled', true);
       $('#newDivId .elaborateClass').addClass('linkDis');
       $('#saveId,#doneId').hide();
     }
+
+
+    if ('${status}' == 'Active') {
+      //  $('input[name="consentDocType"]').attr('disabled', 'disabled');
+        $('#menu1 input').prop('disabled', true);
+        //$('#learnMoreTextId').prop('disabled', true);
+        
+        $('#learnMoreText').append('<div style="position: absolute;top:0;left:0;width: 100%;height:91%; cursor: not-allowed;z-index:2;opacity:0.4;color: #2D2926;background: #dddddd;filter: alpha(opacity = 50)"></div>');
+        
+        $('#longDescriptionId').attr('disabled','disabled');  //note-editable 
+        $('.note-editing-area').attr('disabled','disabled');
+       // $('#longDescriptionId').prop('disabled', true);
+       // $('#newDivId .elaborateClass').addClass('linkDis');
+       // $('#saveId,#doneId').hide();
+      }
     
     if ('${isActive}' == 'consentReview') {
-   	 $('.consentReview a').tab('show');
-   } else  {
-   	$('.shareData a').tab('show');
-   }
-    
+    	 $('.consentReview a').tab('show');
+    } else  {
+    	$('.shareData a').tab('show');
+    }
+
     //auto select if consent Id is empty
     var consentId = "${consentBo.consentDocType}";
     if (consentId == null || consentId == '' || typeof consentId === 'undefined') {
@@ -749,12 +776,18 @@
             }
             if (item == "doneId") {
               var a = document.createElement('a');
-              if ($(".consentReview").hasClass("active")) {
-          		a.href = "/studybuilder/adminStudies/consentReviewMarkAsCompleted.do?_S=${param._S}&isActive=consentReview";
-              }else{
-              	a.href = "/studybuilder/adminStudies/consentReviewMarkAsCompleted.do?_S=${param._S}&isActive=shareData";
-              }
+
+            	if ($(".consentReview a").hasClass("active")) {
+            		a.href = "/studybuilder/adminStudies/consentReviewMarkAsCompleted.do?_S=${param._S}&isActive=consentReview";
+              	  
+                }else{
+                	a.href = "/studybuilder/adminStudies/consentReviewMarkAsCompleted.do?_S=${param._S}&isActive=shareData";
+                }
+              
+
               document.body.appendChild(a).click();
+              
+              
             } else {
               $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft");
               $(item).prop('disabled', false);
@@ -779,7 +812,7 @@
     <c:if test="${permission ne 'view'}">
     $(item).prop('disabled', true);
     bootbox.confirm({
-      closeButton: false,
+      closeButton: true,
       message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
       buttons: {
         'cancel': {
@@ -958,11 +991,14 @@
   if (sucMsg.length > 0) {
     showSucMsg(sucMsg);
   }
-  function showSucMsg(message) {
-	 $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
-	 $('#alertMsg').show('5000');
-	   window.setTimeout(function(){
+
+
+	function showSucMsg(message) {
+	  $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+	  $('#alertMsg').show('5000');
+	    window.setTimeout(function(){
+
 	        window.location.href = "/studybuilder/adminStudies/viewStudyQuestionnaires.do?_S=${param._S}";
 	    }, 5000);
-  }
+	}
 </script>

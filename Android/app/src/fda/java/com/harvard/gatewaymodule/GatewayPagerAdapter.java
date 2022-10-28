@@ -31,6 +31,7 @@ import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
+import io.realm.Realm;
 
 import io.realm.Realm;
 

@@ -11,11 +11,13 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.US
 
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ConsentDocumentResponse;
+import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.ConsentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +38,11 @@ public class ConsentController {
 
   @Autowired private ConsentService consentService;
 
-  @ApiOperation(value = "fetch consent document")
+
+  @Autowired AppPropertyConfig appConfig;
+
+  @ApiOperation(value = "Returns a response of encoded base 64 consent document")
+
   @GetMapping("/consents/{consentId}/consentDocument")
   public ResponseEntity<ConsentDocumentResponse> getConsentDocument(
       @PathVariable String consentId,
@@ -44,8 +50,11 @@ public class ConsentController {
       HttpServletRequest request) {
     logger.entry("%s request", request.getRequestURI());
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    String flag = appConfig.getEnableConsentManagementAPI();
     ConsentDocumentResponse consentDocument =
-        consentService.getConsentDocument(consentId, userId, auditRequest);
+        StringUtils.isNotEmpty(flag) && Boolean.valueOf(flag)
+            ? consentService.getConsentDocumentFromConsentStore(consentId, userId, auditRequest)
+            : consentService.getConsentDocument(consentId, userId, auditRequest);
 
     logger.exit(String.format("status=%d", consentDocument.getHttpStatusCode()));
     return ResponseEntity.status(consentDocument.getHttpStatusCode()).body(consentDocument);

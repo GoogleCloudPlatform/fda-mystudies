@@ -15,21 +15,20 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">
 
-        <TextView
-            android:id="@+id/info_txt"
-            style="@style/contactUsTextField"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginBottom="5dp"
-            android:text="@string/we_will_get_back_to_you_as_soon_as_possible"
-            android:textSize="12sp" />
+<!--        <TextView-->
+<!--            android:id="@+id/info_txt"-->
+<!--            style="@style/contactUsTextField"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginLeft="15dp"-->
+<!--            android:layout_marginBottom="5dp"-->
+<!--            android:text="@string/we_will_get_back_to_you_as_soon_as_possible"-->
+<!--            android:textSize="12sp" />-->
 
         <View
             android:id="@+id/hrline8"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_below="@id/info_txt"
             android:layout_marginBottom="10dp"
             android:background="@color/colorSecondaryBg" />
 
@@ -236,7 +235,20 @@
                     android:textColor="@color/colorPrimaryBlack"
                     android:textColorHint="@color/colorSecondary"
                     android:textCursorDrawable="@drawable/custom_cursor_drawable" />
-
+                <TextView
+                    android:id="@+id/offlineIndicatior"
+                    android:layout_width="200dp"
+                    android:layout_height="30dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="22dp"
+                    android:background="@drawable/oval_black_black"
+                    android:gravity="center"
+                    android:text="You are offline"
+                    android:textColor="@color/white"
+                    android:textSize="16dp"
+                    android:layout_alignParentBottom="true"
+                    android:includeFontPadding ="true"
+                    android:visibility="gone"></TextView>
             </RelativeLayout>
 
         </RelativeLayout>

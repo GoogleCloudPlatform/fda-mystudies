@@ -133,6 +133,11 @@ public class StudyMetadataControllerTest extends BaseMockIT {
         "1.0",
         "Open",
         "Active",
+
+        //        "Health",
+        //        "TEST_TAGLINE",
+        //        "TEST_SPONSOR",
+
         "Yes",
         APP_ID_VALUE,
         "Test App",

@@ -61,11 +61,23 @@ button#deleteUser {
     margin-left: 9px;
 }
 
+
 input::-webkit-calendar-picker-indicator {
   display: none !important;
 }
 
 
+.dropdown-menu>.inner { 
+overflow-y: hidden !important;
+}
+
+.changeView3 div.dropdown-menu ul.dropdown-menu {
+    max-height: 400px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    min-height: 100% !important;
+    height: 100% !important;
+}
 
 </style>
 
@@ -95,7 +107,9 @@ input::-webkit-calendar-picker-indicator {
       <div class="dis-line pull-right">
         <div class="form-group mb-none">
           <c:if
+
               test="${(userBO.idpUser eq true || not empty userBO.userPassword) && userBO.enabled && userBO.emailChanged  eq '0'}">
+
             <div class="dis-inline mt-sm">
               <span class="stat">
                 <span class="black-sm-f">Account status:
@@ -142,7 +156,9 @@ input::-webkit-calendar-picker-indicator {
 	      	 </c:choose> 
             </div>
           </c:if>
+
           <c:if test="${userBO.emailChanged  eq '1'}">
+
             <div class="dis-inline mt-sm">
               <span class="black-sm-f">Account status:
                 <span
@@ -159,7 +175,7 @@ input::-webkit-calendar-picker-indicator {
 
 </div>
 
-<form:form
+<form:form class="display_contents"
     action="/studybuilder/adminUsersEdit/addOrUpdateUserDetails.do"
     data-toggle="validator" id="userForm" role="form" method="post"
     autocomplete="off">
@@ -174,7 +190,9 @@ input::-webkit-calendar-picker-indicator {
   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none">
     <div class="white-bg box-space">
       <c:if
+
           test="${actionPage eq 'EDIT_PAGE' && (userBO.idpUser eq false && not empty userBO.userPassword) && userBO.emailChanged  eq '0'}">
+
         <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN')}">
           <div class="gray-xs-f text-weight-semibold pull-right">
             <button type="button" class="btn btn-default gray-btn"id="enforcePasswordId">Enforce password change
@@ -186,7 +204,7 @@ input::-webkit-calendar-picker-indicator {
         <!-- Edit User Layout-->
 
         <div class="blue-md-f text-uppercase mb-md">Admin Information</div>
-        <div class="col-md-12 p-none">
+        <div class="col-md-12 row p-none">
           <!-- form- input-->
           <div class="col-md-6 pl-none">
             <div class="gray-xs-f mb-xs">
@@ -195,7 +213,9 @@ input::-webkit-calendar-picker-indicator {
             </div>
             <div class="form-group">
               <input autofocus="autofocus" type="text" class="form-control"
+
                      id="firstName" name="firstName" value="${fn:escapeXml(userBO.firstName)}"
+
                      maxlength="50" required data-error="Please fill out this field"
                      <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if> />
               <div class="help-block with-errors red-txt"></div>
@@ -208,7 +228,9 @@ input::-webkit-calendar-picker-indicator {
               <span class="requiredStar"> *</span>
             </div>
             <div class="form-group">
+
               <input type="text" class="form-control" id="lastName" name="lastName"
+
                      value="${fn:escapeXml(userBO.lastName)}" maxlength="50" required data-error="Please fill out this field"
                      <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if> />
               <div class="help-block with-errors red-txt"></div>
@@ -217,7 +239,7 @@ input::-webkit-calendar-picker-indicator {
         </div>
 
 
-        <div class="col-md-12 p-none">
+        <div class="col-md-12 row p-none">
           <!-- form- input-->
           <div class="col-md-6 pl-none">
             <div class="gray-xs-f mb-xs">
@@ -227,6 +249,7 @@ input::-webkit-calendar-picker-indicator {
               </c:if>
               <span class="requiredStar"> *</span>
             </div>
+
             <c:set var="idpEnabled" value="${idpEnabled}"/>
             <c:set var="mfaEnabled" value="${mfaEnabled}"/>
             <c:if test="${idpEnabled eq false }">
@@ -239,6 +262,7 @@ input::-webkit-calendar-picker-indicator {
                      required
                       <c:if
                          test="${actionPage eq 'VIEW_PAGE' || (empty userBO.userPassword && not empty userBO) || userBO.idpUser eq true}">disabled</c:if> />
+
               <div class="help-block with-errors red-txt"></div>
             </div>
             </c:if>
@@ -281,7 +305,7 @@ input::-webkit-calendar-picker-indicator {
 
         <div class="clearfix"></div>
         <!-- Assign Role Section -->
-        <div class="col-md-12 p-none">
+        <div class="col-md-12 row p-none">
           <!-- form- input-->
           <div class="col-md-6 pl-none">
             <div class="blue-md-f mt-lg mb-md">
@@ -321,9 +345,11 @@ input::-webkit-calendar-picker-indicator {
 		            	
                       <c:if test="${userBO.enabled}">checked</c:if>
                       <c:if
+
                           test="${(userBO.idpUser eq false && empty userBO.userPassword) || actionPage eq 'VIEW_PAGE' || userBO.emailChanged  eq '1' || (not empty idpDisableUser && idpDisableUser eq 'Y')}">disabled</c:if>
                       onclick="activateOrDeactivateUser('${userBO.userId}');">
                       
+
                     <span class="switch-label bg-transparent" data-on="On"
                           data-off="Off"></span>
                     <span class="switch-handle"></span>
@@ -337,6 +363,7 @@ input::-webkit-calendar-picker-indicator {
 
         <div class="clearfix"></div>
         <!-- Assign Permissions -->
+        <div style="width: 100%;">
         <div class="blue-md-f text-uppercase mt-lg perm-assign">Assigned Permissions</div>
         <div class="pull-right mb-xs">
           <span class="gray-xs-f">View only</span>
@@ -372,9 +399,10 @@ input::-webkit-calendar-picker-indicator {
                 <select
                     class="selectpicker col-md-6 p-none changeView3 <c:if test="${actionPage eq 'VIEW_PAGE'}">linkDis</c:if>"
                     title="- Select and add apps -" multiple id="multipleApps" >
-                    
+
                      <c:if test="${empty apps}">
-                     <option value="" id="">No app records found
+                     <option value="" selected id="">No app records found
+
                      </option>
                       </c:if>
                   <c:forEach items="${apps}" var="app">
@@ -435,7 +463,7 @@ input::-webkit-calendar-picker-indicator {
             </div>
           </div>
         </div>
-        
+
    <!--  Manage studies div  -->     
           <!-- Gray Widget-->
         <div class="edit-user-list-widget mt-xxlg">
@@ -462,7 +490,7 @@ input::-webkit-calendar-picker-indicator {
                     class="selectpicker col-md-6 p-none changeView <c:if test="${actionPage eq 'VIEW_PAGE'}">linkDis</c:if>"
                     title="- Select and add studies -" multiple id="multiple">
                   <c:forEach items="${studyBOList}" var="study">
-                    <option value="${study.id}"
+                    <option value="${study.id}" title="${study.name}&nbsp;(${study.customStudyId})"
                             id="selectStudies${study.id}">${study.name}&nbsp;(${study.customStudyId})
                     </option>
                   </c:forEach>
@@ -521,6 +549,7 @@ input::-webkit-calendar-picker-indicator {
         </div>
         
       </div>
+      </div>
     </div>
   </div>
   <c:if test="${actionPage ne 'VIEW_PAGE'}">
@@ -541,13 +570,14 @@ input::-webkit-calendar-picker-indicator {
             <div class="dis-line form-group mb-none">
               <button type="button" class="btn btn-primary blue-btn addUpdate">Update</button>
             </div>
-            
-          </c:if>
+
+            </c:if>
+
           <c:if test="${actionPage eq 'EDIT_PAGE' &&  not userBO.enabled}">  
             <div class="dis-line">
               <button type="button" class="btn btn-primary red-btn deleteUser" id = "deleteUser" onclick="validateAdminStatus(this);">Delete admin</button>
             </div>
-            
+
           </c:if>
         </div>
       </div>
@@ -560,6 +590,7 @@ input::-webkit-calendar-picker-indicator {
 </form:form>
 
 <script>
+
 
   $(document).ready(function () {
     $('#rowId').parent().removeClass('white-bg');
@@ -618,7 +649,9 @@ input::-webkit-calendar-picker-indicator {
      $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
      	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
    }
-   </c:if> 
+
+    </c:if> 
+
 
     <c:if test="${actionPage eq 'EDIT_PAGE' || actionPage eq 'VIEW_PAGE'}">
     if($('#roleId').find('option:selected').text() == 'Superadmin' ){
@@ -628,6 +661,7 @@ input::-webkit-calendar-picker-indicator {
     }
     </c:if>
 
+
     $('#roleId').on('change', function () {
       var element = $(this).find('option:selected').text();
     	 if(element != 'Superadmin' ){
@@ -635,6 +669,7 @@ input::-webkit-calendar-picker-indicator {
         	 }else $('#enforcePasswordId').show(); 
       setStudySettingByRole(element);
     });
+
 
     var countCall = 0;
     $(window).on('load', function () {
@@ -862,9 +897,12 @@ input::-webkit-calendar-picker-indicator {
     $('#inlineCheckbox6').on('click', function () {
         if ($(this).prop("checked") == true) {
           $(this).val(1);
-        } else if ($(this).prop("checked") == false) {
+
+           } else if ($(this).prop("checked") == false) {
           $(this).val('');
         }
+          
+
       });
     
     // Adding selected study items
@@ -878,7 +916,9 @@ input::-webkit-calendar-picker-indicator {
           $(this).remove();
         }
       });
-	if ($('#inlineCheckbox4').prop("checked") == true) {
+
+	    if ($('#inlineCheckbox4').prop("checked") == true) {
+
       $('#multiple :selected').each(function (i, sel) {
         var selVal = $(sel).val();
         var selTxt = DOMPurify.sanitize($(sel).text());
@@ -940,11 +980,14 @@ input::-webkit-calendar-picker-indicator {
           $(this).remove();
         }
       });
-	if ($('#inlineCheckboxApp').prop("checked") == true) {
+
+	 if ($('#inlineCheckboxApp').prop("checked") == true) {
+		
       $('#multipleApps :selected').each(function (i, sel) {
         var selVal = $(sel).val();
         var selTxt = DOMPurify.sanitize($(sel).text());
-        var existingAppDiv = "<div class='app-selected-item selApp' id='app" + selVal + "'>"
+        var existingAppDiv = "<div class='selApp app-selected-item' id='app" + selVal + "'>"
+
             + "<input type='hidden' class='appCls' id='" + selVal + "' name='' value='" + selVal +"'"
             + "appTxt='"+selTxt+"'>"
             + "<span class='mr-md cls cur-pointer'><img src='/studybuilder/images/icons/close.png' onclick='delApp(\""
@@ -965,10 +1008,12 @@ input::-webkit-calendar-picker-indicator {
 
         $('.app-selected').append(existingAppDiv);
       });
-      } else if ($('#inlineCheckboxApp').prop("checked") == false) {
-          $(this).val('');
-          
-        }
+
+           } else if ($('#inlineCheckboxApp').prop("checked") == false) {
+      			$(this).val('');
+      		}
+      
+
       
      
       $(".selectpicker").selectpicker('deselectAll');
@@ -1108,9 +1153,11 @@ input::-webkit-calendar-picker-indicator {
         saveUser();
         enforce=enforce+1;
       }
+
      if(enforce==3){
     	 $('#enforcePasswordId').show();
     }
+
     });
 
     
@@ -1272,8 +1319,10 @@ input::-webkit-calendar-picker-indicator {
         }
   }else{
 	  addUser();
+
   }
   }
+
 
   function setStudySettingByRole(element) {
     if (element == 'Org-level Admin') {
@@ -1294,17 +1343,19 @@ input::-webkit-calendar-picker-indicator {
     } else {
       $('#inlineCheckbox1').attr('disabled', false);
       if($('#inlineCheck6').prop('checked', false)){
-	   $('.dis-checkbox-app').removeClass('disabled', 'disabled');
-	  }
- 	  else {
- 	   $('.dis-checkbox-app').addClass('disabled', 'disabled');
-		 }
-		if($('#inlineCheck5').prop('checked', false)){
-	     $('.dis-checkbox-st').removeClass('disabled', 'disabled');
-		 }
- 		else {
- 		$('.dis-checkbox-st').addClass('disabled', 'disabled');
-		 }
+
+      	   $('.dis-checkbox-app').removeClass('disabled', 'disabled');
+      	  }
+       	  else {
+       	   $('.dis-checkbox-app').addClass('disabled', 'disabled');
+      		 }
+      		if($('#inlineCheck5').prop('checked', false)){
+      	     $('.dis-checkbox-st').removeClass('disabled', 'disabled');
+      		 }
+       		else {
+       		$('.dis-checkbox-st').addClass('disabled', 'disabled');
+      		 }
+
     }
 
   }
@@ -1344,7 +1395,7 @@ input::-webkit-calendar-picker-indicator {
           	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
         }
        
-        
+
         if(  selected_app == tot_app){
         	  $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
               $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
@@ -1363,6 +1414,7 @@ input::-webkit-calendar-picker-indicator {
 	    $('#alertMsg').show('10000');
 	    setTimeout(hideDisplayMessage, 10000);
 	  }
+
   //funtion for validateAdminStatus for deleting
   function validateAdminStatus(obj) {
 	    var buttonText = obj.id;
@@ -1388,7 +1440,9 @@ input::-webkit-calendar-picker-indicator {
 	                 }
 	               });}}}
   
-  function deleteUserAdmin(){
+
+function deleteUserAdmin(){
+
 	     var form = document.createElement('form');
 	      form.method = 'post';
 	      var input = document.createElement('input');
@@ -1406,7 +1460,9 @@ input::-webkit-calendar-picker-indicator {
 	     document.body.appendChild(form);
 	     form.submit();
 	  }
+
 	      //--------------
+
   function addUser(){
 	  var selectedStudies = "";
 	    var permissionValues = "";
@@ -1456,6 +1512,7 @@ input::-webkit-calendar-picker-indicator {
 	        $("body").removeClass("loading");
 	    }
   }
+
 	      
 	      
 	      
@@ -1511,3 +1568,4 @@ function dlShowAllOnArrowClick(i) {
 
 dlShowAllOnArrowClick('favcolors');
 </script>
+

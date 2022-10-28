@@ -1,3 +1,5 @@
+
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@page session="true" %>
@@ -104,7 +106,9 @@
     </form:form>
 
     <!-- Vendor -->
-    <script src="vendor/jquery/jquery-3.1.1.min.js"></script>
+
+    <script src="vendor/jquery/jquery-3.6.0.min.js"></script>
+
     <script src="vendor/boostrap/bootstrap.min.js"></script>
     <script src="vendor/animation/wow.min.js"></script>
     <script src="vendor/datatable/js/jquery.dataTables.min.js"></script>

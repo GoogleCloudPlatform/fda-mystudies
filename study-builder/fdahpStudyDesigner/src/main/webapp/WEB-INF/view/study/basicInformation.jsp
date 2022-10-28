@@ -28,13 +28,46 @@ li.divider {
 li.dropdown-header {
     padding-bottom: 0px !important;
 }
+
+
+ .dropdown-header {
+    display: block;
+    padding: 3px 20px;
+    font-size: 12px;
+    line-height: 1.42857143;
+    color: #777;
+    white-space: nowrap;
+}
+
+.dropdown-menu > li >a {
+    padding: 8px 20px;
+    color: #2d2926;
+    font-weight: 500;
+}
+
+.bootstrap-select .dropdown-menu li a.opt {
+    position: relative;
+    padding-left: 22px;
+}
+
+.bootstrap-select > .dropdown-menu {
+    padding: 7px 15px;
+    background: #fff !important;
+    color: #fff;
+    border-radius: 5px;
+}
+
+
+
 </style>
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
 
       
-<div class="col-sm-10 col-rc white-bg p-none">
+
+<div class="col-sm-9.5 col-rc white-bg p-none">
+
   <form:form
       action="/studybuilder/adminStudies/saveOrUpdateBasicInfo.do?${_csrf.parameterName}=${_csrf.token}&_S=${param._S}"
       data-toggle="validator" role="form" id="basicInfoFormId" method="post"
@@ -76,7 +109,7 @@ li.dropdown-header {
     <!-- Start body tab section -->
     <div class="right-content-body col-xs-12">
 
-      <div class="col-md-12 p-none">
+      <div class="row col-md-12 p-none">
         <div class="col-md-6 pl-none">
           <div class="gray-xs-f mb-xs">
             Study ID
@@ -91,7 +124,7 @@ li.dropdown-header {
             </span>
           </div>
           <div class="form-group customStudyClass">
-            <input type="text" custAttType="cust" autofocus="autofocus"
+            <input type="text" custAttType="studyCust" autofocus="autofocus"
                    class="form-control aq-inp studyIdCls" name="customStudyId"
                    id="customStudyId" maxlength="15"
                    value="${studyBo.customStudyId}"
@@ -142,7 +175,9 @@ li.dropdown-header {
       </div>
       
       <!-- phase2a-sp1 -->
-      <div class="col-md-12 p-none">
+
+      <div class="col-md-12 row p-none">
+
         <div class="col-md-6 pl-none">
           <div class="gray-xs-f mb-xs">
             Study website
@@ -182,7 +217,9 @@ li.dropdown-header {
      
 
       
-      <div class="col-md-12 p-none">
+
+      <div class="col-md-12 row p-none">
+
       
      <div class="col-md-6 pl-none">
         
@@ -261,7 +298,9 @@ li.dropdown-header {
           </div>
         </div>
         
-         <div class="col-md-6 pl-none hidden">
+
+         <div class="col-md-6 pl-none hidden hide">
+
           <div class="gray-xs-f mb-xs">
             Study type
             <span class="requiredStar"> *</span>
@@ -359,7 +398,7 @@ li.dropdown-header {
             </div>
           </div>
          
-           <div class="mt-lg" style="margin-top:-5px !important;  font-size:10px; ">
+           <div class="mt-1" style="font-size:10px; ">
                     <div class="gray-xs-f" style="font-size:12px !important; font-weight:500 !important ; color:#4a5054 !important; display:inline-block">
                      Default image                     
             </div>

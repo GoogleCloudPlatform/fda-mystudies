@@ -16,6 +16,9 @@ public class AppConstants {
   public static final String USER_EMAILID = "userEmail";
   public static final String APPLICATION_ID = "appId";
   public static final String USER_ID = "userId";
+  public static final String DEVICE_TYPE = "deviceType";
+  public static final String DEVICE_OS = "deviceOS";
+  public static final String MOBILE_PLATFORM = "mobilePlatform";
   public static final String STUDY_ID = "studyId";
   public static final String EMAIL = "email";
   public static final String CUSTOM_STUDY_ID = "customId";

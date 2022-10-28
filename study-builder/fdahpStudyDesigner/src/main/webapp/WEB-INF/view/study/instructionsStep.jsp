@@ -2,10 +2,15 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+<style>
+.modal-header .close { padding: 1rem 1rem; margin: -3rem -1rem -1rem auto; }
+</style>
+
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
-<div class="col-sm-10 col-rc white-bg p-none">
+<div class="col-sm-9.5 col-rc white-bg p-none">
   <!--  Start top tab section-->
   <form:form action="/studybuilder/adminStudies/saveOrUpdateInstructionStep.do?_S=${param._S}"
              name="basicInfoFormId"
@@ -51,7 +56,8 @@
       <input type="hidden" id="type" name="type" value="complete"/>
       <input type="hidden" name="questionnairesStepsBo.stepId" id="stepId"
              value="${instructionsBo.questionnairesStepsBo.stepId}">
-      <div class="col-md-6 pl-none">
+             <div class="row">
+      <div class="col-md-6 pl-none mt-xlg">
         <div class="gray-xs-f mb-xs">Step short title or key (15 characters max)
           <span
               class="requiredStar">*
@@ -64,7 +70,7 @@
           <input autofocus="autofocus" type="text" custAttType="cust" class="form-control"
                  name="questionnairesStepsBo.stepShortTitle" id="shortTitleId"
                  value="${fn:escapeXml(instructionsBo.questionnairesStepsBo.stepShortTitle)}"
-                 required="required" data-error="Please fill out this field" 
+                 required="required" data-error="Please fill out this field"
                  maxlength="15" <c:if
               test="${not empty instructionsBo.questionnairesStepsBo.isShorTitleDuplicate && (instructionsBo.questionnairesStepsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>/>
           <div class="help-block with-errors red-txt"></div>
@@ -72,16 +78,17 @@
                  value="${fn:escapeXml(instructionsBo.questionnairesStepsBo.stepShortTitle)}"/>
         </div>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-6 mt-xlg">
         <div class="gray-xs-f mb-xs">Step type</div>
         <div>Instruction step</div>
       </div>
+    </div>
       <div class="clearfix"></div>
       <div class="gray-xs-f mb-xs">Title (250 characters max)
         <span class="requiredStar">*</span>
       </div>
       <div class="form-group">
-        <input type="text" class="form-control" required data-error="Please fill out this field"  name="instructionTitle"
+        <input type="text" class="form-control" required data-error="Please fill out this field" name="instructionTitle"
                id="instructionTitle"
                value="${fn:escapeXml(instructionsBo.instructionTitle)}" maxlength="250"/>
         <div class="help-block with-errors red-txt"></div>
@@ -93,7 +100,7 @@
       </div>
       <div class="form-group">
         <textarea class="form-control" rows="5" id="summernote" name="instructionText"
-                  required data-error="Please fill out this field" 
+                  required data-error="Please fill out this field"
                   maxlength="500">${instructionsBo.instructionText}</textarea>
         <div class="help-block with-errors red-txt"></div>
       </div>
@@ -107,14 +114,16 @@
           </div>
           <div class="form-group">
             <select name="questionnairesStepsBo.destinationStep" id="destinationStepId"
-                    data-error="Please choose one title" class="selectpicker" required data-error="Please fill out this field" >
+                    data-error="Please choose one title" class="selectpicker" required data-error="Please fill out this field">
               <c:forEach items="${destinationStepList}" var="destinationStep">
                 <option
                     value="${destinationStep.stepId}" ${instructionsBo.questionnairesStepsBo.destinationStep eq destinationStep.stepId ? 'selected' :''}>
                   Step ${destinationStep.sequenceNo} : ${destinationStep.stepShortTitle}</option>
               </c:forEach>
               <option
-                   value="0" ${instructionsBo.questionnairesStepsBo.destinationStep eq "0" ? 'selected' :''}>
+
+                  value="0" ${instructionsBo.questionnairesStepsBo.destinationStep eq "0" ? 'selected' :''}>
+
                 Completion Step
               </option>
             </select>
@@ -147,7 +156,9 @@
     	validatesummernote();
       });
   //summernote editor initialization
- 	var maxwords=500;
+
+  var maxwords=500;  
+
     $('#summernote')
         .summernote(
             {
@@ -227,7 +238,7 @@
   function saveIns() {
     $("body").addClass("loading");
     $("#saveId").attr("disabled", true);
-    
+
     var valid = validatesummernote();
     var richTextVal = $('#summernote').val();
     if (null == richTextVal || richTextVal == '' || typeof richTextVal == 'undefined' || richTextVal == '<p><br></p>'){
@@ -293,7 +304,7 @@
 	           '<ul class="list-unstyled"><li>Please fill out this field</li></ul>');
       }
   }
-  
+
   function validateShortTitle(item, callback) {
     var shortTitle = $("#shortTitleId").val();
     var questionnaireId = $("#questionnaireId").val();
@@ -428,7 +439,7 @@
     $(item).prop('disabled', true);
     <c:if test="${actionTypeForQuestionPage ne 'view'}">
     bootbox.confirm({
-      closeButton: false,
+      closeButton: true,
       message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
       buttons: {
         'cancel': {

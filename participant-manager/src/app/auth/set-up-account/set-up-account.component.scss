@@ -77,6 +77,9 @@ div p a {
   cursor: pointer;
   background: #fff;
 }
+.passCriteria {
+  float: right;
+}
 /* 
 meter::-webkit-meter-bar {background: #e6e6e9;} 
 meter::-webkit-meter-optimum-value {background: green;}
@@ -90,9 +93,11 @@ meter::-webkit-meter-even-less-good-value{background:red;} */
 /* meter::-moz-meter-bar { 
   background: red;
 } */
+
 .passCriteria {
   float: right;
 }
+
 
 @media only screen and (max-width: 1020px) and (min-width: 320px) {
   #desktop-menu {
@@ -108,6 +113,9 @@ meter::-webkit-meter-even-less-good-value{background:red;} */
   display: none !important;
 }
 
+
 .search-icon {
   display: none !important;
 }
+
+

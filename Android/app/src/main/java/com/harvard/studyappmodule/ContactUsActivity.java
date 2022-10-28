@@ -16,26 +16,31 @@
 package com.harvard.studyappmodule;
 
 import android.app.Activity;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatEditText;
-import androidx.appcompat.widget.AppCompatTextView;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatTextView;
 import com.harvard.R;
 import com.harvard.studyappmodule.events.ContactUsEvent;
 import com.harvard.studyappmodule.studymodel.ReachOut;
 import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
+import com.harvard.utils.NetworkChangeReceiver;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
 import java.util.HashMap;
 
-public class ContactUsActivity extends AppCompatActivity implements ApiCall.OnAsyncRequestComplete {
+public class ContactUsActivity extends AppCompatActivity implements ApiCall.OnAsyncRequestComplete,
+    NetworkChangeReceiver.NetworkChangeCallback {
 
   private RelativeLayout backBtn;
   private AppCompatTextView title;
@@ -50,12 +55,15 @@ public class ContactUsActivity extends AppCompatActivity implements ApiCall.OnAs
   private static final int CONTACT_US = 15;
   private AppCompatTextView submitButton;
   private CustomFirebaseAnalytics analyticsInstance;
+  private TextView offlineIndicatior;
+  private NetworkChangeReceiver networkChangeReceiver;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_contact_us);
     analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
+    networkChangeReceiver = new NetworkChangeReceiver(this);
     initializeXmlId();
     setFont();
     bindEvents();
@@ -80,6 +88,7 @@ public class ContactUsActivity extends AppCompatActivity implements ApiCall.OnAs
     message = (AppCompatEditText) findViewById(R.id.edittxt_message);
 
     submitButton = (AppCompatTextView) findViewById(R.id.submitButton);
+    offlineIndicatior = findViewById(R.id.offlineIndicatior);
   }
 
   private void setFont() {
@@ -228,6 +237,34 @@ public class ContactUsActivity extends AppCompatActivity implements ApiCall.OnAs
       if (responseCode == CONTACT_US) {
         Toast.makeText(ContactUsActivity.this, errormsg, Toast.LENGTH_SHORT).show();
       }
+    }
+  }
+
+  @Override
+  public void onNetworkChanged(boolean status) {
+    if (!status) {
+      offlineIndicatior.setVisibility(View.VISIBLE);
+      submitButton.setClickable(false);
+      submitButton.setAlpha(0.5F);
+    } else {
+      offlineIndicatior.setVisibility(View.GONE);
+      submitButton.setClickable(true);
+      submitButton.setAlpha(1F);
+    }
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+    registerReceiver(networkChangeReceiver, intentFilter);
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    if (networkChangeReceiver != null) {
+      unregisterReceiver(networkChangeReceiver);
     }
   }
 }

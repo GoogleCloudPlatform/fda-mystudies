@@ -120,6 +120,10 @@ public class LoginController {
       Model model)
       throws UnsupportedEncodingException {
     logger.entry(String.format("%s request", request.getRequestURI()));
+    String sessionid = ((HttpServletRequest) request).getSession().getId();
+    response.setHeader("Set-Cookie", "JSESSIONID=" + sessionid + "Secure; SameSite=Strict;");
+    response.setHeader("X-Content-Type-Options", "nosniff");
+    response.setHeader("Cache-Control", "no-cache; no-store; must-revalidate;");
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     model.addAttribute("loginRequest", new LoginRequest());
 
@@ -169,6 +173,10 @@ public class LoginController {
       HttpServletResponse response)
       throws IOException, JSONException {
     logger.entry(String.format("%s request", request.getRequestURI()));
+    String sessionid = ((HttpServletRequest) request).getSession().getId();
+    response.setHeader("Set-Cookie", "JSESSIONID=" + sessionid + "Secure; SameSite=Strict;");
+    response.setHeader("X-Content-Type-Options", "nosniff");
+    response.setHeader("Cache-Control", "no-cache; no-store; must-revalidate;");
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     String tempRegId = cookieHelper.getCookieValue(request, TEMP_REG_ID_COOKIE);

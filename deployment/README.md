@@ -24,8 +24,8 @@ Project | Name | Purpose
 ---------|------------|---------------
 Devops | `{PREFIX}-{ENV}-devops` | This project executes the Terraform CICD pipeline that keeps your infrastructure aligned with the state defined in the [`deployment/terraform/`](/deployment/terraform/) directory of your GitHub repository
 Apps | `{PREFIX}-{ENV}-apps` | This project stores the container images for each of your FDA MyStudies applications, updates those images with CICD pipelines that monitor changes you make to the application directories of your GitHub repository, and administers the Kubernetes cluster that operates those images ([**Figure 2**](#figure-2-application-architecture) diagrams each the applications and how they related to their data sources)
-Data | `{PREFIX}-{ENV}-data` | This project contains the MySQL databases that support each of the FDA MyStudies applications, and the blob storage buckets that hold study resources and consent documents
-Firebase | `{PREFIX}-{ENV}-firebase` | This project contains the NoSQL database that stores the study response data
+Data | `{PREFIX}-{ENV}-data` | This project contains the MySQL databases that support each of the FDA MyStudies applications, Cloud Healthcare API that allows storing, maintaining, and backing up personal health information(PHI), and the blob storage buckets that hold study resources and consent documents
+Firebase | `{PREFIX}-{ENV}-firebase` | This project manages Android mobile development platform
 Networks | `{PREFIX}-{ENV}-networks` | This project manages the network policies and firewalls 
 Secrets | `{PREFIX}-{ENV}-secrets` | This project manages the deployment’s secrets, such as client ids and client secrets
 Audit | `{PREFIX}-{ENV}-audit` | This project stores the audit logs for the FDA MyStudies platform and applications
@@ -46,10 +46,10 @@ Application | URL | Notes
 More information about the purpose of each application can be found in the [*Platform Overview*](/documentation/architecture.md) guide. Detailed information about configuration and operation of each application can be found in their [respective READMEs](/documentation/README.md).
 
 #### Figure 1: Overall architecture of the semi-automated deployment
-![Architecture](/documentation/images/deployment-reference-architecture.svg "Architecture")
+![Architecture](/documentation/images/deployment-reference-architecture.png "Architecture")
 
 #### Figure 2: Application architecture
-![Applications](/documentation/images/apps-reference-architecture.svg "Applications")
+![Applications](/documentation/images/apps-reference-architecture.svg.png "Applications")
 
 The deployment process takes the following approach:
 1. Create a copy of the FDA MyStudies repository that you will use for your deployment
@@ -182,6 +182,12 @@ The deployment process takes the following approach:
     cd $GIT_ROOT/deployment/terraform/cicd
     terraform init && terraform apply
     ```
+1. The Cloud Build service account will need to be a Shared VPC Admin (XPN Admin) at the organization level as this permission cannot be granted at the folder level.
+    1. Open [Cloud IAM](https://console.cloud.google.com/iam-admin/iam) in your `{PREFIX}-{ENV}-devops` project, and copy the Member name of the service account with the role `Cloud Build Service Agent`. The format should be `############@cloudbuild.gserviceaccount.com`
+    1. At the top of the page change from the `{PREFIX}-{ENV}-devops` project to the organization containing your folder and projects.
+    1. Click Add to add a new member to the organization
+    1. Enter the Cloud Build service account in the New members field and add the role `Compute Shared VPC Admin` and click `Save`.
+
 ### Deploy your platform infrastructure
 
 1. Commit your local git working directory (which now represents your desired infrastructure state) to a new branch in your cloned FDA MyStudies repository, for example using:
@@ -213,9 +219,8 @@ The deployment process takes the following approach:
 
 ### Configure your deployment’s databases
 
-1. [Create](https://console.cloud.google.com/datastore/) a [*Native mode*](https://cloud.google.com/datastore/docs/firestore-or-datastore) Cloud Firestore database in your `{PREFIX}-{ENV}-firebase` project (the location selected here does not need to match the region configured in your `deployment.hcl` file) 
-1. Use Terraform and CICD to create Firestore indexes, a Cloud SQL instance, user accounts and IAM role bindings
-    - Uncomment the blocks for steps 5.1 through 5.6 in [`mystudies.hcl`](/deployment/mystudies.hcl), for example:
+1. Use Terraform and CICD to create Cloud SQL instance, user accounts and IAM role bindings
+    - Uncomment the blocks for steps 5.1 through 5.2 in [`mystudies.hcl`](/deployment/mystudies.hcl), for example:
          ```bash
          sed -e 's/#5# //g' -i.backup $GIT_ROOT/deployment/mystudies.hcl
          ```
@@ -250,7 +255,6 @@ The deployment process takes the following approach:
          gsutil cp \
            ${GIT_ROOT}/study-builder/sqlscript/* \
            ${GIT_ROOT}/response-datastore/sqlscript/mystudies_response_server_db_script.sql \
-           ${GIT_ROOT}/participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql \
            ${GIT_ROOT}/participant-datastore/sqlscript/mystudies_participant_datastore_db_script.sql \
            ${GIT_ROOT}/auth-server/sqlscript/mystudies_oauth_server_hydra_db_script.sql \
            ${GIT_ROOT}/hydra/sqlscript/create_hydra_db_script.sql \
@@ -334,7 +338,7 @@ The deployment process takes the following approach:
     `manual-mystudies-email-address` | The login of the email account you want MyStudies to use to send system-generated emails | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-email-address" --data-file=-`
     `manual-mystudies-email-password` | The password for that email account | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-email-password" --data-file=-`
     `manual-mystudies-contact-email-address` | The email address that the in-app contact and feedback forms will send messages to | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-contact-email-address" --data-file=-`
-    `manual-mystudies-from-email-address` | The return email address that is shown is system-generated messages (for example, `no-reply@example.com`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-from-email-address" --data-file=-`
+    `manual-mystudies-from-email-address` | The return email address that is shown is system-generated messages (for example, `no-reply@example.com`) This email should be an alias of `manual-mystudies-email-address`. Alternaitvely, provide the same email as `manual-mystudies-email-address` here as well | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-from-email-address" --data-file=-`
     `manual-mystudies-from-email-domain` | The domain of the above email address (just the value after “@”) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-from-email-domain" --data-file=-`
     `manual-mystudies-smtp-hostname` | The hostname for your email account’s SMTP server (for example, `smtp.gmail.com`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-smtp-hostname" --data-file=-`
     `manual-mystudies-smtp-use-ip-allowlist` | Typically ‘false’; if ‘true’, the platform will not authenticate to the email server and will rely on the allowlist configured in the SMTP service | Set this value to `true` or `false` now (you can update it later) | `echo -n "false" \| gcloud secrets versions add "manual-mystudies-smtp-use-ip-allowlist" --data-file=-`
@@ -342,16 +346,15 @@ The deployment process takes the following approach:
     `manual-org-name` | The name of your organization that is displayed to users, for example ‘Sincerely, the `manual-org-name` support team’ | Set this value now | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-org-name" --data-file=-`
     `manual-terms-url` | URL for a terms and conditions page that the applications will link to (for example, `https://example.com/terms`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-terms-url" --data-file=-`
     `manual-privacy-url` | URL for a privacy policy page that the applications will link to (for example, `https://example.com/privacy`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-privacy-url" --data-file=-`
-    `manual-mobile-app-appid` | The value of the `App ID` (15 characters max) that you will configure on the Settings page of the [Study builder](/study-builder/) user interface when you create your first study (you will also use this same value when configuring your mobile applications for deployment) | Set now if you know what value you will use when you create your first study - otherwise enter a placeholder and update once you have created a study in the [Study builder](/study-builder) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mobile-app-appid" --data-file=-`
-    `manual-android-bundle-id` | The value of [`applicationId`](https://developer.android.com/studio/build/application-id) that you will configure in [`Android/app/build.gradle`](/Android/app/build.gradle) during [Android configuration](/Android/), for example `{PREFIX}_{ENV}.{DOMAIN}` (note that some characters are not permitted) | If you know what value you will use during [Android](/Android/) deployment you can set this now, otherwise enter a placeholder and update later (leave as placeholder if you will be deploying to iOS only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-android-bundle-id" --data-file=-`
     `manual-fcm-api-url` | [URL](https://firebase.google.com/docs/reference/fcm/rest) of your Firebase Cloud Messaging API ([documentation](https://firebase.google.com/docs/cloud-messaging/http-server-ref)) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-fcm-api-url" --data-file=-`
-    `manual-android-server-key` | The Firebase Cloud Messaging [server key](https://firebase.google.com/docs/cloud-messaging/auth-server#authorize-legacy-protocol-send-requests) that you will obtain during [Android configuration](/Android/) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-android-server-key" --data-file=-`
-    `manual-android-deeplink-url` | The URL to redirect to after Android login (for example, `app://{PREFIX}-{ENV}.{DOMAIN}/mystudies`) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-android-deeplink-url" --data-file=-`
-    `manual-ios-bundle-id` | The value you will obtain from Xcode (Project target > General tab > Identity section > Bundle identifier) during [iOS configuration](/iOS/) - for a production application, the bundle ID needs to be verified with Apple and is usually a reverse domain name that you own; it is a unique app identifier and application capabilities are mapped to this value ([details](https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids)) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ios-bundle-id" --data-file=-`
-    `manual-ios-certificate` | The value of the Base64 converted `.p12` file that you will obtain during [iOS configuration](/iOS/) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ios-certificate" --data-file=-`
-    `manual-ios-certificate-password` | The value of the password for the `.p12` certificate (necessary if your certificate is encrypted - otherwise leave empty) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ios-certificate-password" --data-file=-`
-    `manual-ios-deeplink-url` | The URL to redirect to after iOS login (for example, `app://{PREFIX}-{ENV}.{DOMAIN}/mystudies`) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ios-deeplink-url" --data-file=-`
-     > Note: When updating secrets after this initial deployment, you must refresh your Kubernetes cluster and restart the relevant pods to ensure the updated secrets are propagated to your applications (you do not need to do this now - only when making updates later), for example you can update your Kubernetes state with:
+    `manual-android-deeplink-url` | The sign-in screen is run on the Hydra-based auth server. This URL is a deep link that helps redirect users to the native mobile app after they sign in. (for example, `app://{PREFIX}-{ENV}.{DOMAIN}/mystudies`) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-android-deeplink-url" --data-file=-`
+    `manual-ios-deeplink-url` | The sign-in screen is run on the Hydra-based auth server. This URL is a deep link that helps redirect users to the native mobile app after they sign in. (for example, `app://{PREFIX}-{ENV}.{DOMAIN}/mystudies`) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ios-deeplink-url" --data-file=-`
+    `manual-region-id` | To set FHIR region in Google healthcare API (for example, `us-east1`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-fhir-enabled" --data-file=-`
+    `manual-consent-enabled` | To enable Google healthcare consent managment API (for example, `true` or `false`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-consent-enabled" --data-file=-`
+    `manual-fhir-enabled` | To enable FHIR and/or FHIR de-identification in Google healthcare API (for example, `false` or `fhir` or `fhir&did`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-fhir-enabled" --data-file=-`
+	`manual-discard-fhir` | To discard FHIR responses in Google healthcare API (for example, `true or false`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-discard-fhir-response-enabled" --data-file=-`    
+	`manual-ingest-data-to-bigquery` | To ingest healthcare API response to BigQuery (for example, `true` or `false`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ingest-data-to-bigquery" --data-file=-`     
+	 > Note: When updating secrets after this initial deployment, you must refresh your Kubernetes cluster and restart the relevant pods to ensure the updated secrets are propagated to your applications (you do not need to do this now - only when making updates later), for example you can update your Kubernetes state with:
      ```bash
      cd $GIT_ROOT/deployment/terraform/kubernetes
      terraform init && terraform apply
@@ -441,36 +444,35 @@ The deployment process takes the following approach:
            $PREFIX $ENV <YOUR_DESIRED_LOGIN_EMAIL> <YOUR_DESIRED_PASSWORD>
          ```
 
+### Configure Logging & Monitoring (optional)
+
+There are optional logging, monitoring, alerts, and notifications that can be configured for a deployment. See [`/documentation/monitoring.md`](/documentation/monitoring.md) for guidance on configuring this as well as recommended alert thresholds.
+
 ### Configure your first study
 
 1. Navigate your browser to `studies.{PREFIX}-{ENV}.{DOMAIN}/studybuilder/` (the trailing slash is necessary) and use the account credentials that you created with the `create_study_builder_superadmin.sh` script to log into the [`Study builder`](/study-builder/) user interface
 1. Change your password, then create any additional administrative accounts that you might need
-1. Create a new study with the `App ID` that you set in the `manual-mobile-app-appid` secret, or choose a new `App ID` that you will update `manual-mobile-app-appid` with
-1. Publish your study to propagate your study values to the other platform components
+1. Create a new app record in the Apps section. Read more about creating and managing apps in the next section. 
+1. Create a new study in the Studies section and associate it with the app you want it to appear in. 
+1. Publish your study to propagate your study values to the other platform components.
 1. Navigate your browser to `participants.{PREFIX}-{ENV}.{DOMAIN}/participant-manager/` (the trailing slash is necessary), then use the account credentials that you created with the `create_participant_manager_superadmin.sh` script to log into the [`Participant manager`](/participant-manager/) user interface (if the `Participant Manager` application fails to load, confirm you are using `https` - this deployment requires `https` to be fully operational)
 1. You will be asked to change your password; afterwards you can create any additional administrative accounts that you might need
 1. Confirm your new study is visible in the `Participant manager` interface
 
-### Prepare your mobile applications
+### Manage apps in the Study Builder 
+1. You can use the `Apps` section in the Study Builder to create and manage multiple mobile apps running off a single deployment of the platform.
+1. Start by creating a new app record by filling out the required fields.
+1. Once an app record is created, studies can be mapped to it in the Studies section. 
+1. To start testing an app, fill out additional required app properties and configurations in the Study Builder, and publish the app to propagate the app’s properties to other platform components that need them, using the `Publish App` action. If you are testing out a new version of an app that already exists, ensure you have retained current app version information in the Developer Configurations section at this point - do not replace it with new version information. 
+1. Confirm your app is visible in the Participant Manager interface and test out your app.
+1. Once the app is tested and ready to go to the app stores, update or finalize the app properties to correspond to the app store version of the app that will go live, and publish the latest values, again using the `Publish App` action. At this point, ensure that the app version information in the Developer Configurations section still retains the current version information and that the `Force upgrade` field is set to `No`, even if you are pushing out a new version of an existing app to the app stores.
+1. Upload the app to the app stores for review and approval.
+1. Once the app is approved in both the app stores and live, revisit the Study Builder and update the app version information in the Developer Configurations section to the latest app version information. Also, at this point, if you wish to enforce an app update, update the `Force upgrade` field to `Yes`. Use the `Publish App` action again for these changes to take effect. 
+1. These steps will ensure that app users get prompted to update their apps to the new version when they open the existing apps on their device.
+1. Also, once your app is live, mark the app as `distributed` in the Study Builder to prevent inadvertent changes to key configurations that drive your live app.
 
-1. Follow the instructions in either or both [`Android`](/Android/) and [`iOS`](/iOS/) deployment guides (if you haven’t created a study yet, you can configure the mobile applications with the `APP_ID` you plan on using when you create your first study in the [`Study builder`](/study-builder/))
-1. Open Secret Manager in your `{PREFIX}-{ENV}-secrets` project and update the secrets you previously configured with placeholder values (you can skip this step if you already configured your secrets with the appropriate values - if you do update secret values, make sure to refresh your Kubernetes cluster and applications as described above)
-    - `manual-mobile-app-appid` is the value of the `App ID` (15 characters max) that you configured, or will configure, on the Settings page of the [`Study builder`](/study-builder/)
-    - `manual-android-bundle-id` is the value of [`applicationId`](https://developer.android.com/studio/build/application-id) that you configured in [`Android/app/build.gradle`](/Android/app/build.gradle), for example `{PREFIX}_{ENV}.{DOMAIN}` (note that some characters are not permitted)
-    - `manual-fcm-api-url` is the URL of your [Firebase Cloud Messaging API](https://firebase.google.com/docs/reference/fcm/rest)
-    - `manual-android-server-key` is your Firebase Cloud Messaging [server key](https://firebase.google.com/docs/cloud-messaging/auth-server#authorize-legacy-protocol-send-requests)
-    - `manual-android-deeplink-url` is the URL to redirect to after Android login (for example, `app://{PREFIX}-{ENV}.{DOMAIN}/mystudies`)
-    - `manual-ios-bundle-id` is the value you obtained from Xcode (in production use-cases, this  bundle ID needs to be [verified with Apple](https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids))
-    - `manual-ios-certificate` is the value of the Base64 converted `.p12` file
-    - `manual-ios-certificate-password` is the value of the password for the `.p12` certificate 
-    - `manual-ios-deeplink-url` is the URL to redirect to after iOS login
-1. Initialize your `Participant datastore` database to work with your mobile applications
-    - Once a study with the `App ID` corresponding to the `manual-mobile-app-appid` secret is created and published using the [`Study builder`](/study-builder) user interface, a corresponding 
-app record will appear in the [`Participant manager`](/participant-manager/) user interface (if you created a study before all of your platform components were operational, you can reinitialize this process by using the `Study builder` user interface to pause and resume the study) 
-    - Once the `App ID` appears in `Participant manager`, run the [`deployment/scripts/copy_app_info_to_sql.sh`](/deployment/scripts/copy_app_info_to_sql.sh) script to update the remaining databases, for example:
-         ```bash
-         $GIT_ROOT/deployment/scripts/copy_app_info_to_sql.sh $PREFIX $ENV
-         ```
+1. Barring these few key configurations, most other app properties can be updated after the app is live. 
+1. Note: Any from email addresses that you configure in the app’s properties must be an [alias](https://support.google.com/mail/answer/22370) of the `manual-mystudies-email-address` that is configured in the Secret Manager as part of the platform deployment process. If an alias is not available, please use the same email here. [This Github issue](https://github.com/GoogleCloudPlatform/fda-mystudies/issues/4104) has additional detail on the alias requirements.
 
 ### Clean up
 
@@ -490,5 +492,431 @@ app record will appear in the [`Participant manager`](/participant-manager/) use
 
 When updating FDA MyStudies it may be necessary to migrate the databases to support the new version. Detailed instructions can be found in the [Database Migration README](/db-migration/README.md).
 
+### Study Resources in Cloud Storage (2.0.5 upgrade)
+
+Release 2.0.5 changed permissions for the Cloud Storage buckets used for study resources to remove public access and use signed URLs. New deployments will use this behavior automatically. When upgrading a prior release to 2.0.5 or greater, you will need to change permissions to the storage bucket using one of the following processes.
+
+#### Manual process:
+Go to Data Project ({prefix}-{env}-data) and remove `AllUser` access from the ({prefix}-{env}-mystudies-study-resources) storage bucket and provide access to the service accounts below with storage.objectAdmin role
+
+*  serviceAccount:participant-manager-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com
+*  serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com
+*  serviceAccount:study-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com
+
+#### Script process:
+In the Terraform/{prefix}-{env}-data /main.tf file, please replace the existing `module "{prefix}_{env}_mystudies_study_resources>"` with the values below, replacing with your prefix and env values
+
+```bash
+module "{prefix}_{env}_mystudies_study_resources" {
+  source = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
+  version = "~> 1.4"
+
+  name = "{prefix}-{env}-mystudies-study-resources"
+  project_id = module.project.project_id
+  location = "us-east1"
+
+  iam_members = [
+    {
+      member = "serviceAccount:study-builder-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com"
+      role = "roles/storage.objectAdmin"
+    },
+    {
+      member = "serviceAccount:study-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com"
+      role = "roles/storage.objectAdmin"
+    },
+    {
+      member = "serviceAccount:participant-manager-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com"
+      role = "roles/storage.objectAdmin"
+    },
+  ]
+}
+```
+
+#### tfengine process:
+
+Pull the latest code (2.0.5+) and run the following commands
+
+```bash
+cd $GIT_ROOT
+tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
+git checkout -b bucket-permissions
+git add $GIT_ROOT/deployment/terraform
+git commit -m "bucket-permissions"
+git push origin bucket-permissions
+```
+
+Then create a pull request from `bucket-permissions` branch to your target branch
+Once your pull request pre-submit checks have completed successfully, and you have received code review approval, merge your pull request to trigger terraform apply(you can view the status of the operation in the Cloud Build history of your devops project)
+
+### Study Import / Export (2.0.6 upgrade)
+
+Release 2.0.6 added additional functionality to support study import and export. This requires a permission change and an additional secret to be added. When upgrading a prior release to 2.0.6 or greater, you will need to perform the following steps.
+
+#### Permission change to import bucket
+
+Update your repository with the latest changes from release 2.0.6 or greater, create a new working branch and make the following changes:
+
+1.  In the file `deployment/terraform/{prefix}-{env}-data/main.tf` find the section `module "{prefix}_{env}_mystudies_sql_import" { [...] }` and completely replace it with the following, substituting your values for `{prefix}` & `{env}` and changing the location to your preference:
+
+    ```bash
+    module "{prefix}-{env}_mystudies_sql_import" {
+    source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
+    version = "~> 1.4"
+
+    name       = "{prefix}-{env}-mystudies-sql-import"
+    project_id = module.project.project_id
+    location   = "us-east1"
+
+    iam_members = [
+      {
+        member = "serviceAccount:${module.mystudies.instance_service_account_email_address}"
+        role   = "roles/storage.objectViewer"
+      },
+      {
+        member = "serviceAccount:study-builder-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com"
+        role   = "roles/storage.objectAdmin"
+      },
+    ]
+    }
+
+    ```
+
+1.  Create a pull request from this working branch to your specified branch, which will start the terraform plan and validation. After completion of the plan and validation, merge the pull request. That will run the terraform apply.
+
+#### Add import / export bucket to Kubernetes cluster shared secrets
+
+To add the bucket to the shared secrets, create a new working branch and make the following change:
+
+1.  Edit the file `deployment/terraform/kubernetes/main.tf` and in the section `# Shared secrets` add the following line to the section `data = { [...] }`, substituting your values for `{prefix}` & `{env}`
+
+    ```bash
+    study_export_import_bucket_name   = "{prefix}_{env}-mystudies-sql-import" 
+    ```
+
+1.  Create a pull request from this working branch to your specified branch, which will start the terraform plan and validation. After completion of the plan and validation, merge the pull request. That will run the terraform apply.
+
+1.  Pull the latest code from your repository and checkout your specified branch which contains the new shared secret.
+
+1.  Run the following commands to apply the changes to your cluster:
+
+    ```bash
+    cd $GIT_ROOT/deployment/terraform/kubernetes/
+    terraform init && terraform apply
+    ```
+
+1. Run the following command to apply the latest Study Builder deployment changes:
+
+    ```bash
+    kubectl apply \
+      -f $GIT_ROOT/study-builder/tf-deployment.yaml
+    ```
+
+### Managing apps (2.0.8 upgrade)
+
+Release 2.0.8 added functionality to support managing mobile apps in the deployment with the Study Builder interface. This requires that apps that are running in existing deployments must be updated (and new versions published to the app stores) if the deployment is being upgraded to 2.0.8 or greater. 
+
+#### Required steps when upgrading to 2.0.8 or greater
+
+When upgrading a prior release to 2.0.8 or greater, you will need to perform the following steps to continue to support existing apps.
+
+1. Take the latest code and generate the mobile app build following the latest iOS and Android app build and deployment instructions given in the repo. Ensure you use the same App ID as before.
+1. Sign in to the Study Builder and create an app record that has the exact same App ID that you have been using for your app. Ensure that you choose the correct app settings as well as applicable to your live app (gateway or standalone type of app, platform(s) that need to be supported etc.)
+1. Cross-check if all the studies that belong to the app, are mapped to this app in their respective study creation sections.
+1. In the newly created app record, fill out all the required app properties and configurations as applicable to a test version of the app and publish the app, using the `Publish App` action.  At this point, ensure you have retained current app version information in the Developer Configurations section - do not replace it with new version information. 
+1. Confirm your app is still visible in the Participant Manager interface. Test out your newly generated app with the published configurations. 
+1. Once the app is tested and ready to go to the app stores, update or finalize these app properties to correspond to the app store version of the app that will go live, and publish the latest values, again using the `Publish App` action. At this point, ensure that the app version information in the Developer Configurations section still retains the current version information and that the `Force upgrade` field is set to `No`.
+1. Upload the app to the app stores for review and approval.
+1. Once the app is approved in both the app stores and live, revisit the Study Builder and update the app version information in the Developer Configurations section to the latest app version information. Also, at this point, if you wish to enforce an app update, update the `Force upgrade` field to `Yes`. Use the `Publish App` action again for these changes to take effect. 
+1. These steps will ensure that app users get prompted to update their apps to the new version when they open the existing apps on their device.
+1. As a last step, once your app is live, mark the app as `distributed` in the Study Builder to prevent inadvertent changes to key configurations that drive your live app.
+
+
+#### Changes to iOS push notifications in 2.0.8 or greater
+
+This release uses Firebase Cloud Messaging (FCM) for push notifications for the iOS app. Follow the step `Configure Firebase Cloud Messaging (FCM) for push notifications` in the [iOS Configuration Instructions](/iOS/README.md#configuration-instructions) to set up FCM for iOS. Note that the server key generated here is to be entered into the developer configurations section of the app in the Study builder. 
+
+#### Changes to secrets when upgrading to 2.0.8 or greater
+
+The following secrets which were in earlier versions are no longer being used as of 2.0.8:
+-   `manual-android-bundle-id`
+-   `manual-android-server-key`
+-   `manual-ios-bundle-id`
+-   `manual-ios-certificate`
+-   `manual-ios-certificate-password`
+-   `manual-mobile-app-appid`
+
+These secrets can be deleted from your deployment with the following steps. However, make sure you have a record of them handy before deleting, as these need to be updated in the Study Builder interface when [managing the apps](#manage-apps-in-the-study-builder)
+
+1. Update your repository with the latest changes from release 2.0.8 or greater, create a new working branch and make the following changes:
+1. In the file `deployment/terraform/{prefix}-{env}-secret/main.tf`, remove the following resources:
+    -   ```
+        resource "google_secret_manager_secret" "manual_mobile_app_appid" {
+          [...]
+        }
+        ```
+    -   ```
+        resource "google_secret_manager_secret" "manual_android_bundle_id" {
+          [...]
+        }
+        ```
+    -   ```
+        resource "google_secret_manager_secret" "manual_android_server_key" {
+          [...]
+        }
+        ```
+    -   ```
+        resource "google_secret_manager_secret" "manual_ios_bundle_id" {
+          [...]
+        }
+        ```
+    -   ```
+        resource "google_secret_manager_secret" "manual_ios_certificate" {
+          [...]
+        }
+        ```
+    -   ```
+        resource "google_secret_manager_secret" "manual_ios_certificate_password" {
+          [...]
+        }
+        ```
+1.  Create a pull request from this working branch to your specified branch, which will start the terraform plan and validation. After completion of the plan and validation, merge the pull request. That will run the terraform apply.
+
+### Whitelisting the TCP Port 10256 in the firewall when upgrading to 2.0.10 or greater
+
+One of the Backend service health checks is using the 10256 port, and it was observed this port needs to be whitelisted.
+Please follow the below steps to whitelist the port:
+1.  Update your repository with the latest changes from release 2.0.10 or greater, create a new working branch, and make the following changes.
+1.  In the deployment/terraform/<Prefix>-<env>-network/main.tf, find the section resource "google_compute_firewall" "fw_allow_k8s_ingress_lb_health_checks" { [...] } and add below script along with other port numbers script: 
+ 
+        allow {
+         protocol = "tcp"
+         ports  = ["10256"]
+        }   
+1.  Create a pull request from this working branch to your specified branch, which will start the terraform plan and validation. After completion of the plan and validation, merge the pull request. That will run the terraform apply.
+ 
+### Ingress version Upgrade when upgrading to 2.0.10 or greater
+ 
+ The Beta API versions (extensions/v1beta1 and networking.k8s.io/v1beta1) of Ingress are no longer served for GKE clusters created on versions 1.22 and later.
+ We have upgraded the API version in the deployment/kubernetes/ingress.yaml as part of this release. After updating the repo with the latest changes from release 2.0.10 or greater, please follow the below steps:
+1.  Pull the latest code from your repository and checkout your specified branch, which contains the upgraded ingress.yaml.
+1.  Run the following command to apply the latest ingress.yaml:
+ 
+         kubectl apply \
+             -f $GIT_ROOT/deployment/kubernetes/ingress.yaml
+1. Update firewalls:
+      - Run `kubectl describe ingress $PREFIX-$ENV`
+      - Look at the suggested commands under "Events", in the form of "Firewall
+        change required by network admin"
+      - Run each of the suggested commands
+1. Verify the status of your Kubernetes cluster:
+     - Check the [Kubernetes ingress dashboard](https://console.cloud.google.com/kubernetes/ingresses) in your `{PREFIX}-{ENV}-apps` project to view the status of your cluster ingress (if status is not green, repeat the firewall step above)
+    - Check the [Kubernetes workloads dashboard](https://console.cloud.google.com/kubernetes/workload) in your `{PREFIX}-{ENV}-apps` project to view the status of your applications (confirm all applications are green before proceeding)
+ 
+### Migrate to Containerd node images before GKE v1.24
+ 
+1. Update your repository with the latest changes from release 2.0.10 or greater, create a new working branch, and make the following changes.
+1. In the deployment/terraform/<Prefix>-<env>-apps/main.tf, find the section 
+module "<prefix>_<env>_gke_cluster" { [...] } and add below script at the end of this section:
+ 
+     ```
+     node_pools = [
+        {
+          name       = "default-node-pool"
+          image_type = "COS_CONTAINERD"
+        },
+      ]
+    }
+    ```
+3.  Create a pull request from this working branch to your specified branch, which will start the terraform plan and validation. After completion of the plan and validation, merge the pull request. That will run the terraform apply.
+
+### Migration to Cloud Healthcare API from Firestore (2.0.11 Upgrade)
+Release 2.0.11 added functionality to support Healthcare API’s like Consent API, FHIR, DID and Big query. This requires that apps that are running in existing deployments must be updated (and new versions published to the app stores) if the deployment is being upgraded to 2.0.11. These functionality shall be available only for new study and not for existing study. Brief details of the API’s integrated is provide below:
+	
+*	Consent API: This API shall help in the integration of the GCP Consent Management API into the platform. The vision is to leverage the capabilities of the Consent API in managing consent given by the app user/study participant for the collection and access or use of various types of their data by a study. 
+	
+*	FHIR: The integration of the GCP FHIR API into the platform will be handled in this deployment, specifically to facilitate the creation and storage of FHIR-compliant study metadata and response data.
+
+*	DID:The integration with DID API will help the platform to redact sensitive data from the responses collected, and provide the cleansed version of the data for audiences to use for research purposes.
+
+*	Big Query: This will be helpful for data scientists and researchers to carry out data analytics and operations, and derive insights from the collected data. It would be useful to stream data collected in the Response Server into BigQuery. BigQuery will be provided as an optional appended service to the GCP MyStudies platform and will connect to the Response Server to provide data export, reporting and analytics functions.
+
+#### Note: Update your repository with the latest changes from release 2.0.11 or greater, create a new working branch and make the following changes:
+
+#### Enabling Healthcare API and adding required permissions to Applications
+1.  To enable the Healthcare API in the Data project, edit the file `deployment/terraform/{prefix}-{env}-data/main.tf` and in the section `# Create the project and optionally enable APIs` add the following line to the section `activate_apis = [.....]`.
+	```
+		`"healthcare.googleapis.com",`
+	```	
+1.  To provide Healthcare API access to all the application service accounts, edit the file `deployment/terraform/{prefix}-{env}-data/main.tf` and in the section `module "project_iam_members"` add the following lines to the section `bindings = {.......}`.
+	
+	-   ```   
+	    "roles/healthcare.consentArtifactEditor" = [
+	      "serviceAccount:response-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	      "serviceAccount:study-builder-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	      "serviceAccount:consent-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	      "serviceAccount:enroll-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	      "serviceAccount:user-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	    ],
+	    ```
+	-   ``` 
+	    "roles/healthcare.consentArtifactReader" = [
+	      "serviceAccount:participant-manager-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com"  
+	    ],
+	    ```
+	-   ``` 
+	    "roles/healthcare.consentEditor" = [
+	      "serviceAccount:consent-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	      "serviceAccount:enroll-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	      "serviceAccount:user-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	    ],
+	    ```
+	-   ```   
+	    "roles/healthcare.consentReader" = [
+	      "serviceAccount:response-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	    ],
+	    ```
+	-   ``` 
+	    "roles/healthcare.consentStoreAdmin" = [
+	      "serviceAccount:study-builder-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	    ],
+	    ```
+	-   ```   
+	    "roles/healthcare.consentStoreViewer" = [
+	      "serviceAccount:response-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	    ],
+	    ```
+	-   ``` 
+	    "roles/healthcare.datasetAdmin" = [
+	      "serviceAccount:response-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	      "serviceAccount:study-builder-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	    ],
+	    ```
+	-   ``` 
+	    "roles/healthcare.fhirResourceEditor" = [
+	      "serviceAccount:study-builder-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	      "serviceAccount:response-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	    ],
+	    ```
+	-   ``` 
+	    "roles/healthcare.fhirStoreAdmin" = [
+	      "serviceAccount:study-builder-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	      "serviceAccount:response-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	    ],
+	    ```
+	-   ``` 
+	    "roles/bigquery.admin" = [
+	      "serviceAccount:response-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	      "serviceAccount:user-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	      "serviceAccount:service-${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com",          
+	    ],
+	    ```
+	-   ``` 
+	    "roles/bigquery.dataEditor" = [
+	      "serviceAccount:response-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	    ],
+	    ```
+	-   ``` 
+	    "roles/datastore.user" = [
+	      "serviceAccount:response-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	      "serviceAccount:user-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	    ],
+	    ```
+	-   ``` 
+	    "roles/storage.objectAdmin" = [
+	       "serviceAccount:service-${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com",
+	    ],
+	    ```
+1.  To provide `{prefix}-{env}-mystudies-consent-documents` storage bucket access to study builder and Healthcare API service accounts, edit the file  `deployment/terraform/{prefix}-{env}-data/main.tf` and in the section `module "{prefix}_{env}_mystudies_consent_documents"` add the following lines to the section `iam_members = [...]`.
+	
+    -   ```	
+            {
+              role   = "roles/storage.objectAdmin"
+              member = "serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
+            },
+        ```
+    -   ```
+            {
+              role   = "roles/storage.objectViewer"
+              member = "serviceAccount:service-${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com"
+            },
+	
+1.  To provide BigQuery admin access to `Response-Datastore service account`, edit the file `deployment/terraform/{prefix}-{env}-apps/main.tf` and in the section `module "project_iam_members"` add the following lines to the section `bindings = {.......}`.
+	 
+	```
+		"roles/bigquery.admin" = [
+		  "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+		]
+	 ```
+	
+#### Changes to secrets when upgrading to 2.0.11 or greater
+
+The following secrets need to be added for this release:
+-   `manual-region-id`
+-   `manual-consent-enabled`
+-   `manual-fhir-enabled`
+-   `manual-discard-fhir`
+-   `manual-ingest-data-to-bigquery`
+	
+These secrets can be added from your deployment with the following steps. 
+	
+1. Edit the file `deployment/terraform/{prefix}-{env}-secret/main.tf`, add the following resources similar to other secrets in the file:
+    -   ```
+        resource "google_secret_manager_secret" "manual_region_id" {
+          [...]
+        }
+        ```
+    -   ```
+        resource "google_secret_manager_secret" "manual_consent_enabled" {
+          [...]
+        }
+        ```
+    -   ```
+        resource "google_secret_manager_secret" "manual_fhir_enabled" {
+          [...]
+        }
+        ```
+    -   ```
+        resource "google_secret_manager_secret" "manual_discard_fhir" {
+          [...]
+        }
+        ```
+    -   ```
+        resource "google_secret_manager_secret" "manual_ingest_data_to_bigquery" {
+          [...]
+        }
+        ```		
+#### Add above new secrets to Kubernetes cluster shared secrets
+
+1.  Edit the file `deployment/terraform/kubernetes/main.tf` and in the section `# Data sources from Secret Manager` add the following lines to the section `for_each = toset(concat([...] )}` along with other secrets.
+	
+ 	-   `"manual-region-id",`
+ 	-   `"manual-consent-enabled",`
+ 	-   `"manual-fhirenabled",`
+ 	-   `"manual-discard-fhir",`
+ 	-   `"manual-ingest-data-to-bigquery",`
+	
+1.  In the section `# Shared secrets` add the following lines to the section `data = { [...] }`
+	
+ 	-   `region_id                    	= data.google_secret_manager_secret_version.secrets["manual-region-id"].secret_data`
+ 	-   `consent_enabled                   	= data.google_secret_manager_secret_version.secrets["manual-consent-enabled"].secret_data`
+ 	-   `fhir_enabled                      	= data.google_secret_manager_secret_version.secrets["manual-fhir-enabled"].secret_data`
+ 	-   `discard_fhir                    	= data.google_secret_manager_secret_version.secrets["manual-discard-fhir"].secret_data`
+ 	-   `ingest_data_to_bigquery           	= data.google_secret_manager_secret_version.secrets["manual-ingest-data-to-bigquery"].secret_data`
+	
+##### Note: After all above changes in the working branch, create a pull request from this working branch to your specified branch, which will start the terraform plan and validation. After completion of the plan and validation, merge the pull request. That will run the terraform apply.
+
+#### Follow below steps to apply above secrets to all containers 
+1. Pull the latest code from your repository and checkout your specified branch which contains the new shared secret.	
+1. Run the following commands to apply the changes to your cluster:	
+```bash
+    cd $GIT_ROOT/deployment/terraform/kubernetes/
+    terraform init && terraform apply
+```	
+1. Restart all default pods except hydra-ic by running below commands:
+```bash
+     APP_PATH=<path_to_component_to_restart> # for example, $GIT_ROOT/auth-server
+     kubectl scale --replicas=0 -f $APP_PATH/tf-deployment.yaml && \
+     kubectl scale --replicas=1 -f $APP_PATH/tf-deployment.yaml
+```	
 ***
 <p align="center">Copyright 2020 Google LLC</p>

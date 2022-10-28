@@ -45,9 +45,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
   private String componentName;
 
   @ExceptionHandler(Exception.class)
-  public ResponseEntity<?> handleSystemException(Exception ex, WebRequest request) {
+  public ResponseEntity<Object> handleSystemException(Exception ex, WebRequest request) {
     String uri = ((ServletWebRequest) request).getRequest().getRequestURI();
-    logger.error(String.format("%s request failed with an exception", uri), ex);
+    logger.error("%s request failed with an exception", uri, ex);
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
         .body(ErrorCode.APPLICATION_ERROR);
   }
@@ -59,9 +59,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     String uri = ((ServletWebRequest) request).getRequest().getRequestURI();
     ErrorResponse response = new ErrorResponse(ex);
     logger.error(
-        String.format(
-            "%s request failed due to RestClientResponseException, response=%s", uri, response),
-        ex);
+        "%s request failed due to RestClientResponseException, response=%s", uri, response, ex);
     return response;
   }
 
@@ -72,7 +70,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
   }
 
   @ExceptionHandler(ResourceAccessException.class)
-  public ResponseEntity<?> handleResourceAccessException(
+  public ResponseEntity<Object> handleResourceAccessException(
       ResourceAccessException ex, WebRequest webRequest) {
     HttpServletRequest servletRequest =
         ((ServletWebRequest) webRequest).getNativeRequest(HttpServletRequest.class);
@@ -90,8 +88,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
           CommonAuditEvent.RESOURCE_ACCESS_FAILED, auditRequest, placeHolders);
     }
 
-    logger.error(
-        String.format("%s request failed with an exception", servletRequest.getRequestURI()), ex);
+    logger.error("%s request failed with an exception", servletRequest.getRequestURI(), ex);
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
         .body(ErrorCode.APPLICATION_ERROR);
   }

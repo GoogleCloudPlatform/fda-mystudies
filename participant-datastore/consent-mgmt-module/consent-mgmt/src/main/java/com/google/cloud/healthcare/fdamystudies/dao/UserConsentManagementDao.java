@@ -22,11 +22,17 @@ public interface UserConsentManagementDao {
 
   public StudyConsentEntity getStudyConsent(String userId, String studyId, String consentVersion);
 
-  public String saveStudyConsent(StudyConsentEntity studyConsent);
+  public String saveStudyConsent(
+      StudyConsentEntity studyConsent,
+      ParticipantStudyEntity participantStudyEntity,
+      String filePath,
+      String dataSharingPath);
 
   public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String appId);
 
   public StudyEntity getStudyInfo(String customStudyId);
 
   public String getUserDetailsId(String userId);
+
+  public StudyConsentEntity getExistStudyConsent(String userId, String studyId, String siteId);
 }

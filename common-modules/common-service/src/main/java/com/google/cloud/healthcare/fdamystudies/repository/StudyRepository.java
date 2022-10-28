@@ -308,5 +308,5 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
       value =
           "SELECT * FROM study_info study where study.custom_id IN (:customIds) ORDER BY study.created_time",
       nativeQuery = true)
-  public Optional<StudyEntity> findByCustomIds(List<String> customIds);
+  public List<StudyEntity> findByCustomIds(List<String> customIds);
 }

@@ -14,7 +14,7 @@
 
   <div class="clearfix"></div>
 </div>
-<form:form
+<form:form class="display_contents"
     action="/studybuilder/adminDashboard/updateUserDetails.do?${_csrf.parameterName}=${_csrf.token}"
     id="userDetailsForm"
     name="userDetailsForm" role="form" data-toggle="validator" method="post" autocomplete="off">
@@ -78,7 +78,9 @@
                      id="userEmail" name="userEmail" value="${userBO.userEmail}"
                      oldVal="${userBO.userEmail}" maxlength="100"
                      pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,24}$"
+
                      data-pattern-error="Email address is invalid" data-error="Please fill out this field" required data-error="Please fill out this field" readonly/>
+
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
@@ -137,7 +139,7 @@
   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mb-md">
     <div class="white-bg box-space">
       <div class="row" id="hideChangePwd">
-        <div class="col-md-12 pl-none pr-none">
+        <div class="col-md-12 display_contents pl-none pr-none">
           <div class="col-md-3 p-none">
             <div class="gray-xs-f line34">Password</div>
           </div>
@@ -151,7 +153,7 @@
           </div>
         </div>
       </div>
-      <div class="row changepwd dis-none">
+      <div class="row display_contents changepwd dis-none">
         <div class="pl-none ">
           <div class="b-bor mt-md">
             <div class="ed-user-layout row">
@@ -231,7 +233,7 @@
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mb-md">
   <div class="white-bg box-space">
 
-    <div class="ed-user-layout row">
+    <div class="ed-user-layout">
       <div class="blue-md-f text-uppercase mb-md">Assigned Permissions</div>
 
       <!-- Assigned Permissions List-->
@@ -248,7 +250,7 @@
       </div>
       </c:if>
 
-      
+
       <!-- Assigned Permissions List-->
       <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APPS')}">
       <div class="edit-user-list-widget">
@@ -283,6 +285,7 @@
         </c:if>
       </div>
       </c:if>
+
       <!-- Assigned Permissions List-->
       <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">
       <div class="edit-user-list-widget">

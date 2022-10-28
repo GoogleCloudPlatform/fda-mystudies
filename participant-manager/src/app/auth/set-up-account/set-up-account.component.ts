@@ -112,8 +112,9 @@ export class SetUpAccountComponent
       }),
     );
     this.passCriteria = `Your password must be at least 8 characters long    
-and contain lower case, upper case, numeric and
-special characters.`;
+
+    and contain lower case, upper case, numeric and
+    special characters.`;
 
   }
 

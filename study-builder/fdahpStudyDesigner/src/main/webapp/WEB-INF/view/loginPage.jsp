@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -53,7 +54,7 @@
     <script src="/studybuilder/vendor/modernizr/modernizr.js"></script>
 
     <!-- Vendor -->
-    <script src="/studybuilder/vendor/jquery/jquery-3.1.1.min.js"></script>
+    <script src="/studybuilder/vendor/jquery/jquery-3.6.0.min.js"></script>
     <script src="/studybuilder/vendor/boostrap/bootstrap.min.js"></script>
     <script src="/studybuilder/js/validator.min.js"></script>
     <script src="/studybuilder/vendor/animation/wow.min.js"></script>
@@ -102,7 +103,9 @@
       <!-- new login -->
       <!-- Logo-->
       <div class="logo__space">
-       <a href="/studybuilder/login.do"><img src="images/logo/logo_landing_welcome.png" alt=""/></a>
+
+        <a href="/studybuilder/login.do"><img src="images/logo/logo_landing_welcome.png" alt=""/></a>
+
       </div>
       <div class="clearfix"></div>
       <div class="login__container">
@@ -118,11 +121,13 @@
           <form:form id="loginForm" data-toggle="validator" role="form" action="#" name="loginForm"
                      method="post"
                      autocomplete="off">
+
             <input type="hidden" id="idp" value="${idpEnabled}" name="idp"/>
             <input type="hidden" id="mfa" value="${mfaEnabled}" name="mfa"/>
             <div id="errMsg" class="error_msg" style="display: contents;">${errMsg}</div>
             <div id="sucMsg" class="suceess_msg" style="display: contents;">${sucMsg}</div>
            
+
             <div class="login pt-lg">
               <div class="mb-lg form-group">
                 <input type="text" class="input-field wow_input" id="email" name="username"
@@ -346,7 +351,8 @@
 
       function hideDisplayMessage() {
         $('#sucMsg').hide();
-        $('#errMsg').hide();
+        $('#errMsg').hide(); 
+         
       }
 
       window.history.forward();

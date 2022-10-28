@@ -583,7 +583,8 @@ public class ManageUserServiceImpl implements ManageUserService {
     logger.exit("Successfully deleted all the assigned permissions");
   }
 
-  private void logoutAdminUser(String authUserId, AuditLogEventRequest auditRequest) {
+  @Override
+  public void logoutAdminUser(String authUserId, AuditLogEventRequest auditRequest) {
     logger.entry("logoutAdminUser()");
 
     HttpHeaders headers = new HttpHeaders();
@@ -828,21 +829,21 @@ public class ManageUserServiceImpl implements ManageUserService {
       Integer offset,
       AuditLogEventRequest auditRequest,
       String orderByCondition,
-      String searchTerm) {
+      String searchValue) {
     logger.entry("getUsers()");
     validateSignedInUser(superAdminUserId);
 
     List<User> users = new ArrayList<>();
     List<UserRegAdminEntity> adminList =
         userAdminRepository.findByLimitAndOffset(
-            limit, offset, orderByCondition, StringUtils.defaultString(searchTerm));
+            limit, offset, orderByCondition, StringUtils.defaultString(searchValue));
 
     adminList
         .stream()
         .map(admin -> users.add(UserMapper.prepareUserInfo(admin)))
         .collect(Collectors.toList());
 
-    Long usersCount = userAdminRepository.countBySearchTerm(StringUtils.defaultString(searchTerm));
+    Long usersCount = userAdminRepository.countBySearchTerm(StringUtils.defaultString(searchValue));
     participantManagerHelper.logEvent(USER_REGISTRY_VIEWED, auditRequest);
     logger.exit(String.format("total users=%d", adminList.size()));
     return new GetUsersResponse(MessageCode.GET_USERS_SUCCESS, users, usersCount);
@@ -936,7 +937,11 @@ public class ManageUserServiceImpl implements ManageUserService {
                 : ACCOUNT_UPDATE_EMAIL_SENT;
 
         invokeAuditEvent(adminRecordToSendEmail, admin, auditEnum);
+
         //        logger.info("audit Request=" + ReflectionToStringBuilder.toString(auditEnum));
+
+
+
         userAccountEmailSchedulerTaskRepository.deleteByUserId(adminRecordToSendEmail.getUserId());
       } else {
         auditEnum =
