@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@page session="true" %>
@@ -71,7 +72,7 @@
     <script src="/studybuilder/vendor/modernizr/modernizr.js"></script>
 
     <!-- Vendor -->
-    <script src="/studybuilder/vendor/jquery/jquery-3.1.1.min.js"></script>
+    <script src="/studybuilder/vendor/jquery/jquery-3.6.0.min.js"></script>
     <script src="/studybuilder/vendor/boostrap/bootstrap.min.js"></script>
     <script src="/studybuilder/js/validator.min.js"></script>
     <script src="/studybuilder/vendor/animation/wow.min.js"></script>
@@ -120,8 +121,8 @@
               <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
               <c:if test="${isValidToken}">
                 <div class="lg-space-txt col-xs-12  text-center boxcenter mb-xlg white__text">Set up your Study Builder account</div>
-                <div class=" col-md-6 boxcenter">
-                <div class="col-xs-6">
+                <div class=" row boxcenter">
+                <div class="col-md-6">
                   <div class="mb-lg form-group">
                     <input type="text" class="input-field wow_input" id=""
                            name="firstName" placeholder="First Name"
@@ -131,7 +132,7 @@
                   </div>
                 </div>
 
-                <div class="col-xs-6">
+                <div class="col-md-6">
                   <div class="mb-lg form-group">
                     <input type="text" class="input-field wow_input" id=""
                            name="lastName" placeholder="Last Name"
@@ -140,7 +141,7 @@
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
-                <div class="col-xs-6">
+                <div class="col-md-6">
                   <div class="mb-lg form-group">
                     <input type="text"
                            class="input-field wow_input validateUserEmail"
@@ -152,7 +153,7 @@
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
-                <div class="col-xs-6">
+                <div class="col-md-6">
                   <div class="mb-lg form-group">
                     <input type="text" class="input-field wow_input phoneMask"
                            id="" name="phoneNumber" placeholder="Phone"
@@ -161,7 +162,7 @@
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
-                <div class="col-xs-6">
+                <div class="col-md-6">
                   <div class="mb-lg form-group">
                     <input type="password" class="input-field wow_input"
                            id="password" maxlength="64" data-minlength="8"
@@ -173,7 +174,7 @@
 
                   </div>
                 </div>
-                <div class="col-xs-6">
+                <div class="col-md-6">
                   <div class="mb-lg form-group">
                     <input type="password" class="input-field wow_input"
                            id="cfnPassword" name="" maxlength="64"
@@ -183,7 +184,7 @@
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
-                <div class="col-xs-12 text-center">
+                <div class="col-md-12 text-center">
                   <div class="mb-lg form-group text-center">
                     <span class="checkbox checkbox-inline"><input
                         type="checkbox" id="inlineCheckbox" value="option1"

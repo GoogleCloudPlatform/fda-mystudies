@@ -828,11 +828,11 @@ typedef NS_ENUM(NSInteger, ORKQuestionSection) {
     [self saveAnswer:answer];
     self.hasChangedAnswer = YES;
     
-    if (immediateNavigation) {
-        // Proceed as continueButton tapped
-        ORKSuppressPerformSelectorWarning(
-                                         [self.continueButtonItem.target performSelector:self.continueButtonItem.action withObject:self.continueButtonItem];);
-    }
+//    if (immediateNavigation) {
+//        // Proceed as continueButton tapped
+//        ORKSuppressPerformSelectorWarning(
+//                                         [self.continueButtonItem.target performSelector:self.continueButtonItem.action withObject:self.continueButtonItem];);
+//    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {

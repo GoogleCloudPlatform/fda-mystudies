@@ -8,7 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.mapper;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE_NA;
 
 import com.google.cloud.healthcare.fdamystudies.beans.Enrollment;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
@@ -56,10 +56,11 @@ public final class ParticipantMapper {
         OnboardingStatus.fromCode(onboardingStatusCode).getStatus());
 
     String invitedDate = DateTimeUtils.format(studyParticipantDetail.getInvitedDate());
-    participantDetail.setInvitedDate(StringUtils.defaultIfEmpty(invitedDate, NOT_APPLICABLE));
+    participantDetail.setInvitedDate(StringUtils.defaultIfEmpty(invitedDate, NOT_APPLICABLE_NA));
 
     String enrollmentDate = DateTimeUtils.format(studyParticipantDetail.getEnrolledDate());
-    participantDetail.setEnrollmentDate(StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
+    participantDetail.setEnrollmentDate(
+        StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE_NA));
 
     return participantDetail;
   }
@@ -132,12 +133,12 @@ public final class ParticipantMapper {
     ParticipantStudyEntity participantStudy = idMap.get(participantRegistrySite.getId());
     participant.setEnrollmentStatus(EnrollmentStatus.getDisplayValue(participantStudy.getStatus()));
     String enrollmentDate = DateTimeUtils.format(participantStudy.getEnrolledDate());
-    participant.setEnrollmentDate(StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
+    participant.setEnrollmentDate(StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE_NA));
 
     String invitedDate = DateTimeUtils.format(participantRegistrySite.getInvitationDate());
-    participant.setInvitedDate(StringUtils.defaultIfEmpty(invitedDate, NOT_APPLICABLE));
+    participant.setInvitedDate(StringUtils.defaultIfEmpty(invitedDate, NOT_APPLICABLE_NA));
     String disabledDate = DateTimeUtils.format(participantRegistrySite.getDisabledDate());
-    participant.setDisabledDate(StringUtils.defaultIfEmpty(disabledDate, NOT_APPLICABLE));
+    participant.setDisabledDate(StringUtils.defaultIfEmpty(disabledDate, NOT_APPLICABLE_NA));
     return participant;
   }
 
@@ -158,8 +159,8 @@ public final class ParticipantMapper {
       Enrollment enrollment = new Enrollment();
       String withdrawalDate = DateTimeUtils.format(enrollmentHistory.getWithdrawalDate());
       String enrolledDate = DateTimeUtils.format(enrollmentHistory.getEnrolledDate());
-      enrollment.setWithdrawalDate(StringUtils.defaultIfEmpty(withdrawalDate, NOT_APPLICABLE));
-      enrollment.setEnrollmentDate(StringUtils.defaultIfEmpty(enrolledDate, NOT_APPLICABLE));
+      enrollment.setWithdrawalDate(StringUtils.defaultIfEmpty(withdrawalDate, NOT_APPLICABLE_NA));
+      enrollment.setEnrollmentDate(StringUtils.defaultIfEmpty(enrolledDate, NOT_APPLICABLE_NA));
       enrollment.setEnrollmentStatus(
           EnrollmentStatus.getDisplayValue(enrollmentHistory.getEnrollmentStatus()));
       participantDetail.getEnrollments().add(enrollment);
@@ -185,7 +186,7 @@ public final class ParticipantMapper {
     participantDetail.setAppStatus(participantRegistry.getStudy().getApp().getAppStatus());
 
     String invitedDate = DateTimeUtils.format(participantRegistry.getInvitationDate());
-    participantDetail.setInvitationDate(StringUtils.defaultIfEmpty(invitedDate, NOT_APPLICABLE));
+    participantDetail.setInvitationDate(StringUtils.defaultIfEmpty(invitedDate, NOT_APPLICABLE_NA));
 
     OnboardingStatus onboardingStatus =
         OnboardingStatus.fromCode(participantRegistry.getOnboardingStatus());
@@ -207,10 +208,12 @@ public final class ParticipantMapper {
     }
 
     String enrolledDate = DateTimeUtils.format(participantStudy.getEnrolledDate());
-    participantDetail.setEnrollmentDate(StringUtils.defaultIfEmpty(enrolledDate, NOT_APPLICABLE));
+    participantDetail.setEnrollmentDate(
+        StringUtils.defaultIfEmpty(enrolledDate, NOT_APPLICABLE_NA));
 
     String withdrawalDate = DateTimeUtils.format(participantStudy.getWithdrawalDate());
-    participantDetail.setWithdrawalDate(StringUtils.defaultIfEmpty(withdrawalDate, NOT_APPLICABLE));
+    participantDetail.setWithdrawalDate(
+        StringUtils.defaultIfEmpty(withdrawalDate, NOT_APPLICABLE_NA));
     return participantDetail;
   }
 

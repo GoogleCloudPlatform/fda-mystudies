@@ -26,7 +26,6 @@ import com.harvard.utils.Logger;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
-
 import java.util.HashMap;
 
 public class VersionCheckerService extends Service implements ApiCall.OnAsyncRequestComplete {

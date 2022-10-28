@@ -85,7 +85,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     sesObj.setAccessLevel(userdetails.getAccessLevel());
     sesObj.setCorrelationId(UUID.randomUUID().toString());
     sesObj.setGcpBucketName(propMap.get("cloud.bucket.name"));
-    sesObj.setStoragePath(propMap.get("fda.imgDisplaydPath"));
+    sesObj.setStoragePath(propMap.get("fda.storagePath"));
     sesObj.setExportStudiesBucketName(propMap.get("cloud.bucket.name.export.studies"));
 
     if (response.isCommitted()) {

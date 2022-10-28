@@ -21,9 +21,6 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.appcompat.widget.AppCompatTextView;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +29,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.recyclerview.widget.RecyclerView;
 import com.harvard.R;
 import com.harvard.studyappmodule.activitylistmodel.ActivitiesWS;
 import com.harvard.studyappmodule.surveyscheduler.SurveyScheduler;
@@ -750,104 +750,115 @@ public class SurveyActivitiesListAdapter
         }
       }
 
-      holder.container.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-          Bundle eventProperties = new Bundle();
-          eventProperties.putString(
-              CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-              context.getString(R.string.survey_activities_list));
-          analyticsInstance.logEvent(
-              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
-          int currentRunVal = currentRunStatusForActivities.get(holder.getAdapterPosition()).getCurrentRunId();
-          int totalRunVal = currentRunStatusForActivities.get(holder.getAdapterPosition()).getTotalRun();
-          if (click) {
-            click = false;
-            new Handler().postDelayed(new Runnable() {
-              @Override
-              public void run() {
-                click = true;
-              }
-            }, 1500);
-            if (paused) {
-              Toast.makeText(context, R.string.study_Joined_paused, Toast.LENGTH_SHORT).show();
-            } else {
-              if (status
-                      .get(holder.getAdapterPosition())
-                      .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_CURRENT)
+      holder.container.setOnClickListener(
+          new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  context.getString(R.string.survey_activities_list));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+              int currentRunVal =
+                  currentRunStatusForActivities.get(holder.getAdapterPosition()).getCurrentRunId();
+              int totalRunVal =
+                  currentRunStatusForActivities.get(holder.getAdapterPosition()).getTotalRun();
+              if (click) {
+                click = false;
+                new Handler()
+                    .postDelayed(
+                        new Runnable() {
+                          @Override
+                          public void run() {
+                            click = true;
+                          }
+                        },
+                        1500);
+                if (paused) {
+                  Toast.makeText(context, R.string.study_Joined_paused, Toast.LENGTH_SHORT).show();
+                } else {
+                  if (status
+                          .get(holder.getAdapterPosition())
+                          .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_CURRENT)
                       && (currentRunStatusForActivities
-                      .get(holder.getAdapterPosition())
-                      .getStatus()
-                      .equalsIgnoreCase(SurveyActivitiesFragment.IN_PROGRESS)
-                      || currentRunStatusForActivities
-                      .get(holder.getAdapterPosition())
-                      .getStatus()
-                      .equalsIgnoreCase(SurveyActivitiesFragment.YET_To_START))) {
-                if (currentRunStatusForActivities
+                              .get(holder.getAdapterPosition())
+                              .getStatus()
+                              .equalsIgnoreCase(SurveyActivitiesFragment.IN_PROGRESS)
+                          || currentRunStatusForActivities
+                              .get(holder.getAdapterPosition())
+                              .getStatus()
+                              .equalsIgnoreCase(SurveyActivitiesFragment.YET_To_START))) {
+                    if (currentRunStatusForActivities
                         .get(holder.getAdapterPosition())
                         .isRunIdAvailable()) {
-                  surveyActivitiesFragment.getActivityInfo(
+                      surveyActivitiesFragment.getActivityInfo(
                           items.get(holder.getAdapterPosition()).getActivityId(),
                           currentRunStatusForActivities
-                                  .get(holder.getAdapterPosition())
-                                  .getCurrentRunId(),
+                              .get(holder.getAdapterPosition())
+                              .getCurrentRunId(),
                           currentRunStatusForActivities
-                                  .get(holder.getAdapterPosition())
-                                  .getStatus(),
+                              .get(holder.getAdapterPosition())
+                              .getStatus(),
                           items.get(holder.getAdapterPosition()).getBranching(),
                           items.get(holder.getAdapterPosition()).getActivityVersion(),
                           currentRunStatusForActivities.get(holder.getAdapterPosition()),
                           items.get(holder.getAdapterPosition()));
-                } else {
-                  Toast.makeText(
-                          context,
-                          context.getResources().getString(R.string.survey_message),
-                          Toast.LENGTH_SHORT)
+                    } else {
+                      Toast.makeText(
+                              context,
+                              context.getResources().getString(R.string.survey_message),
+                              Toast.LENGTH_SHORT)
                           .show();
-                }
-              } else if (status
+                    }
+                  } else if (status
                       .get(holder.getAdapterPosition())
                       .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_UPCOMING)) {
-                Toast.makeText(context, R.string.upcoming_event, Toast.LENGTH_SHORT).show();
-              } else if (currentRunStatusForActivities
+                    Toast.makeText(context, R.string.upcoming_event, Toast.LENGTH_SHORT).show();
+                  } else if (currentRunStatusForActivities
                       .get(holder.getAdapterPosition())
                       .getStatus()
                       .equalsIgnoreCase(SurveyActivitiesFragment.INCOMPLETE)) {
-                if (currentRunVal != totalRunVal) {
-                  Toast.makeText(context, R.string.incomple_event, Toast.LENGTH_SHORT).show();
-                }
-              } else {
-                if (currentRunVal != totalRunVal) {
-                  Toast.makeText(context, R.string.completed_event, Toast.LENGTH_SHORT).show();
+                    if (currentRunVal != totalRunVal) {
+                      Toast.makeText(context, R.string.incomple_event, Toast.LENGTH_SHORT).show();
+                    }
+                  } else {
+                    if (currentRunVal != totalRunVal) {
+                      Toast.makeText(context, R.string.completed_event, Toast.LENGTH_SHORT).show();
+                    }
+                  }
                 }
               }
             }
-          }
-        }
-      });
-      holder.more.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-          Bundle eventProperties = new Bundle();
-          eventProperties.putString(
-              CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-              context.getString(R.string.survey_activities_list_more));
-          analyticsInstance.logEvent(
-              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
-          int p = 0;
-          try {
-            p = timePos.get(holder.getAdapterPosition());
-          } catch (Exception e) {
-            Logger.log(e);
-          }
-          CustomActivitiesDailyDialogClass c =
+          });
+      holder.more.setOnClickListener(
+          new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  context.getString(R.string.survey_activities_list_more));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+              int p = 0;
+              try {
+                p = timePos.get(holder.getAdapterPosition());
+              } catch (Exception e) {
+                Logger.log(e);
+              }
+              CustomActivitiesDailyDialogClass c =
                   new CustomActivitiesDailyDialogClass(
-                          context, mScheduledTime, p, false, SurveyActivitiesListAdapter.this, status
-                          .get(holder.getAdapterPosition()), currentRunStatusForActivities
-                          .get(holder.getAdapterPosition()));
-          c.show();
-        }
-      });
+                      context,
+                      mScheduledTime,
+                      p,
+                      false,
+                      SurveyActivitiesListAdapter.this,
+                      status.get(holder.getAdapterPosition()),
+                      currentRunStatusForActivities.get(holder.getAdapterPosition()));
+              c.show();
+            }
+          });
 
       if (status
               .get(holder.getAdapterPosition())

@@ -33,6 +33,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEven
 import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.WITHDRAWAL_INFORMATION_RETRIEVED;
 import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.WITHDRAWAL_INFORMATION_UPDATED;
 import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.WITHDRAWAL_INFORMATION_UPDATE_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.utils.AppConstants.QUESTIONNAIRE_RESPONSE_TYPE;
 
 import com.google.cloud.healthcare.fdamystudies.bean.ActivityResponseBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ActivityRunBean;
@@ -41,11 +42,13 @@ import com.google.cloud.healthcare.fdamystudies.bean.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ParticipantActivityBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ParticipantStudyInformation;
 import com.google.cloud.healthcare.fdamystudies.bean.QuestionnaireActivityStructureBean;
+import com.google.cloud.healthcare.fdamystudies.bean.SearchQuestionnaireResponseFhirBean;
 import com.google.cloud.healthcare.fdamystudies.bean.StoredResponseBean;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyActivityMetadataRequestBean;
 import com.google.cloud.healthcare.fdamystudies.bean.SuccessResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ResponseServerAuditLogHelper;
+import com.google.cloud.healthcare.fdamystudies.config.ApplicationConfiguration;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.response.model.ParticipantInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.service.ActivityResponseProcessorService;
@@ -56,6 +59,9 @@ import com.google.cloud.healthcare.fdamystudies.service.StudyMetadataService;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.utils.AppUtil;
 import com.google.cloud.healthcare.fdamystudies.utils.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.utils.FhirHealthcareApis;
+import com.google.cloud.healthcare.fdamystudies.utils.GetResponsefhirApi;
+import com.google.gson.Gson;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.sql.Timestamp;
@@ -63,6 +69,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections4.map.HashedMap;
@@ -93,13 +100,19 @@ public class ProcessActivityResponseController {
 
   @Autowired private ResponseServerAuditLogHelper responseServerAuditLogHelper;
 
+  @Autowired private ApplicationConfiguration appConfig;
+  @Autowired private GetResponsefhirApi getresponsefhirApi;
+  @Autowired private FhirHealthcareApis fhirhealthcareApis;
+
   private static final String BEGIN_REQUEST_LOG = "%s request";
+
+  private static final String DATASET_PATH = "projects/%s/locations/%s/datasets/%s";
+  private static final String FHIR_STORES = "/fhirStores/";
 
   private XLogger logger =
       XLoggerFactory.getXLogger(ProcessActivityResponseController.class.getName());
 
-  @ApiOperation(
-      value = "Process activity response for participant and store in Google Cloud Firestore")
+  @ApiOperation(value = "Process activity response for participant and store in cloud fire store")
   @PostMapping("/participant/process-response")
   public ResponseEntity<?> processActivityResponseForParticipant(
       @RequestBody ActivityResponseBean questionnaireActivityResponseBean,
@@ -107,6 +120,7 @@ public class ProcessActivityResponseController {
       HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    Locale locale = request.getLocale();
     auditRequest.setUserId(userId);
     String applicationId = null;
     String studyId = null;
@@ -131,6 +145,8 @@ public class ProcessActivityResponseController {
               + activityId
               + "\n Activity Version: "
               + activityVersion);
+      logger.debug("DiscardFHIR : \n : " + appConfig.getDiscardFhirAfterDid());
+      logger.debug("EnableFHI : \n : " + appConfig.getEnableFhirApi());
       if (StringUtils.isBlank(applicationId)
           || StringUtils.isBlank(secureEnrollmentToken)
           || StringUtils.isBlank(studyId)
@@ -224,8 +240,13 @@ public class ProcessActivityResponseController {
         responseServerAuditLogHelper.logEvent(ACTIVTY_METADATA_RETRIEVED, auditRequest, map);
 
         // Get ParticipantStudyInfo from Registration Server
+        String flag = appConfig.getEnableConsentManagementAPI();
         ParticipantStudyInformation partStudyInfo =
-            partStudyInfoService.getParticipantStudyInfo(studyId, participantId, auditRequest);
+            !StringUtils.isEmpty(flag) && Boolean.valueOf(flag)
+                ? partStudyInfoService.getParticipantStudyInfoFromConsent(
+                    studyId, participantId, auditRequest)
+                : partStudyInfoService.getParticipantStudyInfo(
+                    studyId, participantId, auditRequest);
         if (partStudyInfo == null) {
           logger.error("GetParticipantStudyInfo() - ParticipantInfo is null. Study Id: " + studyId);
           responseServerAuditLogHelper.logEvent(
@@ -263,9 +284,11 @@ public class ProcessActivityResponseController {
         withdrawMap.put("withdrawn_status", String.valueOf(withdrawalStatus));
         responseServerAuditLogHelper.logEvent(
             WITHDRAWAL_INFORMATION_RETRIEVED, auditRequest, withdrawMap);
+
         if (!withdrawalStatus) {
+
           activityResponseProcessorService.saveActivityResponseDataForParticipant(
-              activityMetadatFromWcp, questionnaireActivityResponseBean, auditRequest);
+              activityMetadatFromWcp, questionnaireActivityResponseBean, auditRequest, locale);
           savedResponseData = true;
 
           // Update Participant Activity State
@@ -407,7 +430,7 @@ public class ProcessActivityResponseController {
     }
   }
 
-  @ApiOperation(value = "Get activity response data for participant from Google Cloud Firestore")
+  @ApiOperation(value = "Get activity response data for participant from cloud fire store")
   @GetMapping("/participant/getresponse")
   public ResponseEntity<?> getActivityResponseDataForParticipant(
       @RequestParam("appId") String applicationId,
@@ -416,13 +439,14 @@ public class ProcessActivityResponseController {
       @RequestParam("participantId") String participantId,
       @RequestParam(AppConstants.PARTICIPANT_TOKEN_IDENTIFIER_KEY) String tokenIdentifier,
       @RequestParam("activityId") String activityId,
+      @RequestParam("activityRunId") String activityRunId,
       @RequestParam("questionKey") String questionKey,
       @RequestHeader String userId,
       HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     try {
-
+      Locale locale = request.getLocale();
       logger.debug(
           "Input values are :\n Study Id: "
               + studyId
@@ -455,13 +479,190 @@ public class ProcessActivityResponseController {
       participantBo.setParticipantId(participantId);
 
       if (participantService.isValidParticipant(participantBo)) {
+        List<SearchQuestionnaireResponseFhirBean> fhirBeans = new ArrayList<>();
+        if (appConfig.getEnableFhirApi().contains("fhir")
+            && appConfig.getDiscardFhirAfterDid().equalsIgnoreCase("false")) {
+          String datasetPathforFHIR =
+              String.format(
+                  DATASET_PATH, appConfig.getProjectId(), appConfig.getRegionId(), studyId);
+          StoredResponseBean storedResponseBean = null;
+          if (getresponsefhirApi.getfhirResource(
+                  datasetPathforFHIR + FHIR_STORES + "FHIR_" + studyId)
+              != null) {
+            String identifierValue = "";
+            String searchQuestionnaireJson = "";
+            if (!activityRunId.isEmpty()) {
+              identifierValue =
+                  studyId
+                      + "@"
+                      + siteId
+                      + "@"
+                      + participantId
+                      + "@"
+                      + activityId
+                      + "@"
+                      + activityRunId;
 
-        StoredResponseBean storedResponseBean =
-            activityResponseProcessorService.getActivityResponseDataForParticipant(
-                studyId, siteId, participantId, activityId, questionKey);
-        responseServerAuditLogHelper.logEvent(
-            READ_OPERATION_FOR_RESPONSE_DATA_SUCCEEDED, auditRequest);
-        return new ResponseEntity<>(storedResponseBean, HttpStatus.OK);
+              searchQuestionnaireJson =
+                  fhirhealthcareApis.fhirResourceSearchPost(
+                      datasetPathforFHIR
+                          + FHIR_STORES
+                          + "FHIR_"
+                          + studyId
+                          + "/fhir/"
+                          + QUESTIONNAIRE_RESPONSE_TYPE,
+                      "identifier=" + identifierValue);
+              SearchQuestionnaireResponseFhirBean searchResponseFhirbean =
+                  new Gson()
+                      .fromJson(searchQuestionnaireJson, SearchQuestionnaireResponseFhirBean.class);
+              fhirBeans.add(searchResponseFhirbean);
+              storedResponseBean = getresponsefhirApi.initStoredResponseBean();
+              storedResponseBean =
+                  getresponsefhirApi.convertFhirResponseDataToBean(
+                      participantId, fhirBeans, storedResponseBean, locale);
+              // return new ResponseEntity<>(storedResponseBean, HttpStatus.OK);
+            } else {
+              int runId = 1;
+              for (int i = 0; i < 50; i++) {
+                activityRunId = Integer.toString(runId);
+                identifierValue =
+                    studyId
+                        + "@"
+                        + siteId
+                        + "@"
+                        + participantId
+                        + "@"
+                        + activityId
+                        + "@"
+                        + activityRunId;
+                searchQuestionnaireJson =
+                    fhirhealthcareApis.fhirResourceSearchPost(
+                        datasetPathforFHIR
+                            + FHIR_STORES
+                            + "FHIR_"
+                            + studyId
+                            + "/fhir/"
+                            + QUESTIONNAIRE_RESPONSE_TYPE,
+                        "identifier=" + identifierValue);
+                SearchQuestionnaireResponseFhirBean searchResponseFhirbean =
+                    new Gson()
+                        .fromJson(
+                            searchQuestionnaireJson, SearchQuestionnaireResponseFhirBean.class);
+                storedResponseBean = getresponsefhirApi.initStoredResponseBean();
+                if (searchResponseFhirbean != null && searchResponseFhirbean.getTotal() == 1) {
+                  runId = runId + 1;
+                  fhirBeans.add(searchResponseFhirbean);
+                } else {
+                  // break;
+                  runId = runId + 1;
+                }
+              }
+              storedResponseBean =
+                  getresponsefhirApi.convertFhirResponseDataToBean(
+                      participantId, fhirBeans, storedResponseBean, locale);
+              logger.debug("getresponse()storedResponseBean1", storedResponseBean.toString());
+              return new ResponseEntity<>(storedResponseBean, HttpStatus.OK);
+            }
+
+            // return new ResponseEntity<>(storedResponseBean, HttpStatus.OK);
+          }
+          logger.debug("getresponse()storedResponseBean2", storedResponseBean.toString());
+          return new ResponseEntity<>(storedResponseBean, HttpStatus.OK);
+        } else if (appConfig.getEnableFhirApi().contains("did")) {
+          String datasetPathforDID =
+              String.format(
+                  DATASET_PATH, appConfig.getProjectId(), appConfig.getRegionId(), studyId);
+          StoredResponseBean storedResponseBean = null;
+          if (getresponsefhirApi.getfhirResource(datasetPathforDID + FHIR_STORES + "DID_" + studyId)
+              != null) {
+            String identifierValue = "";
+            String searchQuestionnaireJson = "";
+            if (!activityRunId.isEmpty()) {
+              identifierValue =
+                  studyId
+                      + "@"
+                      + siteId
+                      + "@"
+                      + participantId
+                      + "@"
+                      + activityId
+                      + "@"
+                      + activityRunId;
+
+              searchQuestionnaireJson =
+                  fhirhealthcareApis.fhirResourceSearchPost(
+                      datasetPathforDID
+                          + FHIR_STORES
+                          + "DID_"
+                          + studyId
+                          + "/fhir/"
+                          + QUESTIONNAIRE_RESPONSE_TYPE,
+                      "identifier=" + identifierValue);
+              SearchQuestionnaireResponseFhirBean searchResponseFhirbean =
+                  new Gson()
+                      .fromJson(searchQuestionnaireJson, SearchQuestionnaireResponseFhirBean.class);
+              fhirBeans.add(searchResponseFhirbean);
+              storedResponseBean = getresponsefhirApi.initStoredResponseBean();
+              storedResponseBean =
+                  getresponsefhirApi.convertFhirResponseDataToBean(
+                      participantId, fhirBeans, storedResponseBean, locale);
+
+            } else {
+              int runId = 1;
+              for (int i = 0; i < 50; i++) {
+                activityRunId = Integer.toString(runId);
+                identifierValue =
+                    studyId
+                        + "@"
+                        + siteId
+                        + "@"
+                        + participantId
+                        + "@"
+                        + activityId
+                        + "@"
+                        + activityRunId;
+                searchQuestionnaireJson =
+                    fhirhealthcareApis.fhirResourceSearchPost(
+                        datasetPathforDID
+                            + FHIR_STORES
+                            + "DID_"
+                            + studyId
+                            + "/fhir/"
+                            + QUESTIONNAIRE_RESPONSE_TYPE,
+                        "identifier=" + identifierValue);
+                SearchQuestionnaireResponseFhirBean searchResponseFhirbean =
+                    new Gson()
+                        .fromJson(
+                            searchQuestionnaireJson, SearchQuestionnaireResponseFhirBean.class);
+                storedResponseBean = getresponsefhirApi.initStoredResponseBean();
+                if (searchResponseFhirbean != null && searchResponseFhirbean.getTotal() == 1) {
+                  runId = runId + 1;
+                  fhirBeans.add(searchResponseFhirbean);
+                } else {
+                  // break;
+                  runId = runId + 1;
+                }
+              }
+              storedResponseBean =
+                  getresponsefhirApi.convertFhirResponseDataToBean(
+                      participantId, fhirBeans, storedResponseBean, locale);
+              logger.debug("getresponse()storedResponseBean3", storedResponseBean.toString());
+              return new ResponseEntity<>(storedResponseBean, HttpStatus.OK);
+            }
+          }
+          logger.debug("getresponse()storedResponseBean4", storedResponseBean.toString());
+          return new ResponseEntity<>(storedResponseBean, HttpStatus.OK);
+
+        } else {
+
+          StoredResponseBean storedResponseBean =
+              activityResponseProcessorService.getActivityResponseDataForParticipant(
+                  studyId, siteId, participantId, activityId, questionKey);
+          responseServerAuditLogHelper.logEvent(
+              READ_OPERATION_FOR_RESPONSE_DATA_SUCCEEDED, auditRequest);
+          logger.debug("getresponse()storedResponseBean5", storedResponseBean.toString());
+          return new ResponseEntity<>(storedResponseBean, HttpStatus.OK);
+        }
       } else {
         ErrorBean errorBean =
             AppUtil.dynamicResponse(
@@ -515,9 +716,10 @@ public class ProcessActivityResponseController {
       @RequestParam(name = "participantId") String participantId,
       HttpServletRequest request) {
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     if (StringUtils.isBlank(studyId) || StringUtils.isBlank(participantId)) {
+      logger.debug(
+          "ParticipantIdController withdrawParticipantFromStudy() - studyId or participantId is blank ");
       ErrorBean errorBean =
           AppUtil.dynamicResponse(
               ErrorCode.EC_701.code(),
@@ -551,6 +753,9 @@ public class ProcessActivityResponseController {
         return new ResponseEntity<>(srBean, HttpStatus.OK);
       } catch (Exception e) {
         if (responseDataUpdate) {
+          logger.debug(
+              "ParticipantIdController withdrawParticipantFromStudy() - Catch responseDataUpdate 1: "
+                  + responseDataUpdate);
           ErrorBean errorBean =
               AppUtil.dynamicResponse(
                   ErrorCode.EC_717.code(),
@@ -564,6 +769,9 @@ public class ProcessActivityResponseController {
                   + "\n Particpant Id");
           return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
         } else {
+          logger.debug(
+              "ParticipantIdController withdrawParticipantFromStudy() - Catch responseDataUpdate 2: "
+                  + responseDataUpdate);
           responseServerAuditLogHelper.logEvent(WITHDRAWAL_INFORMATION_UPDATE_FAILED, auditRequest);
           ErrorBean errorBean =
               AppUtil.dynamicResponse(

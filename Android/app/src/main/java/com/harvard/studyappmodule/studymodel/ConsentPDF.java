@@ -22,6 +22,8 @@ public class ConsentPDF extends RealmObject {
 
   private String sharing;
 
+  private String dataSharingScreenShot;
+
   @PrimaryKey
   private String studyId;
 
@@ -59,14 +61,12 @@ public class ConsentPDF extends RealmObject {
     this.consent = consent;
   }
 
-  @Override
-  public String toString() {
-    return "ClassPojo [message = "
-            + message
-            + ", sharing = "
-            + sharing
-            + ", consent = "
-            + consent
-            + "]";
+  public String getDataSharingScreenShot() {
+    return dataSharingScreenShot;
   }
+
+  public void setDataSharingScreenShot(String dataSharingScreenShot) {
+    this.dataSharingScreenShot = dataSharingScreenShot;
+  }
+
 }

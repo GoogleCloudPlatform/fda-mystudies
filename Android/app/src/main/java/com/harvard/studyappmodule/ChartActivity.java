@@ -18,11 +18,13 @@ package com.harvard.studyappmodule;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
@@ -54,6 +56,7 @@ import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.CustomMarkerView;
 import com.harvard.utils.Logger;
+import com.harvard.utils.NetworkChangeReceiver;
 import com.harvard.utils.TempGraphHelper;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -69,7 +72,8 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ChartActivity extends AppCompatActivity {
+public class ChartActivity extends AppCompatActivity
+    implements NetworkChangeReceiver.NetworkChangeCallback {
   private LinearLayout chartlayout;
   private String[] day = {"SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"};
   private String[] monthfull = {
@@ -91,6 +95,7 @@ public class ChartActivity extends AppCompatActivity {
   private ArrayList<String> fromDayVals = new ArrayList<>();
   private ArrayList<String> dateTypeArray = new ArrayList<>();
   private ArrayList<String> toDayVals = new ArrayList<>();
+  RelativeLayout shareBtn;
 
   private Date starttime;
   private Date endtime;
@@ -98,6 +103,7 @@ public class ChartActivity extends AppCompatActivity {
   private Realm realm;
   private static final int PERMISSION_REQUEST_CODE = 2000;
   private CustomFirebaseAnalytics analyticsInstance;
+  private NetworkChangeReceiver networkChangeReceiver;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -107,21 +113,22 @@ public class ChartActivity extends AppCompatActivity {
     dbServiceSubscriber = new DbServiceSubscriber();
     analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     realm = AppController.getRealmobj(this);
+    networkChangeReceiver = new NetworkChangeReceiver(this);
     dashboardData =
         dbServiceSubscriber.getDashboardDataFromDB(getIntent().getStringExtra("studyId"), realm);
     chartlayout = (LinearLayout) findViewById(R.id.chartlayout);
     RelativeLayout backBtn = (RelativeLayout) findViewById(R.id.backBtn);
-    RelativeLayout shareBtn = (RelativeLayout) findViewById(R.id.mShareBtn);
+    shareBtn = (RelativeLayout) findViewById(R.id.mShareBtn);
     shareBtn.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
             Bundle eventProperties = new Bundle();
             eventProperties.putString(
-                    CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                    getString(R.string.chart_actvity_share));
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.chart_actvity_share));
             analyticsInstance.logEvent(
-                    CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             screenshotWritingPermission();
           }
         });
@@ -585,7 +592,7 @@ public class ChartActivity extends AppCompatActivity {
     File dir = new File(root + "/Android/FDA/Screenshot");
     dir.mkdirs();
     String fname = getIntent().getStringExtra("studyName")
-            .replace("/", "\u2215") + "_Chart.png";
+        .replace("/", "\u2215") + "_Chart.png";
     File file = new File(dir, fname);
     if (file.exists()) {
       file.delete();
@@ -1556,5 +1563,31 @@ public class ChartActivity extends AppCompatActivity {
   protected void onDestroy() {
     dbServiceSubscriber.closeRealmObj(realm);
     super.onDestroy();
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+    registerReceiver(networkChangeReceiver, intentFilter);
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    if (networkChangeReceiver != null) {
+      unregisterReceiver(networkChangeReceiver);
+    }
+  }
+
+  @Override
+  public void onNetworkChanged(boolean status) {
+    if (!status) {
+      shareBtn.setClickable(false);
+      shareBtn.setAlpha(0.3F);
+    } else {
+      shareBtn.setClickable(true);
+      shareBtn.setAlpha(1F);
+    }
   }
 }

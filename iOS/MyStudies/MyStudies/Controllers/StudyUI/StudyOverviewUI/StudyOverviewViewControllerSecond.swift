@@ -105,13 +105,13 @@ class StudyOverviewViewControllerSecond: UIViewController {
         self.textViewDescription?.text = detailText
         if detailText.stringByDecodingHTMLEntities.range(of: regex, options: .regularExpression) == nil {
           if let valReConversiontoHTMLfromHTML =
-              detailText.stringByDecodingHTMLEntities.htmlToAttributedString?.attributedString2Html {
+              detailText.stringByDecodingHTMLEntities.htmlToAttriString?.attriString2Html {
             
-            if let attributedText = valReConversiontoHTMLfromHTML.stringByDecodingHTMLEntities.htmlToAttributedString,
+            if let attributedText = valReConversiontoHTMLfromHTML.stringByDecodingHTMLEntities.htmlToAttriString,
                attributedText.length > 0 {
               textViewDescription?.attributedText = attributedText
             } else if let attributedText =
-                        detailText.htmlToAttributedString?.attributedString2Html?.stringByDecodingHTMLEntities.htmlToAttributedString,
+                        detailText.htmlToAttriString?.attriString2Html?.stringByDecodingHTMLEntities.htmlToAttriString,
                       attributedText.length > 0 {
               textViewDescription?.attributedText = attributedText
             } else {
@@ -122,7 +122,7 @@ class StudyOverviewViewControllerSecond: UIViewController {
           }
         } else {
           self.textViewDescription?.attributedText =
-            detailText.stringByDecodingHTMLEntities.htmlToAttributedString
+            detailText.stringByDecodingHTMLEntities.htmlToAttriString
         }
       } else {
         self.textViewDescription?.text = ""

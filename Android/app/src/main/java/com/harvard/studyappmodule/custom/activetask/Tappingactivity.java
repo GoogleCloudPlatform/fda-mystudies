@@ -22,7 +22,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import androidx.appcompat.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -34,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 import com.harvard.R;
 import com.harvard.studyappmodule.activitybuilder.CustomSurveyViewTaskActivity;
 import com.harvard.studyappmodule.custom.QuestionStepCustom;
@@ -98,10 +98,12 @@ public class Tappingactivity implements StepBody {
     timer.addTextChangedListener(
         new TextWatcher() {
           @Override
-          public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+          public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+          }
 
           @Override
-          public void onTextChanged(CharSequence s, int start, int before, int count) {}
+          public void onTextChanged(CharSequence s, int start, int before, int count) {
+          }
 
           @Override
           public void afterTextChanged(Editable s) {
@@ -156,8 +158,10 @@ public class Tappingactivity implements StepBody {
               new MyTimePickerDialog(
                   context,
                   new MyTimePickerDialog.OnTimeSetListener() {
+
                     @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute, int seconds) {
+                    public void onTimeSet(
+                        TimePicker view, int hourOfDay, int minute, int seconds) {
                       String hrs;
                       String min;
                       String sec;
@@ -181,9 +185,9 @@ public class Tappingactivity implements StepBody {
                         timer.setText(hrs + ":" + min + ":" + sec);
                       } else {
                         Toast.makeText(
-                                inflater.getContext(),
-                                "Max duration you can enter is " + formathrs(maxTime),
-                                Toast.LENGTH_SHORT)
+                            inflater.getContext(),
+                            "Max duration you can enter is " + formathrs(maxTime),
+                            Toast.LENGTH_SHORT)
                             .show();
                         finalSecond =
                             (Integer.parseInt(duration[0]) * 60 * 60)
@@ -195,7 +199,8 @@ public class Tappingactivity implements StepBody {
                   Integer.parseInt(duration[0]),
                   Integer.parseInt(duration[1]),
                   Integer.parseInt(duration[2]),
-                  true).show();
+                  true)
+                  .show();
             }
           }
         });
@@ -206,10 +211,10 @@ public class Tappingactivity implements StepBody {
           public void onClick(View view) {
             Bundle eventProperties = new Bundle();
             eventProperties.putString(
-                    CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                    context.getString(R.string.tap_btn));
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                context.getString(R.string.tap_btn));
             analyticsInstance.logEvent(
-                    CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             kickcounter.setFocusable(false);
             kickcounter.setFocusableInTouchMode(false);
             kickcounter.setFocusable(true);
@@ -245,9 +250,9 @@ public class Tappingactivity implements StepBody {
               }
             } else {
               Toast.makeText(
-                      inflater.getContext(),
-                      "max kick you can enter is " + maxcount,
-                      Toast.LENGTH_SHORT)
+                  inflater.getContext(),
+                  "max kick you can enter is " + maxcount,
+                  Toast.LENGTH_SHORT)
                   .show();
             }
           }
@@ -262,15 +267,16 @@ public class Tappingactivity implements StepBody {
           }
 
           @Override
-          public void onTextChanged(CharSequence s, int start, int before, int count) {}
+          public void onTextChanged(CharSequence s, int start, int before, int count) {
+          }
 
           @Override
           public void afterTextChanged(Editable s) {
             if (!s.toString().equalsIgnoreCase("") && Integer.parseInt(s.toString()) > maxcount) {
               Toast.makeText(
-                      inflater.getContext(),
-                      "max kick you can enter is " + maxcount,
-                      Toast.LENGTH_SHORT)
+                  inflater.getContext(),
+                  "max kick you can enter is " + maxcount,
+                  Toast.LENGTH_SHORT)
                   .show();
               kickcounter.setText(pervioustxt[0]);
               kickcounter.setSelection(kickcounter.getText().toString().length());

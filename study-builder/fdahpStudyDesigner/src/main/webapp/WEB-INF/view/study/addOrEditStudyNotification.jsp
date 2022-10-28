@@ -6,7 +6,7 @@
 <jsp:useBean id="date" class="java.util.Date"/>
 <c:set var="tz" value="America/Los_Angeles"/>
 
-<div class="col-sm-10 col-rc white-bg p-none">
+<div class="col-sm-9.5 col-rc white-bg p-none">
   <form:form
       action="/studybuilder/adminStudies/saveOrUpdateStudyNotification.do?${_csrf.parameterName}=${_csrf.token}&_S=${param._S}"
       data-toggle="validator" role="form" id="studyNotificationFormId" method="post"
@@ -80,7 +80,7 @@
         <div class="form-group">
           <textarea autofocus="autofocus" class="form-control" maxlength="250" rows="5"
                     id="notificationText"
-                    name="notificationText" required data-error="Please fill out this field" 
+                    name="notificationText" required data-error="Please fill out this field"
           >${notificationBO.notificationText}</textarea>
           <div class="help-block with-errors red-txt"></div>
         </div>
@@ -95,7 +95,7 @@
                        test="${notificationBO.notificationScheduleType eq 'notImmediate'}">checked</c:if>
                    <c:if test="${notificationBO.actionPage eq 'addOrCopy'}">checked</c:if>>
             <label for="inlineRadio1">Schedule this notification</label>
-              <span
+            <span
       <fmt:formatDate value = "${date}" pattern="z" var="server_timezone"/>
           class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
           style="width: 20px;background-position: -164px -68px;"
@@ -130,9 +130,9 @@
           <span class="requiredStar">*</span>
         </div>
         <div class="form-group date">
-          <input id='datetimepicker' type="text" class="form-control calendar datepicker resetVal" data-error="Please fill out this field" 
+          <input id='datetimepicker' type="text" class="form-control calendar datepicker resetVal"
                  id="scheduleDate"
-                 name="scheduleDate" value="${notificationBO.scheduleDate}"
+                 name="scheduleDate" value="${notificationBO.scheduleDate}" data-error="Please fill out this field"
                  oldValue="${notificationBO.scheduleDate}"
                  placeholder="MM/DD/YYYY" disabled/>
           <div class="help-block with-errors red-txt"></div>
@@ -144,8 +144,8 @@
           <span class="requiredStar">*</span>
         </div>
         <div class="form-group">
-          <input id="timepicker1" class="form-control clock timepicker resetVal" id="scheduleTime" data-error="Please fill out this field" 
-                 name="scheduleTime" value="${notificationBO.scheduleTime}"
+          <input id="timepicker1" class="form-control clock timepicker resetVal" id="scheduleTime"
+                 name="scheduleTime" value="${notificationBO.scheduleTime}" data-error="Please fill out this field"
                  oldValue="${notificationBO.scheduleTime}"
                  placeholder="00:00" disabled/>
           <div class="help-block with-errors red-txt"></div>
@@ -182,6 +182,7 @@
     $('.eigthNotification').removeClass('cursor-none');
 
     $('[data-toggle="tooltip"]').tooltip();
+
 
     <c:if test="${notificationBO.actionPage eq 'view'}">
     $('#studyNotificationFormId input,textarea').prop('disabled', true);
@@ -421,7 +422,7 @@
     $('.goToNotificationListForm').on('click', function () {
       <c:if test="${notificationBO.actionPage eq 'edit' || notificationBO.actionPage eq 'addOrCopy' && not notificationBO.notificationSent}">
       bootbox.confirm({
-        closeButton: false,
+        closeButton: true,
         message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
         buttons: {
           'cancel': {
@@ -446,7 +447,7 @@
       </c:if>
       <c:if test="${notificationBO.actionPage eq 'resend' && notificationBO.notificationSent}">
       bootbox.confirm({
-        closeButton: false,
+        closeButton: true,
         message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
         buttons: {
           'cancel': {
@@ -478,10 +479,18 @@
       dt.setMinutes(thisDate.getMinutes());
       $('.timepicker').parent().removeClass('has-error has-danger').find(
           '.help-block.with-errors').empty();
-      if (dt < serverDateTime()) {
+      $('.datepicker').parent().removeClass('has-error has-danger').find(
+      '.help-block.with-errors').empty();
+      if(dt < serverDate()){
+    	  $('.datepicker').parent().addClass('has-error has-danger').find(
+          '.help-block.with-errors').empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+          "Please select a date that has not gone past yet"));
+      valid = false;
+      }
+      else if(dt < serverDateTime()) {
         $('.timepicker').parent().addClass('has-error has-danger').find(
             '.help-block.with-errors').empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Please select a time in the future"));
+            "Please select a time that has not gone past yet"));
         valid = false;
       }
     }

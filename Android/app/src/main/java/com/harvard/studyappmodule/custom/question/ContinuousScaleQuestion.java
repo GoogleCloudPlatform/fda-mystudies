@@ -33,7 +33,6 @@ import com.harvard.utils.VerticalSeekBar;
 import com.jaygoo.widget.OnRangeChangedListener;
 import com.jaygoo.widget.RangeSeekBar;
 import com.jaygoo.widget.VerticalRangeSeekBar;
-
 import java.text.NumberFormat;
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
@@ -208,7 +207,8 @@ public class ContinuousScaleQuestion<T> implements StepBody {
               + Double.parseDouble("" + (int) seekBar.getLeftSeekBar().getProgress())
               / Double.parseDouble("" + (stepSection * 10));
     } else {
-      value = Double.parseDouble("" + min) + Double.parseDouble("" + (int) seekBar.getLeftSeekBar().getProgress());
+      value = Double.parseDouble("" + min)
+          + Double.parseDouble("" + (int) seekBar.getLeftSeekBar().getProgress());
     }
     NumberFormat nf = NumberFormat.getInstance();
     nf.setMaximumFractionDigits(stepSection);

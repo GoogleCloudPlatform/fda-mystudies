@@ -14,7 +14,7 @@
 
   <div class="clearfix"></div>
 </div>
-<form:form
+<form:form class="display_contents"
     action="/studybuilder/adminDashboard/updateUserDetails.do?${_csrf.parameterName}=${_csrf.token}"
     id="userDetailsForm"
     name="userDetailsForm" role="form" data-toggle="validator" method="post" autocomplete="off">
@@ -136,7 +136,7 @@
   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mb-md">
     <div class="white-bg box-space">
       <div class="row" id="hideChangePwd">
-        <div class="col-md-12 pl-none pr-none">
+        <div class="col-md-12 display_contents pl-none pr-none">
           <div class="col-md-3 p-none">
             <div class="gray-xs-f line34">Password</div>
           </div>
@@ -150,7 +150,7 @@
           </div>
         </div>
       </div>
-      <div class="row changepwd dis-none">
+      <div class="row display_contents changepwd dis-none">
         <div class="pl-none ">
           <div class="b-bor mt-md">
             <div class="ed-user-layout row">
@@ -229,7 +229,7 @@
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mb-md">
   <div class="white-bg box-space">
 
-    <div class="ed-user-layout row">
+    <div class="ed-user-layout">
       <div class="blue-md-f text-uppercase mb-md">Assigned Permissions</div>
 
       <!-- Assigned Permissions List-->

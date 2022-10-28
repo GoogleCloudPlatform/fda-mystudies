@@ -18,7 +18,6 @@ export const expectedSitesList = {
       id: '1',
       customId: 'TestStudy001',
       name: 'abcd',
-      appStatus: 'Active',
       sitesCount: 1,
       sites: [
         {
@@ -122,10 +121,8 @@ export const expectedStudiesDetails = {
     appId: '4028617973be410f0173be41229e0001',
     customAppId: 'mystudies-id-1',
     appName: 'mystudies-1',
-    appStatus: 'Active',
     targetEnrollment: 1,
     studyStatus: Status.Active,
-
     studyPermission: Permission.ViewAndEdit,
     registryParticipants: [
       {
@@ -193,7 +190,6 @@ export const expectedStudiesDetails = {
   message: 'Get participant registry successfully',
   code: 'MSG-0013',
   totalParticipantCount: 3,
-  appStatus: 'Active',
 } as StudyDetails;
 
 export const expectedStudyId = {id: '1'} as Study;

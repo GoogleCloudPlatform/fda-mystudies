@@ -8,7 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE_NA;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.APP_PARTICIPANT_REGISTRY_VIEWED;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AppDetails;
@@ -514,8 +514,8 @@ public class AppServiceImpl implements AppService {
 
     String withdrawalDate = DateTimeUtils.format(enrollmentHistory.getWithdrawalDate());
     String enrolledDate = DateTimeUtils.format(enrollmentHistory.getEnrolledDate());
-    appSiteDetails.setWithdrawlDate(StringUtils.defaultIfEmpty(withdrawalDate, NOT_APPLICABLE));
-    appSiteDetails.setEnrollmentDate(StringUtils.defaultIfEmpty(enrolledDate, NOT_APPLICABLE));
+    appSiteDetails.setWithdrawlDate(StringUtils.defaultIfEmpty(withdrawalDate, NOT_APPLICABLE_NA));
+    appSiteDetails.setEnrollmentDate(StringUtils.defaultIfEmpty(enrolledDate, NOT_APPLICABLE_NA));
     return appSiteDetails;
   }
 

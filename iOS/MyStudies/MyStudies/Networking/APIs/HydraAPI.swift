@@ -80,7 +80,7 @@ struct HydraAPI {
   }
 
   static func refreshToken(completion: @escaping StatusHandler) {
-    APIService.instance.isTokenRefreshing = true
+//    APIService.instance.isTokenRefreshing = true
     let params: StringDictionary = [
       "grant_type": "refresh_token",
       "redirect_uri": AuthRouter.redirectURL,

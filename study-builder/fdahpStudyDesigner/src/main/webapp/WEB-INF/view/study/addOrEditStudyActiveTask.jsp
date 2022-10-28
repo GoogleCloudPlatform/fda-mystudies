@@ -5,7 +5,7 @@
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
-<div class="col-sm-10 col-rc white-bg p-none">
+<div class="col-sm-9.5 col-rc white-bg p-none">
 
   <!--  Start top tab section-->
   <div class="right-content-head">
@@ -43,19 +43,19 @@
   <div class="right-content-body pt-none pl-none pr-none">
 
     <ul class="nav nav-tabs review-tabs gray-bg" id="tabsId">
-      <li class="contentClass active">
-        <a data-toggle="tab" href="#content">Content</a>
+      <li class="contentClass nav-item active">
+        <a data-toggle="tab" href="#content" class="nav-link active">Content</a>
       </li>
-      <li class="scheduleTaskClass linkDis" disabled>
-        <a data-toggle="tab"
+      <li class="scheduleTaskClass linkDis nav-item" disabled>
+        <a data-toggle="tab" class="nav-link" id="scd_id"
            href="#schedule">Schedule
         </a>
       </li>
     </ul>
     <div class="tab-content pl-xlg pr-xlg">
       <!-- Content-->
-      <div id="content" class="tab-pane fade in active mt-xlg">
-        <div class="mt-md blue-md-f text-uppercase">Select Active task</div>
+      <div id="content" class="tab-pane fade show active mt-xlg">
+        <div class="mt-md blue-md-f text-uppercase">Select Active Task</div>
         <div class="gray-xs-f mt-md mb-sm">Choose from a list of pre-defined active tasks</div>
         <div class="col-md-4 p-none">
           <select class="selectpicker targetOption" id="targetOptionId" taskId="${activeTaskBo.id}"
@@ -94,13 +94,14 @@
     if (!activeTaskInfoId) {
       activeTaskInfoId = '${activeTaskInfoId}';
     }
+    
     var actionType = '${actionPage}';
-
     var selectedTask = $('.targetOption').find("option:selected").text();
     
-    if(actionType == 'view'){
-        $('.manuallyContainer').find('input:text').attr('disabled', 'disabled');
-    }
+        if(actionType == 'view'){
+      		  $('.manuallyContainer').find('input:text').attr('disabled', 'disabled');
+        }
+     
 
     if (activeTaskInfoId) {
       $('.targetOption').prop('disabled', true);
@@ -136,17 +137,19 @@
       var activeTaskInfoId = $(this).attr('taskId');
       $('.changeContent').empty();
       $(document).find('#saveId').unbind();
+      //$(document).off('click', '#saveId');
       $(document).off('click', '#doneId');
-      loadSelectedATask(typeOfActiveTask, activeTaskInfoId, actionType);
+      loadSelectedATask(typeOfActiveTask, activeTaskInfoId, actionType); 
       $('.actBut').show();
       $('.scheduleTaskClass').prop('disabled', false);
       $('.scheduleTaskClass').removeClass('linkDis');
     });
-    if (activeTaskInfoId || selectedTask) {
+    // if (activeTaskInfoId || selectedTask) {
       loadActiveSchedule(changeTabSchedule);
-    }
+    // }
 
     function loadSelectedATask(typeOfActiveTask, activeTaskInfoId, actionType) {
+      debugger;
       $(".changeContent").load(
           "/studybuilder/adminStudies/navigateContentActiveTask.do?${_csrf.parameterName}=${_csrf.token}&_S=${param._S}",
           {
@@ -154,9 +157,10 @@
             typeOfActiveTask: typeOfActiveTask,
             activeTaskInfoId: activeTaskInfoId,
             actionType: actionType
-          },
+          } ,
           function () {
-            
+            $(this).parents('form').attr('action',
+                '/studybuilder/adminStudies/saveOrUpdateActiveTaskContent.do?_S=${param._S}');
             resetValidation($(this).parents('form'));
             var dt = new Date();
             $('#inputClockId').datetimepicker({
@@ -167,12 +171,15 @@
             actionPageView();
             var currentPage = '${currentPage}';
             $('#currentPageId').val(currentPage);
-          });
+          } );
 
-    }
+    };
+
+
 
     function loadActiveSchedule(changeTabSchedule) {
       if (changeTabSchedule) {
+        debugger;
         $("#schedule").load(
             "/studybuilder/adminStudies/viewScheduledActiveTask.do?${_csrf.parameterName}=${_csrf.token}&_S=${param._S}",
             {
@@ -255,7 +262,7 @@
     <c:if test="${actionPage ne 'view'}">
     $(item).prop('disabled', true);
     bootbox.confirm({
-      closeButton: false,
+      closeButton: true,
       message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
       buttons: {
         'cancel': {
@@ -301,5 +308,4 @@
    		  $('.manuallyContainer').find('input:text').attr('disabled', 'disabled');
      }
   })
- 
 </script>

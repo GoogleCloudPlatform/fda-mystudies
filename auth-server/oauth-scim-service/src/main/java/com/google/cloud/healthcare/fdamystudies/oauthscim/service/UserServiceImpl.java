@@ -126,6 +126,7 @@ public class UserServiceImpl implements UserService {
     // save user account details
     UserEntity userEntity = UserMapper.fromUserRequest(userRequest);
     ObjectNode userInfo = getObjectNode();
+
     setPasswordAndPasswordHistoryFields(
         userRequest.getPassword(), userInfo, UserAccountStatus.PENDING_CONFIRMATION.getStatus());
 
@@ -328,6 +329,9 @@ public class UserServiceImpl implements UserService {
       currentPwdNode = userInfo.get(ACCOUNT_LOCKED_PASSWORD);
     }
 
+    logger.debug("getCurrentPassword value: " + userRequest.getCurrentPassword());
+    logger.debug("getNewPassword value: " + userRequest.getNewPassword());
+    logger.debug("userInfo value in change password: " + userInfo.toPrettyString());
     ErrorCode errorCode =
         validateChangePasswordRequest(userRequest, currentPwdNode, passwordHistory, userEntity);
 
@@ -552,9 +556,11 @@ public class UserServiceImpl implements UserService {
       passwordNode.put(OTP_USED, true);
       userInfo.set(ACCOUNT_LOCKED_PASSWORD, passwordNode);
     } else if (UserAccountStatus.PASSWORD_RESET.equals(status)) {
+      logger.debug("userInfo value in before login: " + userInfo.toPrettyString());
       ObjectNode passwordNode = (ObjectNode) userInfo.get(PASSWORD);
       passwordNode.put(OTP_USED, true);
       userInfo.set(PASSWORD, passwordNode);
+      logger.debug("userInfo value in after login: " + userInfo.toPrettyString());
     } else {
       ObjectNode passwordNode = (ObjectNode) userInfo.get(PASSWORD);
       passwordNode.remove(OTP_USED);
@@ -636,13 +642,41 @@ public class UserServiceImpl implements UserService {
     UserEntity userEntity = optUser.get();
     Integer status =
         userRequest.getStatus() == null ? userEntity.getStatus() : userRequest.getStatus();
+
+    logger.debug("userEntity.getStatus(): " + userEntity.getStatus());
+    logger.debug("userRequest.getStatus(): " + userRequest.getStatus());
+
     String email = StringUtils.defaultIfEmpty(userRequest.getEmail(), userEntity.getEmail());
 
     String tempRegId = null;
     if (userRequest.getStatus() != null
         && UserAccountStatus.ACTIVE.getStatus() == userRequest.getStatus()) {
       tempRegId = IdGenerator.id();
+    } else if (userRequest.getStatus() != null
+        && UserAccountStatus.PASSWORD_RESET.getStatus() == userEntity.getStatus()
+        && UserAccountStatus.DEACTIVATED.getStatus() == userRequest.getStatus()) {
+
+      ObjectNode userInfo = (ObjectNode) userEntity.getUserInfo();
+      JsonNode passwordNode = userInfo.get(PASSWORD);
+
+      logger.debug("passwordNode before: " + userInfo.toPrettyString());
+      ((ObjectNode) passwordNode)
+          .put(EXPIRE_TIMESTAMP, DateTimeUtils.getSystemDateTimestamp(0, 0, 0));
+
+      ArrayNode passwordHistory =
+          userInfo.hasNonNull(PASSWORD_HISTORY)
+              ? (ArrayNode) userInfo.get(PASSWORD_HISTORY)
+              : createArrayNode();
+      passwordHistory.add(passwordNode);
+
+      userInfo.set(PASSWORD, passwordNode);
+      userInfo.set(PASSWORD_HISTORY, passwordHistory);
+
+      logger.debug("userInfo after update: " + userInfo.toPrettyString());
+      userEntity.setUserInfo(userInfo);
+      repository.saveAndFlush(userEntity);
     }
+
     repository.updateEmailStatusAndTempRegId(email, status, tempRegId, userEntity.getUserId());
     logger.exit(MessageCode.UPDATE_USER_DETAILS_SUCCESS);
     return new UpdateEmailStatusResponse(MessageCode.UPDATE_USER_DETAILS_SUCCESS, tempRegId);
@@ -669,6 +703,8 @@ public class UserServiceImpl implements UserService {
     logger.entry("revokeAndReplaceRefreshToken(userId, refreshToken)");
     Optional<UserEntity> optUserEntity = repository.findByUserId(userId);
     if (!optUserEntity.isPresent()) {
+
+      logger.debug("auth USER_NOT_FOUND ");
       throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
 
@@ -677,21 +713,30 @@ public class UserServiceImpl implements UserService {
 
     if (userInfo.hasNonNull(REFRESH_TOKEN)) {
       String prevRefreshToken = getTextValue(userInfo, REFRESH_TOKEN);
+
+      logger.debug("auth prevRefreshToken " + prevRefreshToken);
       prevRefreshToken = encryptor.decrypt(prevRefreshToken);
       HttpHeaders headers = new HttpHeaders();
       headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
       MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
       requestParams.add(TOKEN, prevRefreshToken);
+
+      logger.debug("auth TOKEN added ");
       ResponseEntity<JsonNode> response = oauthService.revokeToken(requestParams, headers);
+
+      logger.debug("revokeToken completed ");
       if (!response.getStatusCode().is2xxSuccessful()) {
+        logger.debug("revokeToken failed ");
         throw new ErrorCodeException(ErrorCode.APPLICATION_ERROR);
       }
     }
 
     if (StringUtils.isEmpty(refreshToken)) {
+      logger.debug("refreshToken empty ");
       userInfo.remove(REFRESH_TOKEN);
     } else {
       userInfo.put(REFRESH_TOKEN, encryptor.encrypt(refreshToken));
+      logger.debug("refreshToken added userInfo value : " + userInfo.toPrettyString());
     }
 
     userEntity.setUserInfo(userInfo);
@@ -699,6 +744,8 @@ public class UserServiceImpl implements UserService {
 
     UserResponse userResponse = new UserResponse();
     userResponse.setHttpStatusCode(HttpStatus.OK.value());
+
+    logger.debug("refresh token updated ");
     logger.exit(
         "previous refresh token revoked and replaced with new refresh token for the given user");
     return userResponse;

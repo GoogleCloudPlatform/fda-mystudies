@@ -21,9 +21,8 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import androidx.multidex.MultiDex;
 import android.util.Base64;
-
+import androidx.multidex.MultiDex;
 import com.harvard.passcodemodule.PasscodeSetupActivity;
 import com.harvard.studyappmodule.StudyModuleSubscriber;
 import com.harvard.usermodule.UserModuleSubscriber;
@@ -31,7 +30,6 @@ import com.harvard.utils.AppController;
 import com.harvard.utils.AppVisibilityDetector;
 import com.harvard.utils.Logger;
 import com.harvard.webservicemodule.WebserviceSubscriber;
-
 import io.realm.Realm;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

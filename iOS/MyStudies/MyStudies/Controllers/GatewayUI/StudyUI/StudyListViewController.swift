@@ -20,6 +20,7 @@
 import IQKeyboardManagerSwift
 import UIKit
 import FirebaseAnalytics
+import Reachability
 
 let kHelperTextForFilteredStudiesNotFound = "No studies found for the filters applied."
 
@@ -44,6 +45,7 @@ class StudyListViewController: UIViewController {
   lazy var isComingFromFilterScreen: Bool = false
   lazy var studiesList: [Study] = []
   lazy var previousStudyList: [Study] = []
+  private var reachability: Reachability!
 
   /// Gatewaystudylist
   lazy var allStudyList: [Study] = []
@@ -56,10 +58,84 @@ class StudyListViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)),
-                                           name: Notification.Name("Menu Clicked"), object: nil)
-    NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification1(notification:)),
-                                           name: Notification.Name("LeftMenu Home"), object: nil)
+    
+//    UserDefaults.standard.set("1stAugtestDev 0", forKey: "performActivityTaskBasedOnStudyStatus")
+//    UserDefaults.standard.synchronize()
+    
+    print("777userInfoDetails---\(UserDefaults.standard.value(forKey: "newactivity1"))")
+    print("888userInfoDetails---\(UserDefaults.standard.value(forKey: "newactivity2"))")
+    
+    let val31 = UserDefaults.standard.value(forKey: "newactivity1") as? String ?? ""
+    
+   let val4 = ((UserDefaults.standard.value(forKey: "newactivity2") as? String) ?? "").contains("A new activity")
+    
+    let val4b = ((UserDefaults.standard.value(forKey: "newactivity3") as? String) ?? "").contains("A new activity")
+    
+    let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
+    let val4c = "\(appdelegate.notificationDetails)"
+    let val4d = "\(appdelegate.notificationDetails)".contains("A new activity")
+    
+    let val5b = ((UserDefaults.standard.value(forKey: "newactivity4") as? String) ?? "").contains("A new activity")
+    
+    
+//    if val4 && val31 == "" {
+      if val4 {
+      let val5 = ((UserDefaults.standard.value(forKey: "newactivity2") as? String) ?? "").components(separatedBy: "\"studyId\": ")
+      if val5.count > 1 {
+       print("8881userInfoDetails---\(val5[1])")
+        let val6 = val5[1]
+        let val7 = val6.components(separatedBy: ",")
+        if val7.count > 1 {
+          print("8882userInfoDetails---\("\(val7[0] ?? "") 0")")
+          UserDefaults.standard.set("\(val7[0] ?? "") 0", forKey: "performActivityTaskBasedOnStudyStatus")
+          UserDefaults.standard.synchronize()
+        }
+      }
+    }
+    else if val4b {
+      let val5 = ((UserDefaults.standard.value(forKey: "newactivity3") as? String) ?? "").components(separatedBy: "\"studyId\": ")
+      if val5.count > 1 {
+       print("8881userInfoDetails---\(val5[1])")
+        let val6 = val5[1]
+        let val7 = val6.components(separatedBy: ",")
+        if val7.count > 1 {
+          print("8882userInfoDetails---\("\(val7[0] ?? "") 0")")
+          UserDefaults.standard.set("\(val7[0] ?? "") 0", forKey: "performActivityTaskBasedOnStudyStatus")
+          UserDefaults.standard.synchronize()
+        }
+      }
+    } else if val4d {
+      let val5 = val4c.components(separatedBy: "\"studyId\": ")
+      if val5.count > 1 {
+       print("8881userInfoDetails---\(val5[1])")
+        let val6 = val5[1]
+        let val7 = val6.components(separatedBy: ",")
+        if val7.count > 1 {
+          print("8882userInfoDetails---\("\(val7[0] ?? "") 0")")
+          UserDefaults.standard.set("\(val7[0] ?? "") 0", forKey: "performActivityTaskBasedOnStudyStatus")
+          UserDefaults.standard.synchronize()
+        }
+      }
+    } else if val5b {
+      let val5 = ((UserDefaults.standard.value(forKey: "newactivity4") as? String) ?? "").components(separatedBy: "\"studyId\": ")
+      if val5.count > 1 {
+       print("8881userInfoDetails---\(val5[1])")
+        let val6 = val5[1]
+        let val7 = val6.components(separatedBy: ",")
+        if val7.count > 1 {
+          print("8882userInfoDetails---\("\(val7[0] ?? "") 0")")
+          UserDefaults.standard.set("\(val7[0] ?? "") 0", forKey: "performActivityTaskBasedOnStudyStatus")
+          UserDefaults.standard.synchronize()
+        }
+      }
+    }
+    
+    UserDefaults.standard.set("", forKey: "newactivity2")
+    UserDefaults.standard.set("", forKey: "newactivity1")
+    UserDefaults.standard.set("", forKey: "newactivity3")
+    UserDefaults.standard.set("", forKey: "newactivity4")
+    UserDefaults.standard.synchronize()
+    
     
     addNavigationTitle()
     isComingFromFilterScreen = false
@@ -69,17 +145,34 @@ class StudyListViewController: UIViewController {
     if #available(iOS 15, *) {
       UITableView.appearance().sectionHeaderTopPadding = CGFloat(0)
     }
+      print("1stAugtestDev---")
+//      UserDefaults.standard.set("1stAugtestDev 2", forKey: "performTaskBasedOnStudyStatus")
+//      UserDefaults.standard.synchronize()
   }
   
+    override func viewWillDisappear(_ animated: Bool) {
+        removeNotifier()
+    }
+    override func showOfflineIndicator() -> Bool {
+        return true
+    }
   override func viewWillAppear(_ animated: Bool) {
-    if !isComingFromFilterScreen {
+    setupNotifiers()
+    if !isComingFromFilterScreen && !(self.slideMenuController()?.isLeftOpen() ?? true) {
       self.addProgressIndicator()
     }
     setNavigationBarColor()
+    Utilities.removeImageLocalPath(localPathName: kConsentSharingImage)
+    Utilities.removeImageLocalPath(localPathName: kConsentSharingImagePDF)
+    UserDefaults.standard.setValue("", forKey: "enrollmentCompleted")
+    UserDefaults.standard.synchronize()
+      
   }
 
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
+  
+    
     if isComingFromFilterScreen {
       isComingFromFilterScreen = false
       return
@@ -137,12 +230,102 @@ class StudyListViewController: UIViewController {
       ud.synchronize()
     }
     checkBlockerScreen()
+      
+      DispatchQueue.main.async {
+
+//          self.performTaskBasedOnStudyStatus()
+
+      let val1 = UserDefaults.standard.value(forKey: "performTaskBasedOnStudyStatus") as? String ?? ""
+      UserDefaults.standard.set("", forKey: "performTaskBasedOnStudyStatus")
+      UserDefaults.standard.synchronize()
+      print("valvalval---\(val1)")
+      let val = val1.components(separatedBy: " ")
+//      var initialVC: UIViewController?
+
+          UserDefaults.standard.set("325---\(val[0])---,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
+
+      if !(val[0] == "" || val[0] == nil) {
+          if let study = Gateway.instance.studies?.filter { $0.studyId == val[0] }.last {
+              UserDefaults.standard.set("525,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+              UserDefaults.standard.synchronize()
+
+          print("study--\(study)")
+          Study.updateCurrentStudy(study: study)
+              let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
+              appdelegate.notificationDetails = nil
+        self.performTaskBasedOnStudyStatus()
+      print("181userInfoDetails---")
+
+      // push tabbar and switch to activty tab
+//      if let initialVC = initialVC {
+//        print("23userInfoDetails---")
+        UserDefaults.standard.set("323,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+        UserDefaults.standard.synchronize()
+
+
+
+//          let tabVal = Int(val[1]) ?? 0
+//          if tabVal != 0 {
+//        self.pushToTabbar(
+//          viewController: self,
+//          selectedTab: tabVal ?? 0
+//        )
+//      }
+
+          }
+      }
+      }
+      
   }
   
   override func viewDidDisappear(_ animated: Bool) {
     let ud = UserDefaults.standard
     ud.set(false, forKey: kIsStudylistGeneral)
     ud.synchronize()
+  }
+  
+  // MARK: - Utility functions
+  func setupNotifiers() {
+    NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)),
+                                           name: Notification.Name("Menu Clicked"), object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification1(notification:)),
+                                           name: Notification.Name("LeftMenu Home"), object: nil)
+    NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                           name: Notification.Name.reachabilityChanged, object: nil);
+    
+    
+    
+    do {
+      self.reachability = try Reachability()
+      try self.reachability.startNotifier()
+    } catch(let error) {
+    }
+  }
+  
+  func removeNotifier() {
+    NotificationCenter.default.removeObserver(self, name: Notification.Name.reachabilityChanged, object: nil)
+    NotificationCenter.default.removeObserver(self, name: Notification.Name("Menu Clicked"), object: nil)
+    NotificationCenter.default.removeObserver(self, name: Notification.Name("LeftMenu Home"), object: nil)
+  }
+  
+  @objc func reachabilityChanged(note: Notification) {
+    let reachability = note.object as! Reachability
+    switch reachability.connection {
+    case .cellular:
+      ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+      break
+    case .wifi:
+      ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+      break
+    case .none:
+      ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: true)
+      
+      break
+    case .unavailable:
+      ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: true)
+      break
+    }
   }
 
   // MARK: - UI Utils
@@ -315,7 +498,9 @@ class StudyListViewController: UIViewController {
         let studyId = NotificationHandler.instance.studyId
         let study = Gateway.instance.studies?.filter { $0.studyId == studyId }.first
         Study.updateCurrentStudy(study: study!)
-        performTaskBasedOnStudyStatus()
+          UserDefaults.standard.set("326---,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
+        performMainTaskBasedOnStudyStatus()
       }
     }
   }
@@ -396,6 +581,55 @@ class StudyListViewController: UIViewController {
         self.previousStudyList = studies
         self.allStudyList = studies
         Gateway.instance.studies = studies
+        
+        DispatchQueue.main.async {
+            
+  //          self.performTaskBasedOnStudyStatus()
+            
+        let val1 = UserDefaults.standard.value(forKey: "performActivityTaskBasedOnStudyStatus") as? String ?? ""
+        UserDefaults.standard.set("", forKey: "performActivityTaskBasedOnStudyStatus")
+        UserDefaults.standard.synchronize()
+        print("valvalval---\(val1)")
+        let val = val1.components(separatedBy: " ")
+  //      var initialVC: UIViewController?
+            
+            UserDefaults.standard.set("325---\(val[0])---,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+            UserDefaults.standard.synchronize()
+            
+        if !(val[0] == "" || val[0] == nil) {
+            if let study = Gateway.instance.studies?.filter { $0.studyId == val[0] }.last {
+                UserDefaults.standard.set("525,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+                UserDefaults.standard.synchronize()
+                
+            print("study--\(study)")
+            Study.updateCurrentStudy(study: study)
+                let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
+                appdelegate.notificationDetails = nil
+          self.performTaskBasedOnStudyStatus()
+        print("181userInfoDetails---")
+        
+        // push tabbar and switch to activty tab
+  //      if let initialVC = initialVC {
+  //        print("23userInfoDetails---")
+          UserDefaults.standard.set("323,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
+            
+            
+            
+  //          let tabVal = Int(val[1]) ?? 0
+  //          if tabVal != 0 {
+  //        self.pushToTabbar(
+  //          viewController: self,
+  //          selectedTab: tabVal ?? 0
+  //        )
+  //      }
+                
+            }
+        }
+        }
+        
+        
+        
 
         // Applying Filters
         let previousStudyFilters = StudyFilterHandler.instance.previousAppliedFilters
@@ -563,7 +797,8 @@ class StudyListViewController: UIViewController {
   /// Get the `Study` overview from DB if available and navigate.
   /// - Parameter study: Instance of `Study`.
   func checkDatabaseForStudyInfo(study: Study) {
-    DBHandler.loadStudyOverview(studyId: (study.studyId)!) { overview in
+    guard let studyId = study.studyId else { return }
+    DBHandler.loadStudyOverview(studyId: studyId) { overview in
       if overview != nil {
         study.overview = overview
         self.navigateToStudyHome()
@@ -601,9 +836,19 @@ class StudyListViewController: UIViewController {
       let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
 
       if appDelegate.notificationDetails != nil, User.currentUser.userType == .loggedInUser {
+          
+          
+          UserDefaults.standard.set("545,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
+          
+          UserDefaults.standard.set("", forKey: "performTaskBasedOnStudyStatus")
+          UserDefaults.standard.synchronize()
         appDelegate.handleLocalAndRemoteNotification(
           userInfoDetails: appDelegate.notificationDetails!
         )
+          UserDefaults.standard.set("546,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
+          appDelegate.notificationDetails = nil
       }
     } else {
       tableView?.isHidden = true
@@ -670,23 +915,38 @@ class StudyListViewController: UIViewController {
 
   /// Checks `Study` status and do the action.
   func performTaskBasedOnStudyStatus(studyID: String? = nil) {
+      UserDefaults.standard.set("527,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+      UserDefaults.standard.synchronize()
     // Study ID from notification
     if let studyID = studyID,
         let study = studiesList.filter({ $0.studyId == studyID }).first {
+      UserDefaults.standard.set("628,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+      UserDefaults.standard.synchronize()
       Study.updateCurrentStudy(study: study)
     }
     
+    UserDefaults.standard.set("627,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+    UserDefaults.standard.synchronize()
+    
     guard let study = Study.currentStudy else { return }
-
+    UserDefaults.standard.set("629,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+    UserDefaults.standard.synchronize()
     if User.currentUser.userType == UserType.loggedInUser {
+      UserDefaults.standard.set("630,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+      UserDefaults.standard.synchronize()
       let val = UserDefaults.standard.value(forKey: "pausedNotification") as? String ?? ""
       if Study.currentStudy?.status == .paused || val == "paused" {
+        UserDefaults.standard.set("631,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+        UserDefaults.standard.synchronize()
         UserDefaults.standard.set("", forKey: "pausedNotification")
         UserDefaults.standard.synchronize()
         let userStudyStatus = study.userParticipateState.status
-        
+        UserDefaults.standard.set("632,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+        UserDefaults.standard.synchronize()
         if userStudyStatus == .completed || userStudyStatus == .enrolled {
           DispatchQueue.main.async {
+            UserDefaults.standard.set("633,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+            UserDefaults.standard.synchronize()
             if (studyID == nil) {
               UIUtilities.showAlertWithTitleAndMessage(
                 title: "",
@@ -699,12 +959,18 @@ class StudyListViewController: UIViewController {
             }
           }
         } else {
+          UserDefaults.standard.set("634,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
           checkForStudyUpdate(study: study)
         }
       } else if study.status == .active {
+        UserDefaults.standard.set("635,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+        UserDefaults.standard.synchronize()
         let userStudyStatus = study.userParticipateState.status
 
         if userStudyStatus == .completed || userStudyStatus == .enrolled {
+          UserDefaults.standard.set("636,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
           // check if study version is udpated
           if study.version != study.newVersion {
             WCPServices().getStudyUpdates(study: study, delegate: self)
@@ -713,15 +979,120 @@ class StudyListViewController: UIViewController {
             perform(#selector(loadStudyDetails), with: self, afterDelay: 1)
           }
         } else if userStudyStatus == .yetToEnroll {
+          UserDefaults.standard.set("637,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
           checkDatabaseForStudyInfo(study: study)
         } else {
+          UserDefaults.standard.set("638,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
           checkForStudyUpdate(study: study)
         }
       }
     } else {
+      UserDefaults.standard.set("639,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+      UserDefaults.standard.synchronize()
       checkForStudyUpdate(study: study)
     }
   }
+    
+  func performMainTaskBasedOnStudyStatus(studyID: String? = nil) {
+      UserDefaults.standard.set("591,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+      UserDefaults.standard.synchronize()
+    // Study ID from notification
+    if let studyID = studyID,
+        let study = studiesList.filter({ $0.studyId == studyID }).first {
+      UserDefaults.standard.set("592,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+      UserDefaults.standard.synchronize()
+      Study.updateCurrentStudy(study: study)
+    }
+    
+    UserDefaults.standard.set("593,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+    UserDefaults.standard.synchronize()
+    
+    guard let study = Study.currentStudy else { return }
+    UserDefaults.standard.set("594,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+    UserDefaults.standard.synchronize()
+    if User.currentUser.userType == UserType.loggedInUser {
+      UserDefaults.standard.set("595,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+      UserDefaults.standard.synchronize()
+      let val = UserDefaults.standard.value(forKey: "pausedNotification") as? String ?? ""
+      if Study.currentStudy?.status == .paused || val == "paused" {
+        UserDefaults.standard.set("596,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+        UserDefaults.standard.synchronize()
+        UserDefaults.standard.set("", forKey: "pausedNotification")
+        UserDefaults.standard.synchronize()
+        let userStudyStatus = study.userParticipateState.status
+        UserDefaults.standard.set("597,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+        UserDefaults.standard.synchronize()
+        if userStudyStatus == .completed || userStudyStatus == .enrolled {
+          DispatchQueue.main.async {
+            UserDefaults.standard.set("598,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+            UserDefaults.standard.synchronize()
+            if (studyID == nil) {
+              UIUtilities.showAlertWithTitleAndMessage(
+                title: "",
+                message: NSLocalizedString(
+                  kMessageForStudyPausedAfterJoiningState,
+                  comment: ""
+                )
+                as NSString
+              )
+            }
+          }
+        } else {
+          UserDefaults.standard.set("599,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
+          checkForStudyUpdate(study: study)
+        }
+      } else if study.status == .active {
+        UserDefaults.standard.set("581,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+        UserDefaults.standard.synchronize()
+        let userStudyStatus = study.userParticipateState.status
+
+        if userStudyStatus == .completed || userStudyStatus == .enrolled {
+          UserDefaults.standard.set("582,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
+          // check if study version is udpated
+          if study.version != study.newVersion {
+            WCPServices().getStudyUpdates(study: study, delegate: self)
+          } else {
+            addProgressIndicator()
+            perform(#selector(loadStudyDetails), with: self, afterDelay: 1)
+          }
+        } else if userStudyStatus == .yetToEnroll {
+          UserDefaults.standard.set("583,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
+          checkDatabaseForStudyInfo(study: study)
+        } else {
+          UserDefaults.standard.set("584,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
+          checkForStudyUpdate(study: study)
+        }
+      }
+    } else {
+      UserDefaults.standard.set("585,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+      UserDefaults.standard.synchronize()
+      checkForStudyUpdate(study: study)
+    }
+  }
+  
+    func pushToTabbar(viewController: UIViewController, selectedTab: Int, studyID: String? = nil) {
+      UserDefaults.standard.set("586,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+      UserDefaults.standard.synchronize()
+      DispatchQueue.main.async {
+      let studyStoryBoard = UIStoryboard.init(name: kStudyStoryboard, bundle: Bundle.main)
+
+      let studyDashboard =
+        (studyStoryBoard.instantiateViewController(
+          withIdentifier: kStudyDashboardTabbarControllerIdentifier
+        )
+        as? StudyDashboardTabbarViewController)!
+
+      studyDashboard.selectedIndex = selectedTab
+      viewController.navigationController?.navigationBar.isHidden = true
+      viewController.navigationController?.pushViewController(studyDashboard, animated: true)
+      }
+    }
 
   @objc func loadStudyDetails() {
     let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
@@ -889,8 +1260,9 @@ extension StudyListViewController: UITableViewDelegate {
 
     let study = studiesList[indexPath.row]
     Study.updateCurrentStudy(study: study)
-
-    performTaskBasedOnStudyStatus()
+      UserDefaults.standard.set("327---,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+      UserDefaults.standard.synchronize()
+    performMainTaskBasedOnStudyStatus()
   }
 }
 
@@ -1032,7 +1404,7 @@ extension StudyListViewController: NMWebServiceDelegate {
 
     } else if requestName as String == RegistrationMethods.userProfile.description {
       appdelegate.window?.removeProgressIndicatorFromWindow()
-      if User.currentUser.settings?.passcode == true {
+      if User.currentUser.settings?.passcode == true && ORKPasscodeViewController.isPasscodeStoredInKeychain() == false {
         setPassCode()
 
       } else {

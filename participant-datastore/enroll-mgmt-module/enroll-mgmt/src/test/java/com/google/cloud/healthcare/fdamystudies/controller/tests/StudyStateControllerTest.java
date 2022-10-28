@@ -8,7 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller.tests;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE_NA;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.READ_OPERATION_FAILED_FOR_STUDY_INFO;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.READ_OPERATION_SUCCEEDED_FOR_STUDY_INFO;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT;
@@ -89,6 +89,9 @@ public class StudyStateControllerTest extends BaseMockIT {
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
     headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
+    headers.add(Constants.USER_DEVICE_OS, Constants.USER_DEVICE_OS);
+    headers.add(Constants.USER_DEVICE_TYPE, Constants.USER_DEVICE_TYPE);
+    headers.add(Constants.USER_MOBILE_PLATFORM, Constants.USER_MOBILE_PLATFORM);
     headers.add("Authorization", VALID_BEARER_TOKEN);
     mockMvc
         .perform(
@@ -103,7 +106,7 @@ public class StudyStateControllerTest extends BaseMockIT {
     auditRequest.setUserId(Constants.VALID_USER_ID);
     auditRequest.setStudyId("StudyofHealthClose");
     auditRequest.setStudyVersion("3.3");
-    auditRequest.setParticipantId(NOT_APPLICABLE);
+    auditRequest.setParticipantId(NOT_APPLICABLE_NA);
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT.getEventCode(), auditRequest);
@@ -197,6 +200,9 @@ public class StudyStateControllerTest extends BaseMockIT {
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
     headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
+    headers.add(Constants.USER_DEVICE_OS, Constants.USER_DEVICE_OS);
+    headers.add(Constants.USER_DEVICE_TYPE, Constants.USER_DEVICE_TYPE);
+    headers.add(Constants.USER_MOBILE_PLATFORM, Constants.USER_MOBILE_PLATFORM);
     headers.add("Authorization", VALID_BEARER_TOKEN);
 
     mockMvc
@@ -223,6 +229,9 @@ public class StudyStateControllerTest extends BaseMockIT {
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
     headers.add(Constants.USER_ID_HEADER, Constants.INVALID_USER_ID);
+    headers.add(Constants.USER_DEVICE_OS, Constants.USER_DEVICE_OS);
+    headers.add(Constants.USER_DEVICE_TYPE, Constants.USER_DEVICE_TYPE);
+    headers.add(Constants.USER_MOBILE_PLATFORM, Constants.USER_MOBILE_PLATFORM);
     headers.add("Authorization", VALID_BEARER_TOKEN);
 
     mockMvc
@@ -242,6 +251,9 @@ public class StudyStateControllerTest extends BaseMockIT {
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
     headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
+    headers.add(Constants.USER_DEVICE_OS, Constants.USER_DEVICE_OS);
+    headers.add(Constants.USER_DEVICE_TYPE, Constants.USER_DEVICE_TYPE);
+    headers.add(Constants.USER_MOBILE_PLATFORM, Constants.USER_MOBILE_PLATFORM);
     headers.add("Authorization", VALID_BEARER_TOKEN);
 
     String requestJson =

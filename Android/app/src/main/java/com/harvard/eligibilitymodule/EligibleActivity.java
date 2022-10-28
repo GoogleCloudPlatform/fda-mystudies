@@ -21,9 +21,9 @@ import static com.harvard.studyappmodule.StudyFragment.CONSENT;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
 import com.harvard.AppConfig;
 import com.harvard.R;
 import com.harvard.storagemodule.DbServiceSubscriber;
@@ -35,6 +35,7 @@ import com.harvard.studyappmodule.consent.ConsentBuilder;
 import com.harvard.studyappmodule.consent.CustomConsentViewTaskActivity;
 import com.harvard.studyappmodule.consent.model.Consent;
 import com.harvard.studyappmodule.consent.model.EligibilityConsent;
+import com.harvard.studyappmodule.studymodel.ConsentDocumentData;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.UpdatePreferenceEvent;
 import com.harvard.usermodule.webservicemodel.LoginData;
@@ -60,8 +61,8 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
   private EligibilityConsent eligibilityConsent;
   private DbServiceSubscriber dbServiceSubscriber;
   private static final int UPDATE_USER_PREFERENCE_RESPONSE_CODE = 200;
-  private CustomFirebaseAnalytics analyticsInstance;
   private Realm realm;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +70,8 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
     setContentView(R.layout.activity_eligible);
     dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
-    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
 
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     TextView button = (TextView) findViewById(R.id.continueButton);
     button.setOnClickListener(
         new View.OnClickListener() {
@@ -82,6 +83,7 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
                 getString(R.string.eligiblity_confirmation_message));
             analyticsInstance.logEvent(
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+
             eligibilityConsent =
                 dbServiceSubscriber.getConsentMetadata(
                     getIntent().getStringExtra("studyId"), realm);
@@ -151,6 +153,8 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
 
   public void updateuserpreference() {
     AppController.getHelperProgressDialog().showProgress(EligibleActivity.this, "", "", false);
+    ConsentDocumentData consentDocumentData =
+        dbServiceSubscriber.getConsentDocumentFromDB(getIntent().getStringExtra("studyId"), realm);
 
     HashMap<String, String> header = new HashMap();
     header.put(
@@ -174,6 +178,7 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
         studiestatus.put("siteId", getIntent().getStringExtra("siteId"));
       }
       studiestatus.put("status", StudyFragment.YET_TO_JOIN);
+      studiestatus.put("userStudyVersion", consentDocumentData.getConsent().getVersion());
     } catch (JSONException e) {
       Logger.log(e);
     }

@@ -162,13 +162,13 @@ public enum ErrorCode {
       400,
       "EC_0032",
       Constants.BAD_REQUEST,
-      "The admin must have at least one permission assigned"),
+      "The admin should have atleast one permission in the system to access this resource"),
 
   SECURITY_CODE_EXPIRED(
       410,
       "EC_0034",
       HttpStatus.GONE.toString(),
-      "This page is no longer valid. For any assistance needed with your account, please contact the system admin."),
+      "This link is no longer valid to be used. Please contact the system admin for assistance with your account or sign in if already registered."),
 
   PARTICIPANT_REGISTRY_SITE_NOT_FOUND(
       400, "EC_0035", Constants.BAD_REQUEST, "Error in getting participants details"),
@@ -278,10 +278,7 @@ public enum ErrorCode {
       "You do not have permission to access this app."),
 
   CANNOT_ADD_SITE_FOR_DECOMMISSIONED_LOCATION(
-      400,
-      "EC_0122",
-      Constants.BAD_REQUEST,
-      "Sites cannot be added using decommissioned locations."),
+      400, "EC_0122", Constants.BAD_REQUEST, "Cannot add site using a decommissioned location."),
 
   CANNOT_ADD_SITE_FOR_DEACTIVATED_STUDY(
       403,
@@ -341,7 +338,7 @@ public enum ErrorCode {
   REGISTRATION_EMAIL_SEND_FAILED(
       500,
       "EC_0075",
-      "Internal Server Error",
+      Constants.INTERNAL_SERVER_ERROR,
       "Sorry, an error occurred and we could not send you the email required to complete account activation. Please try again."),
 
   UNSUPPORTED_SORTBY_VALUE(
@@ -353,13 +350,13 @@ public enum ErrorCode {
   FEEDBACK_ERROR_MESSAGE(
       500,
       "EC_0073",
-      "Internal Server Error",
+      Constants.INTERNAL_SERVER_ERROR,
       "Sorry, an error occurred and your feedback could not be sent to the organization. Please retry in some time."),
 
   CONTACT_US_ERROR_MESSAGE(
       500,
       "EC_0074",
-      "Internal Server Error",
+      Constants.INTERNAL_SERVER_ERROR,
       "Sorry, an error occurred and your inquiry could not be sent to the organization. Please retry in some time."),
 
   TEMP_PASSWORD_INCORRECT(
@@ -403,6 +400,7 @@ public enum ErrorCode {
   private static class Constants {
 
     private static final String BAD_REQUEST = "Bad Request";
+    private static final String INTERNAL_SERVER_ERROR = "Internal Server Error";
   }
 
   static class ErrorCodeSerializer extends StdSerializer<ErrorCode> {
