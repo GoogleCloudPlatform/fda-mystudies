@@ -10,9 +10,6 @@ package com.google.cloud.healthcare.fdamystudies.util;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.AUTO_EXPIRATION;
 
-import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE;
-
-
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusResponse;
@@ -165,7 +162,6 @@ public class UserManagementUtil {
     return emailContentName;
   }
 
-
   public static String getCurrentDate() {
     Calendar currentDate = Calendar.getInstance();
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -177,7 +173,6 @@ public class UserManagementUtil {
     SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
     return formatter.format(currentDate.getTime());
   }
-
 
   public void deleteUserInfoInAuthServer(String userId, boolean isappDeactivate) {
     HttpHeaders headers = new HttpHeaders();
@@ -193,19 +188,5 @@ public class UserManagementUtil {
       url = appConfig.getAuthServerDeleteStatusUrl();
     }
     restTemplate.exchange(url, HttpMethod.DELETE, entity, Void.class, userId);
-
-  }
-
-  public static String getCurrentDate() {
-    Calendar currentDate = Calendar.getInstance();
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-    return formatter.format(currentDate.getTime());
-  }
-
-  public static String getCurrentTime() {
-    Calendar currentDate = Calendar.getInstance();
-    SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
-    return formatter.format(currentDate.getTime());
-
   }
 }

@@ -185,9 +185,7 @@ public class SiteServiceImpl implements SiteService {
 
   @Autowired ResourceLoader resourceLoader;
 
-
   @Autowired ConsentManagementAPIs consentApis;
-
 
   @Override
   @Transactional
@@ -1603,9 +1601,7 @@ public class SiteServiceImpl implements SiteService {
         logger.error("sendInvitationEmail() failed with an exception.", e);
       }
 
-
       EmailResponse emailResponse = emailService.sendMimeMailWithImages(emailRequest, inlineImages);
-
 
       SiteEntity site = participantRegistrySiteEntity.getSite();
       Map<String, String> map =
@@ -1618,7 +1614,8 @@ public class SiteServiceImpl implements SiteService {
       auditRequest.setParticipantId(participantRegistrySiteEntity.getId());
       auditRequest.setStudyVersion(String.valueOf(site.getStudy().getVersion()));
 
-      EmailResponse emailResponse = emailService.sendMimeMailWithImages(emailRequest, inlineImages);
+      // EmailResponse emailResponse = emailService.sendMimeMailWithImages(emailRequest,
+      // inlineImages);
       if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER
           .getMessage()
           .equals(emailResponse.getMessage())) {
