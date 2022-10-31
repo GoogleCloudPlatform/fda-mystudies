@@ -138,6 +138,27 @@ spec:
                 secretKeyRef:
                   name: shared-secrets
                   key: consent_bucket_name
+            # GOOGLE IDENTITY PLATFORM
+            - name: IDP_ENABLED_SB
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: idp_enabled_sb
+            - name: IDP_AUTH_DOMAIN
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: idp_auth_domain
+            - name: IDP_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: idp_api_key
+            - name: MFA_ENABLED_SB
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: mfa_enabled_sb                  
           ports:
           - containerPort: 8080
           readinessProbe:
