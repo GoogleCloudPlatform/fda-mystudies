@@ -1,45 +1,45 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020-2021 Google LLC
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+* Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+* Copyright 2020-2021 Google LLC
+* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 
- * associated documentation files (the "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
- * following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all copies or substantial
- * portions of the Software.
- *
- * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
- * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
- * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
+* associated documentation files (the "Software"), to deal in the Software without restriction, including
+* without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+* of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+* following conditions:
+*
+* The above copyright notice and this permission notice shall be included in all copies or substantial
+* portions of the Software.
+*
+* Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+* HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+* THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
 
- * associated documentation files (the "Software"), to deal in the Software without restriction,
- * including without limitation the rights to use, copy, modify, merge, publish, distribute,
- * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all copies or
- * substantial portions of the Software.
- *
- * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as
- * Contract no. HHSF22320140030I/HHSF22301006T (the "Prime Contract").
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
- * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+* associated documentation files (the "Software"), to deal in the Software without restriction,
+* including without limitation the rights to use, copy, modify, merge, publish, distribute,
+* sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in all copies or
+* substantial portions of the Software.
+*
+* Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as
+* Contract no. HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+* NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+* NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+* DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- */
+*/
 
 package com.fdahpstudydesigner.dao;
 
@@ -113,23 +113,19 @@ import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
-
 import com.fdahpstudydesigner.service.StudyActiveTasksService;
 import com.fdahpstudydesigner.service.StudyExportImportService;
 import com.fdahpstudydesigner.service.StudyQuestionnaireService;
 import com.fdahpstudydesigner.util.ConsentManagementAPIs;
-
 import com.fdahpstudydesigner.util.CustomMultipartFile;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.ImageUtility;
 import com.fdahpstudydesigner.util.ServletContextHolder;
 import com.fdahpstudydesigner.util.SessionObject;
-
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.gson.Gson;
 import com.itextpdf.html2pdf.HtmlConverter;
-
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -140,13 +136,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.sql.Timestamp;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -161,9 +155,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections.CollectionUtils;
-
 import org.apache.commons.collections.map.HashedMap;
-
 import org.apache.commons.io.FileDeleteStrategy;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.SerializationUtils;
@@ -182,7 +174,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class StudyDAOImpl implements StudyDAO {
-  private static final String EXPORT = "/Export/";
 
   private static XLogger logger = XLoggerFactory.getXLogger(StudyDAOImpl.class.getName());
 
@@ -197,7 +188,6 @@ public class StudyDAOImpl implements StudyDAO {
   @Autowired private NotificationDAO notificationDAO;
 
   @Autowired private StudyExportImportService studyExportImportService;
-
 
   @Autowired private ConsentManagementAPIs consentApis;
 
@@ -224,7 +214,6 @@ public class StudyDAOImpl implements StudyDAO {
   String regionId = configMap.get("regionId");
 
   public static final String fhirEnabled = configMap.get("enableFhirAPI");
-
 
   HibernateTemplate hibernateTemplate;
   private Query query = null;
@@ -725,7 +714,6 @@ public class StudyDAOImpl implements StudyDAO {
       resourceQuery = session.createQuery(deleteQuery).setString("resourceInfoId", resourceInfoId);
       resourceCount = resourceQuery.executeUpdate();
 
-
       updateStudyToDraftStatus(studyId, sesOb, session);
 
       StudySequenceBo studySequence =
@@ -738,7 +726,6 @@ public class StudyDAOImpl implements StudyDAO {
       session.saveOrUpdate(studySequence);
 
       updateStudyToDraftStatus(studyId, sesOb, session);
-
 
       if (!resourceVisibility && (resourceCount > 0)) {
         String deleteNotificationQuery =
@@ -4339,7 +4326,8 @@ public class StudyDAOImpl implements StudyDAO {
     return resourceId;
   }
 
-  protected static final Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
+  // protected static final Map<String, String> configMap =
+  // FdahpStudyDesignerUtil.getAppProperties();
 
   @SuppressWarnings("unchecked")
   @Override
@@ -4377,7 +4365,6 @@ public class StudyDAOImpl implements StudyDAO {
               FdahpStudyDesignerUtil.getStandardFileName(
                   "STUDY", studyBo.getName(), studyBo.getCustomStudyId());
         }
-
 
         BufferedImage newBi = ImageIO.read(new ByteArrayInputStream(studyBo.getFile().getBytes()));
         BufferedImage resizedImage = ImageUtility.resizeImage(newBi, 225, 225);
@@ -7398,7 +7385,6 @@ public class StudyDAOImpl implements StudyDAO {
     return consentBoList;
   }
 
-
   @SuppressWarnings("unchecked")
   public void copyOrMoveStudyResources(
       Session session,
@@ -7407,7 +7393,7 @@ public class StudyDAOImpl implements StudyDAO {
       boolean oldFilePath,
       String newCustomStudyId) {
     if (studyBo.getThumbnailImage() != null) {
-      FdahpStudyDesignerUtil.copyOrMoveStudyResources(
+      FdahpStudyDesignerUtil.copyOrMoveImage(
           studyBo.getThumbnailImage(),
           FdahpStudyDesignerConstants.STUDTYLOGO,
           studyBo.getCustomStudyId(),
@@ -7447,7 +7433,7 @@ public class StudyDAOImpl implements StudyDAO {
       for (QuestionResponseSubTypeBo questionResponseSubType : questionResponseSubTypeList) {
 
         if (questionResponseSubType.getSelectedImage() != null) {
-          FdahpStudyDesignerUtil.copyOrMoveStudyResources(
+          FdahpStudyDesignerUtil.copyOrMoveImage(
               questionResponseSubType.getSelectedImage(),
               FdahpStudyDesignerConstants.QUESTIONNAIRE,
               studyBo.getCustomStudyId(),
@@ -7457,7 +7443,7 @@ public class StudyDAOImpl implements StudyDAO {
         }
 
         if (questionResponseSubType.getImage() != null) {
-          FdahpStudyDesignerUtil.copyOrMoveStudyResources(
+          FdahpStudyDesignerUtil.copyOrMoveImage(
               questionResponseSubType.getImage(),
               FdahpStudyDesignerConstants.QUESTIONNAIRE,
               studyBo.getCustomStudyId(),
@@ -7476,7 +7462,7 @@ public class StudyDAOImpl implements StudyDAO {
 
       for (QuestionReponseTypeBo questionResponseType : questionResponseTypeList) {
         if (questionResponseType.getMinImage() != null) {
-          FdahpStudyDesignerUtil.copyOrMoveStudyResources(
+          FdahpStudyDesignerUtil.copyOrMoveImage(
               questionResponseType.getMinImage(),
               FdahpStudyDesignerConstants.QUESTIONNAIRE,
               studyBo.getCustomStudyId(),
@@ -7487,7 +7473,7 @@ public class StudyDAOImpl implements StudyDAO {
 
         if (questionResponseType.getMaxImage() != null) {
 
-          FdahpStudyDesignerUtil.copyOrMoveStudyResources(
+          FdahpStudyDesignerUtil.copyOrMoveImage(
               questionResponseType.getMaxImage(),
               FdahpStudyDesignerConstants.QUESTIONNAIRE,
               studyBo.getCustomStudyId(),
@@ -7506,7 +7492,7 @@ public class StudyDAOImpl implements StudyDAO {
     for (StudyPageBo studyPageBo : studyPageBoList) {
 
       if (studyPageBo.getImagePath() != null) {
-        FdahpStudyDesignerUtil.copyOrMoveStudyResources(
+        FdahpStudyDesignerUtil.copyOrMoveImage(
             studyPageBo.getImagePath(),
             FdahpStudyDesignerConstants.STUDTYPAGES,
             studyBo.getCustomStudyId(),
@@ -7525,7 +7511,7 @@ public class StudyDAOImpl implements StudyDAO {
     for (ResourceBO resourceBo : resourceBoList) {
 
       if (resourceBo.getPdfUrl() != null) {
-        FdahpStudyDesignerUtil.copyOrMoveStudyResources(
+        FdahpStudyDesignerUtil.copyOrMoveImage(
             resourceBo.getPdfUrl(),
             FdahpStudyDesignerConstants.RESOURCEPDFFILES,
             studyBo.getCustomStudyId(),
@@ -7535,7 +7521,6 @@ public class StudyDAOImpl implements StudyDAO {
       }
     }
   }
-
 
   @Override
   public StudySequenceBo getStudySequenceByStudyId(String studyId) {
@@ -7669,13 +7654,11 @@ public class StudyDAOImpl implements StudyDAO {
         }
       }
 
-
       /*  StudySequenceBo studySequenceBo = getStudySequenceByStudyId(oldStudyId);
       studySequenceBo.setStudySequenceId(null);
       studySequenceBo.setStudyId(studyId);
       studySequenceBo.setBasicInfo(false);
       session.save(studySequenceBo);*/
-
 
       StudySequenceBo studySequenceBo = new StudySequenceBo();
       studySequenceBo.setStudyId(studyId);
@@ -8020,7 +8003,6 @@ public class StudyDAOImpl implements StudyDAO {
         if (questionResponseSubType.getSelectedImage() != null) {
 
           FdahpStudyDesignerUtil.copyOrMoveImage(
-
               questionResponseSubType.getSelectedImage(),
               FdahpStudyDesignerConstants.QUESTIONNAIRE,
               studyBo.getCustomStudyId(),
@@ -8061,7 +8043,6 @@ public class StudyDAOImpl implements StudyDAO {
         }
 
         if (questionResponseType.getMaxImage() != null) {
-
 
           FdahpStudyDesignerUtil.copyOrMoveImage(
               questionResponseType.getMaxImage(),
@@ -8207,7 +8188,6 @@ public class StudyDAOImpl implements StudyDAO {
 
         if (questionResponseType.getMaxImage() != null) {
 
-
           FdahpStudyDesignerUtil.copyOrMoveImage(
               questionResponseType.getMaxImage(),
               FdahpStudyDesignerConstants.QUESTIONNAIRE,
@@ -8335,7 +8315,6 @@ public class StudyDAOImpl implements StudyDAO {
       studyPermissionBO.setViewPermission(true);
       session.save(studyPermissionBO);
 
-
       // give permission to all super admin Start
       query =
           session
@@ -8378,7 +8357,6 @@ public class StudyDAOImpl implements StudyDAO {
     }
     logger.exit("StudyDAOImpl - giveStudyPermission() - Ends");
   }
-
 
   @SuppressWarnings("unchecked")
   @Override
@@ -8760,7 +8738,6 @@ public class StudyDAOImpl implements StudyDAO {
     return consentInfoList;
   }
 
-
   @Override
   public String deleteById(String studyId, AuditLogEventRequest auditRequest) {
     logger.entry("begin studydeleteById()");
@@ -8889,7 +8866,6 @@ public class StudyDAOImpl implements StudyDAO {
     logger.exit("deleteStudyById() - Ends");
     return message;
   }
-
 
   @Override
   public void processToFHIR(String id, String studyId, String buttonText) throws Exception {
@@ -11169,5 +11145,4 @@ public class StudyDAOImpl implements StudyDAO {
     }
     return effectivePeriod;
   }
-
 }

@@ -44,9 +44,7 @@ import com.fdahpstudydesigner.bo.QuestionsBo;
 import com.fdahpstudydesigner.bo.ResourceBO;
 import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.bo.StudyPageBo;
-
 import com.fdahpstudydesigner.bo.StudyPermissionBO;
-
 import com.fdahpstudydesigner.bo.StudySequenceBo;
 import com.fdahpstudydesigner.dao.NotificationDAO;
 import com.fdahpstudydesigner.dao.StudyActiveTasksDAO;
@@ -152,9 +150,7 @@ public class StudyExportImportService {
   private static final String UNDER_DIRECTORY = "export-studies";
 
   public String exportStudy(
-
       String studyId, String userId, AuditLogEventRequest auditRequest, String copyVersion) {
-
 
     final Map<String, String> customIdsMap = new HashMap<>();
 
@@ -166,7 +162,6 @@ public class StudyExportImportService {
       auditRequest.setAppId(studyBo.getAppId());
       customIdsMap.put(STUDY_ID + studyBo.getId(), IdGenerator.id());
       customIdsMap.put(CUSTOM_STUDY_ID + studyBo.getCustomStudyId(), null);
-
 
       // StudyPermissionBO studyPermissionBo = studyDao.getStudyPermissionBO(studyBo.getId(),
       // userId);
@@ -204,7 +199,6 @@ public class StudyExportImportService {
 
       List<ResourceBO> resourceBOs = studyDao.getResourceList(studyBo.getId());
 
-
       // This list contains INSERT SQL statements with original study content as values
       List<String> insertSqlStatements = new ArrayList<>();
 
@@ -239,7 +233,6 @@ public class StudyExportImportService {
 
         addResourceInsertSql(resourceBOs, insertSqlStatements, customIdsMap);
 
-
         // This method export study to google cloud storage
 
         return saveFileToCloudStorage(studyBo, insertSqlStatements);
@@ -265,7 +258,6 @@ public class StudyExportImportService {
 
     Map<String, List<ActiveTaskCustomScheduleBo>> activeTaskCustomFrequencyMap = new HashMap<>();
     Map<String, List<ActiveTaskFrequencyBo>> activeTaskFrequencyMap = new HashMap<>();
-
 
     List<String> activeTaskIds = new ArrayList<>();
 
@@ -313,13 +305,11 @@ public class StudyExportImportService {
     List<ActiveTaskAtrributeValuesBo> activeTaskAtrributeValuesBos =
         studyActiveTasksDAO.getActiveTaskAtrributeValuesByActiveTaskId(activeTaskIds);
 
-
     /*List<ActiveTaskCustomScheduleBo> activeTaskCustomScheduleBoList =
     studyActiveTasksDAO.getActiveTaskCustomScheduleBoList(activeTaskIds);*/
 
     /*List<ActiveTaskFrequencyBo> activeTaskFrequencyBoList =
     studyActiveTasksDAO.getActiveTaskFrequencyBoList(activeTaskIds);*/
-
 
     addStudyActiveTaskInsertSql(activeTaskBos, insertSqlStatements, customIdsMap, studyBo.getId());
 
@@ -344,7 +334,6 @@ public class StudyExportImportService {
         studyQuestionnaireDAO.getStudyQuestionnairesByStudyId(
             studyBo.getId(), studyBo.getCustomStudyId(), copyVersion);
 
-
     Map<String, List<QuestionnaireCustomScheduleBo>> customScheduleMap = new HashMap<>();
     Map<String, List<QuestionnairesFrequenciesBo>> frequencyMap = new HashMap<>();
 
@@ -355,7 +344,6 @@ public class StudyExportImportService {
         questionnaireIds.add(questionnaireBo.getId());
         customIdsMap.put(QUESTIONNAIRES_ID + questionnaireBo.getId(), IdGenerator.id());
         questionnaireBo.setSequenceNumber(count++);
-
 
         if (questionnaireBo
             .getFrequency()
@@ -370,7 +358,6 @@ public class StudyExportImportService {
         }
       }
     }
-
 
     List<QuestionnairesFrequenciesBo> frequencyList = new ArrayList<>();
     for (Map.Entry<String, List<QuestionnairesFrequenciesBo>> entry : frequencyMap.entrySet()) {
@@ -394,8 +381,7 @@ public class StudyExportImportService {
       }
     }
 
-
-    List<QuestionnairesFrequenciesBo> frequencyList = new ArrayList<>();
+    /*List<QuestionnairesFrequenciesBo> frequencyList = new ArrayList<>();
     for (Map.Entry<String, List<QuestionnairesFrequenciesBo>> entry : frequencyMap.entrySet()) {
 
       Integer sequenceNumber = 0;
@@ -403,8 +389,7 @@ public class StudyExportImportService {
         questionnairesFrequenciesBo.setSequenceNumber(sequenceNumber++);
         frequencyList.add(questionnairesFrequenciesBo);
       }
-    }
-
+    }*/
 
     List<QuestionnairesStepsBo> questionnairesStepsList =
         studyQuestionnaireDAO.getQuestionnairesStepsList(questionnaireIds);
@@ -417,7 +402,6 @@ public class StudyExportImportService {
         questionMap.put(questionnairesStepsBo.getStepId(), IdGenerator.id());
       }
     }
-
 
     /*List<QuestionnairesFrequenciesBo> questionnairesFrequenciesBoList =
     studyQuestionnaireDAO.getQuestionnairesFrequenciesBoList(questionnaireIds);*/
@@ -439,7 +423,6 @@ public class StudyExportImportService {
 
     List<QuestionsBo> questionsList =
         studyQuestionnaireDAO.getQuestionsByInstructionFormIds(instructionFormIds);
-
 
     Map<String, List<QuestionResponseSubTypeBo>> responseSubTypeMap = new HashMap<>();
 
@@ -537,7 +520,6 @@ public class StudyExportImportService {
       }
     }
 
-
     /*List<ComprehensionTestResponseBo> comprehensionTestResponseBoList =
     studyDao.getComprehensionTestResponseList(comprehensionTestQuestionIds);*/
 
@@ -622,10 +604,8 @@ public class StudyExportImportService {
 
       String signedUrl =
           FdahpStudyDesignerUtil.getSignedUrlForExportedStudy(
-
               UNDER_DIRECTORY + PATH_SEPARATOR + studyBo.getCustomStudyId() + ".zip",
               Integer.parseInt(map.get("signed.url.expiration.in.hour")));
-
 
       message = studyDao.saveExportFilePath(studyBo.getId(), studyBo.getCustomStudyId(), signedUrl);
 
@@ -1147,7 +1127,6 @@ public class StudyExportImportService {
               studyPageBo.getTitle(),
               sequenceNo++);
 
-
       studyPageBoInsertQueryList.add(studyPageBoInsertQuery);
     }
     insertSqlStatements.addAll(studyPageBoInsertQueryList);
@@ -1236,9 +1215,7 @@ public class StudyExportImportService {
                 customIdsMap.get(STUDY_ID + studyBo.getId()),
                 notificationBO.getxDays(),
                 notificationBO.getScheduleTimestamp(),
-
                 sequence++,
-
                 studyBo.getPlatform());
         notificationBoBoInsertQueryList.add(notificationBoInsertQuery);
       }
@@ -1375,7 +1352,6 @@ public class StudyExportImportService {
     insertSqlStatements.addAll(resourceBoInsertQueryList);
   }
 
-
   private void addStudyPermissionInsertSql(
       StudyPermissionBO studyPermissionBo,
       List<String> insertSqlStatements,
@@ -1398,7 +1374,6 @@ public class StudyExportImportService {
 
     insertSqlStatements.add(studyPermissionsInsertQuery);
   }
-
 
   private void addEligibilityTestListInsertSql(
       List<EligibilityTestBo> eligibilityTestBoList,
@@ -1638,7 +1613,6 @@ public class StudyExportImportService {
   private String prepareInsertQuery(String sqlQuery, Object... values) throws Exception {
 
     logger.info(" begin prepareInsertQuery()");
-
 
     Object[] columns =
         sqlQuery

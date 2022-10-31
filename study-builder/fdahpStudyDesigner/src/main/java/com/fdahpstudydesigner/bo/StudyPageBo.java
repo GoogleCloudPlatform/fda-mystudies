@@ -74,11 +74,6 @@ public class StudyPageBo implements Serializable {
 
   @Transient public String signedUrl;
 
-
-  @Column(name = "sequence_number")
-  private Integer sequenceNumber;
-
-
   public String getCreatedBy() {
     return createdBy;
   }

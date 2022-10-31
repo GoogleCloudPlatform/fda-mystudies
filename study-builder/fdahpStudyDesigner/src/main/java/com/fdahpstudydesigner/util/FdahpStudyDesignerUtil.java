@@ -1,44 +1,42 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+* Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
 
- * Copyright 2020-2021 Google LLC
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction, including
+* Copyright 2020-2021 Google LLC
+* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+* associated documentation files (the "Software"), to deal in the Software without restriction, including
 
- * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
- * following conditions:
+* without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+* of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+* following conditions:
 
- * Copyright 2020-2021 Google LLC Permission is hereby granted, free of charge, to any person
- * obtaining a copy of this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to use, copy, modify,
- * merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
- * to whom the Software is furnished to do so, subject to the following conditions:
+* Copyright 2020-2021 Google LLC Permission is hereby granted, free of charge, to any person
+* obtaining a copy of this software and associated documentation files (the "Software"), to deal in
+* the Software without restriction, including without limitation the rights to use, copy, modify,
+* merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
+* to whom the Software is furnished to do so, subject to the following conditions:
 
- *
- * The above copyright notice and this permission notice shall be included in all copies or substantial
- * portions of the Software.
- *
- * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
- * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
- * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
- */
+*
+* The above copyright notice and this permission notice shall be included in all copies or substantial
+* portions of the Software.
+*
+* Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+* HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+* THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+*/
 package com.fdahpstudydesigner.util;
 
 import com.fdahpstudydesigner.bean.FormulaInfoBean;
 import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.bo.UserPermissions;
-
 import com.google.cloud.WriteChannel;
-
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
@@ -52,9 +50,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
-
 import java.nio.ByteBuffer;
-
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
@@ -1153,7 +1149,6 @@ public class FdahpStudyDesignerUtil {
     return null;
   }
 
-
   public static void copyOrMoveImage(
       String fileName,
       String underDirectory,
@@ -1212,7 +1207,7 @@ public class FdahpStudyDesignerUtil {
     }
   }
 
-  public static String getSignedUrlForExportedStudy(String filePath, int signedUrlDurationInHours) {
+  /*public static String getSignedUrlForExportedStudy(String filePath, int signedUrlDurationInHours) {
     try {
       BlobInfo blobInfo =
           BlobInfo.newBuilder(configMap.get("cloud.bucket.name.export.studies"), filePath).build();
@@ -1232,7 +1227,7 @@ public class FdahpStudyDesignerUtil {
     } catch (Exception e) {
       //   logger.error("Save Image in cloud storage failed", e);
     }
-  }
+  }*/
 
   public static String getSignedUrlForExportedStudy(String filePath, int signedUrlDurationInHours) {
     try {
@@ -1395,7 +1390,6 @@ public class FdahpStudyDesignerUtil {
     return destFile;
   }
 
-
   public static String getStudyPlatform(StudyBo studyBo) {
     String platform = null;
     if (studyBo != null
@@ -1409,7 +1403,6 @@ public class FdahpStudyDesignerUtil {
     }
     return platform;
   }
-
 
   public static String getImageResources(String filepath) {
     try {
@@ -1429,7 +1422,6 @@ public class FdahpStudyDesignerUtil {
     }
     return null;
   }
-
 
   /**
    * Saves file in cloud storage
@@ -1484,6 +1476,5 @@ public class FdahpStudyDesignerUtil {
     sdf1.setTimeZone(TimeZone.getTimeZone("GMT" + dateString.substring(dateString.length() - 5)));
 
     return sdf1.format(sdf.parse(dateString));
-
   }
 }

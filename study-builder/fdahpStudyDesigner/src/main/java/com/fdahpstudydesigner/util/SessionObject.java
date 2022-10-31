@@ -64,10 +64,6 @@ public class SessionObject implements Serializable {
   private String storagePath;
   private String exportStudiesBucketName;
 
-  private List<Integer> appSession;
-  private List<AppSessionBean> appSessionBeans;
-
-
   public String getCorrelationId() {
     return correlationId;
   }
@@ -128,7 +124,6 @@ public class SessionObject implements Serializable {
     return studySessionBeans;
   }
 
-
   public List<AppSessionBean> getAppSessionBeans() {
     return appSessionBeans;
   }
@@ -136,7 +131,6 @@ public class SessionObject implements Serializable {
   public void setAppSessionBeans(List<AppSessionBean> appSessionBeans) {
     this.appSessionBeans = appSessionBeans;
   }
-
 
   public String getSuperAdminId() {
     return superAdminId;
@@ -311,5 +305,4 @@ public class SessionObject implements Serializable {
   public void setExportStudiesBucketName(String exportStudiesBucketName) {
     this.exportStudiesBucketName = exportStudiesBucketName;
   }
-
 }
