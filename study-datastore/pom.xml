@@ -208,29 +208,6 @@
 			<scope>test</scope>
 		</dependency>
 
-
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.16</version>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-annotations</artifactId>
-			<version>3.5.5-Final</version>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-core</artifactId>
-			<version>3.5.5-Final</version>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-entitymanager</artifactId>
-			<version>3.5.5-Final</version>
-		</dependency>
-
-
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
@@ -340,7 +317,7 @@
       <artifactId>activation</artifactId>
       <version>1.1.1</version>
     </dependency>
-    <dependency>
+    
 
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
@@ -444,66 +421,9 @@
 
   </dependencies>
 
-  <build>
-    <finalName>study-datastore</finalName>
-    <plugins>
-      <plugin>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>2.1.1</version>
-        <configuration>
-          <packagingExcludes>WEB-INF/web.xml</packagingExcludes>
-          <packagingExcludes>META-INF/context.xml</packagingExcludes>
-          <failOnMissingWebXml>false</failOnMissingWebXml>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
-        <configuration>
-          <webXml>WEB-INF/web.xml</webXml>
-          <source>1.7</source>
-          <target>1.7</target>
-        </configuration>
-      </plugin>
-	  <plugin>
-         <groupId>com.github.kongchen</groupId>
-         <artifactId>swagger-maven-plugin</artifactId>
-         <version>3.1.0</version>
-         <configuration>
-           <apiSources>
-             <apiSource>
-               <springmvc>false</springmvc>
-               <schemes>http,https</schemes>
-               <locations>com.hphc.mystudies.service</locations>
-               <info>
-       			 <title>Study Meta Data</title>
-               	 <version>2.0.3</version>
-                 <termsOfService>
-                   http://www.github.com/kongchen/swagger-maven-plugin
-                 </termsOfService>
-	             <license>
-	               <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
-	               <name>Apache 2.0</name>
-	             </license>
-			   </info>	
-               <swaggerDirectory>../../fda-mystudies/documentation/API/study-datastore</swaggerDirectory>
-             </apiSource>
-           </apiSources>
-         </configuration>
-         <executions>
-           <execution>
-             <phase>compile</phase>
-             <goals>
-               <goal>generate</goal>
-             </goals>
-           </execution>
-         </executions>
-	   </plugin>
-     </plugins>
-   </build>
+  
 
-
-	</dependencies>
+	
 
 	<build>
    <finalName>study-datastore</finalName>
