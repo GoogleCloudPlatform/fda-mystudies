@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: study-builder
-          image: gcr.io/<PREFIX>-<ENV>-apps/study-builder:latest
+          image: gcr.io/btcsoft-dev-apps/study-builder:latest
           env:
             # DB ACCESS
             - name: DB_USER
@@ -92,6 +92,27 @@ spec:
               value: "http://response-datastore-np:50000/response-datastore"
             - name: SCIM_AUTH_URL
               value: "http://auth-server-np:50000/auth-server"
+            # GOOGLE IDENTITY PLATFORM
+            - name: IDP_ENABLED_SB
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: idp_enabled_sb
+            - name: MFA_ENABLED_SB
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: mfa_enabled_sb
+            - name: IDP_AUTH_DOMAIN
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: idp_auth_domain
+            - name: IDP_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: idp_api_key
             # MISC
             - name: GCP_BUCKET_NAME
               valueFrom:
@@ -157,7 +178,7 @@ spec:
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
           command: ["/cloud_sql_proxy",
-            "-instances=<PREFIX>-<ENV>-data:<LOCATION>:mystudies=tcp:3306",
+            "-instances=btcsoft-dev-data:us-east1:mystudies=tcp:3306",
             "-credential_file=/secrets/gcloud_key/key.json"]
           volumeMounts:
           - name: gcloud-key-volume
