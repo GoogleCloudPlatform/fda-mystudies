@@ -127,11 +127,11 @@ spec:
                   name: shared-secrets
                   key: log_path
             # GOOGLE HEALTH CARE API                  
-            - name: DATA_PROJECT_ID
+            - name: PROJECT_ID
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: data_project_id                  
+                  key: project_id                  
             - name: REGION_ID
               valueFrom:
                 secretKeyRef:
