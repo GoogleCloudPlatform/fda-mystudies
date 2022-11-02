@@ -42,7 +42,6 @@ export class MobileMenuComponent implements OnInit {
         this.updatedPlaceHolder = updatedPlaceHolder;
       },
     );
-
   }
 
   toggleNav(): void {

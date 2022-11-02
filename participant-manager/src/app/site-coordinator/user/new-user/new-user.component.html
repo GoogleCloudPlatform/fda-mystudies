@@ -560,9 +560,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
         type="button"
         name="add"
         class="btn bt__add bt__add__auto mr-sm mb-2 mt-2"
-
         (click)="openModal(template)"
-
       >
         Add admin user and invite
       </button>
@@ -587,16 +585,21 @@ Superadmins can manage users of the Participant Manager and in addition, can man
   </div>
   <div class="modal-footer flex__justify__space-between">
     <div class="float-left text-left">
-    <button type="submit" name="add" class="btn bt__add mr-sm" (click)="add()">
-      Confirm
-    </button>
-    <button
-      type="button"
-      class="btn bt__cancel mobile_mt-8"
-      (click)="modalRef.hide()"
-    >
-      Cancel
-    </button>
+      <button
+        type="submit"
+        name="add"
+        class="btn bt__add mr-sm"
+        (click)="add()"
+      >
+        Confirm
+      </button>
+      <button
+        type="button"
+        class="btn bt__cancel mobile_mt-8"
+        (click)="modalRef.hide()"
+      >
+        Cancel
+      </button>
     </div>
   </div>
 </ng-template>

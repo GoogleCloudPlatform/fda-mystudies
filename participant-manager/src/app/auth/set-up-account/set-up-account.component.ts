@@ -46,7 +46,7 @@ export class SetUpAccountComponent
   consecutiveCharacter = '';
   passwordLength = '';
   userName = '';
-  isMfa?:boolean;
+  isMfa?: boolean;
 
   constructor(
     private readonly fb: FormBuilder,
@@ -74,7 +74,6 @@ export class SetUpAccountComponent
         phoneNum: [
           '',
           // eslint-disable-next-line @typescript-eslint/unbound-method
-         
         ],
         password: [
           '',
@@ -115,10 +114,8 @@ export class SetUpAccountComponent
 
     and contain lower case, upper case, numeric and
     special characters.`;
-
   }
 
-  
   getError(err: ErrorCode): string {
     return getErrorMessage(err);
   }
@@ -147,18 +144,21 @@ export class SetUpAccountComponent
   }
 */
 
-changeValidation(IsMfa: any): void{
-  if(IsMfa) {
-  console.log(1);
-  console.log('true');
-    this.setupAccountForm.controls['phoneNum'].setValidators([Validators.required ,Validators.pattern('[+][0-9\s]{11,15}')]);
-        this.setupAccountForm.controls['phoneNum'].updateValueAndValidity();
-  } else {
-   console.log(2);
-   console.log('false');
-   this.setupAccountForm.controls['phoneNum'].clearValidators();
+  changeValidation(IsMfa: any): void {
+    if (IsMfa) {
+      console.log(1);
+      console.log('true');
+      this.setupAccountForm.controls['phoneNum'].setValidators([
+        Validators.required,
+        Validators.pattern('[+][0-9s]{11,15}'),
+      ]);
+      this.setupAccountForm.controls['phoneNum'].updateValueAndValidity();
+    } else {
+      console.log(2);
+      console.log('false');
+      this.setupAccountForm.controls['phoneNum'].clearValidators();
+    }
   }
-}
 
   registerUser(): void {
     const updatedUser: SetUpUser = {

@@ -39,7 +39,7 @@ export class UpdateUserComponent
   idpUser = true;
   deletedOrDisabledInIdp = true;
   mfaEnabledForPM = true;
-  
+
   sitesMessageMapping: {[k: string]: string} = {
     '=0': '0 sites',
     '=1': '1 site',

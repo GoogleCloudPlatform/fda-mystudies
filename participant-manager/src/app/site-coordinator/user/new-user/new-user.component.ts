@@ -65,7 +65,7 @@ export class AddNewUserComponent
     this.userService.getIdpUsers().subscribe((data) => {
       this.userEmail = data.email;
       this.mfaEnabledForPM = data.mfaEnabledForPM;
-      console.log(this.mfaEnabledForPM)
+      console.log(this.mfaEnabledForPM);
     });
   }
   idpUserStatus(): void {
@@ -237,8 +237,7 @@ export class AddNewUserComponent
     if (!idpUser == true) {
       this.modalRef.hide();
       this.add();
-    }
-    else{
+    } else {
       this.modalRef.hide();
     }
   }

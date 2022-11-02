@@ -22,7 +22,7 @@ export class AccountProfileComponent
   profileForm: FormGroup;
   user = {} as Profile;
   idpUser = true;
-  isMfa?:boolean;
+  isMfa?: boolean;
 
   constructor(
     private readonly fb: FormBuilder,
@@ -50,7 +50,6 @@ export class AccountProfileComponent
       phoneNum: [
         '',
         // eslint-disable-next-line @typescript-eslint/unbound-method
-       
       ],
     });
   }
@@ -61,7 +60,6 @@ export class AccountProfileComponent
 
   ngOnInit(): void {
     this.getProfileDetails();
-    
   }
 
   getProfileDetails(): void {
@@ -74,16 +72,19 @@ export class AccountProfileComponent
     });
   }
 
-  changeValidation(IsMfa: any): void{
-    if(IsMfa) {
-    console.log(1);
-    console.log('true');
-      this.profileForm.controls['phoneNum'].setValidators([Validators.required ,Validators.pattern('[+][0-9\s]{11,15}')]);
-          this.profileForm.controls['phoneNum'].updateValueAndValidity();
+  changeValidation(IsMfa: any): void {
+    if (IsMfa) {
+      console.log(1);
+      console.log('true');
+      this.profileForm.controls['phoneNum'].setValidators([
+        Validators.required,
+        Validators.pattern('[+][0-9s]{11,15}'),
+      ]);
+      this.profileForm.controls['phoneNum'].updateValueAndValidity();
     } else {
-     console.log(2);
-     console.log('false');
-     this.profileForm.controls['phoneNum'].clearValidators();
+      console.log(2);
+      console.log('false');
+      this.profileForm.controls['phoneNum'].clearValidators();
     }
   }
 

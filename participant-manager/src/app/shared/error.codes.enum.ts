@@ -131,7 +131,6 @@ const errorMessages = {
   /* eslint-enable @typescript-eslint/naming-convention */
   EC_0088:
     'Your account seems to managed via the IT admin console.  Please contact your IT admin for assistance in resetting your password.',
-
 };
 export type ErrorCode = keyof typeof errorMessages;
 
