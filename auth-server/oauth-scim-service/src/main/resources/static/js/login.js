@@ -120,9 +120,11 @@ function multiFactorAuth(email, password, phoneNumber) {
   var phoneNumber = $.trim(phoneNumber);
   var errorDiv = document.getElementById("password_error");
   this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
-
+debugger
   window.setTimeout(function() {
+  debugger
    	var provider = new firebase.auth.PhoneAuthProvider();
+   	debugger
 	return provider.verifyPhoneNumber(phoneNumber, recaptchaVerifier)
 	    .then(function(verificationId) {
 	     $('#recaptcha-container').hide();
