@@ -116,7 +116,7 @@ function validateLoginForm() {
 }
 
 function multiFactorAuth(email, password, phoneNumber) {
-			
+			debugger
   var phoneNumber = $.trim(phoneNumber);
   var errorDiv = document.getElementById("password_error");
   this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
@@ -126,6 +126,7 @@ function multiFactorAuth(email, password, phoneNumber) {
 	return provider.verifyPhoneNumber(phoneNumber, recaptchaVerifier)
 	    .then(function(verificationId) {
 	     $('#recaptcha-container').hide();
+	     debugger
 	     // Ask user for the verification code.
 	     var form = $('<form><div class="bootbox-font">Please enter the verification code that was sent to your mobile device.</div><div class="text-center mb-xs mt-md"><input name="verificationCode" class="popup_input" autocomplete="off"/></div></form>');
 
@@ -144,6 +145,7 @@ function multiFactorAuth(email, password, phoneNumber) {
 	      },
 
 	      callback: function (result) {
+	      debugger
 	        if (result) {
 		 	  var verificationCode = form.find('input[name=verificationCode]').val();
 	      	  //verificationCode
