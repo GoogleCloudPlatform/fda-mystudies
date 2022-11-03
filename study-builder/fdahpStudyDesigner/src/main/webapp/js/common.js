@@ -746,20 +746,24 @@ $(document)
                   });
 
 			function multiFactorAuth(fdaLink, email, password, passwordLength, userPhoneNumber) {
-			
+			debugger
 			 var userPhoneNumber = $.trim(userPhoneNumber);
 			 this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
-			 
+			 debugger
 			  document.getElementById("recaptcha-container").style.display = "inline-block";
+			  debugger
 			 setTimeout(function() {
+			 debugger
 	           	var provider = new firebase.auth.PhoneAuthProvider();
+	           	debugger
 				return provider.verifyPhoneNumber(userPhoneNumber, recaptchaVerifier)
 				    .then(function(verificationId) {
+				    debugger
 				     $('#recaptcha-container').hide();
 				     // Ask user for the verification code.
-				     
+				     debugger
 				     var form = $('<form><div class="bootbox-font">Please enter the verification code that was sent to your mobile device.</div><div class="float-left mb-xs mt-md"><input name="verificationCode" class="popup_input" autocomplete="off"/></div></form>');
-
+debugger
 				    bootbox.confirm({
 				      closeButton: false,
 				      message: form,
@@ -1007,6 +1011,7 @@ $(document)
                           'csrfParamName');
                       var csrfToken = $('#csrfDet').attr(
                           'csrfToken');
+                          debugger
                       var isIDPUser = false;
                       var fdaLink = $('#fdaLink').val();
                       var idpEnabled = $('#idp').val();
@@ -1024,6 +1029,7 @@ $(document)
                               },
                               success: function getResponse(
                                   data) {
+                                  debugger
                                 var isIDPUser = data.idpUser;
                                 var userPhoneNumber = data.userPhoneNumber;
 			                     if(isIDPUser) {
@@ -1037,7 +1043,9 @@ $(document)
 						
 							   	  firebase.auth().signInWithEmailAndPassword(email, password)
 							   	  .then(function(firebaseUser) {
-								   	  if(mfaEnabled == 'true'){
+							   	  debugger
+								   	  if(mfaEnabled == 'true' ){
+								   	   debugger
 								   	    $('#recaptcha-container').show();
 								   	   	multiFactorAuth(fdaLink, email, password, passwordLength, userPhoneNumber);
 								   	  } else {
