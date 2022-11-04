@@ -747,7 +747,9 @@ $(document)
 
 			function multiFactorAuth(fdaLink, email, password, passwordLength, userPhoneNumber) {
 			debugger
-			 var userPhoneNumber = $.trim(userPhoneNumber);
+			 //var userPhoneNumber = $.trim(userPhoneNumber);
+			 var userPhoneNumber =userPhoneNumber.replaceAll(' ','');
+			 userPhoneNumber = $.trim(userPhoneNumber);
 			 this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
 			 debugger
 			  document.getElementById("recaptcha-container").style.display = "inline-block";
