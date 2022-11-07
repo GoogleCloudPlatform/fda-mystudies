@@ -79,6 +79,18 @@ overflow-y: hidden !important;
     height: 100% !important;
 }
 
+.myarrow:after {
+  content: "";
+  width: 0;
+  position: absolute;
+  top: 45%;
+  right: 28px;
+  border-width: 4px 4px;
+  border-style: solid;
+  pointer-events: none;
+  border-color: #999 transparent transparent transparent;
+}
+
 </style>
 
 
@@ -253,7 +265,7 @@ overflow-y: hidden !important;
             <c:set var="idpEnabled" value="${idpEnabled}"/>
             <c:set var="mfaEnabled" value="${mfaEnabled}"/>
             <c:if test="${idpEnabled eq false }">
-            <div class="form-group">
+            <div class="form-group ">
               <input type="text" class="form-control" id="emailId"
                      name="userEmail" value="${userBO.userEmail}"
                      oldVal="${userBO.userEmail}" 
@@ -267,7 +279,7 @@ overflow-y: hidden !important;
             </div>
             </c:if>
             <c:if test="${idpEnabled eq true }">
-		     <div class="form-group">
+		     <div class="form-group myarrow">
 		         <input type="text" class="form-control" id="emailId" list="mine"
                      name="userEmail" value="${userBO.userEmail}"
                      oldVal="${userBO.userEmail}" 
