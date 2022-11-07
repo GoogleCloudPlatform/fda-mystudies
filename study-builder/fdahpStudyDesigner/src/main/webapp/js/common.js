@@ -887,8 +887,37 @@ debugger
 				                .removeClass(
 				                    "loading");
 				            return false;
-			           } else {
-			           
+			           }if (error.code == 'auth/invalid-phone-number') {
+			           debugger
+					            $('#password')
+					                .val('');
+					            $(
+					                ".askSignInCls")
+					                .addClass(
+					                    'hide');
+					            $("#errMsg")
+					                .text(
+					                    "The format of the phone number provided is incorrect. "
+										+ "Kindly enter phone number  in the format [+][country code][subscriber number including area code].");
+					            $("#errMsg")
+					                .show(
+					                    "fast");
+					            setTimeout(
+					                hideDisplayMessage,
+					                5000);
+					            $('#password')
+					                .attr(
+					                    "type",
+					                    "password");
+					            $('#email')
+					                .val(
+					                    email);
+					            $("body")
+					                .removeClass(
+					                    "loading");
+					            return false;
+				           }
+			            else {
 			   	           $('#password')
 				                .val('');
 				            $(
