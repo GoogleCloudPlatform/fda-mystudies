@@ -821,6 +821,9 @@ debugger
 					            $("body")
 					                .removeClass(
 					                    "loading");
+					                    setTimeout(function(){
+                              window.location.reload();
+                                             }, 6000);
 					            return false;
 				           } else { 
 				   	            $('#password')
@@ -852,6 +855,10 @@ debugger
 	                        }
                       	 });
 					
+				          }else{
+				          location.reload();
+				          $('#password').val(password);
+                          $('#email').val(email); 
 				          }
 				        }
 				      })			
