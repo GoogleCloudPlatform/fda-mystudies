@@ -289,7 +289,7 @@ overflow-y: hidden !important;
           <!-- form- input-->
           <div class="col-md-6 pr-none">
             <div class="gray-xs-f mb-xs">
-               Phone (+XXX XXXXX XXXXX) 
+               Phone (+X XXX XXX XXXX) 
               <c:if test="${mfaEnabled  eq true}"><span class="requiredStar"> *</span></c:if>
             </div>
             <div class="form-group">

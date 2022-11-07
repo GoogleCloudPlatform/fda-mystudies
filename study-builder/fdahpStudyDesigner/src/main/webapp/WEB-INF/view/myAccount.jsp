@@ -90,7 +90,7 @@
       <div class="b-bor mt-md">
         <div class="ed-user-layout row">
           <div class="col-md-4 p-none">
-            <div class="gray-xs-f line34">Phone (+XXX XXXXX XXXXX)
+            <div class="gray-xs-f line34">Phone (+X XXX XXX XXXX)
             </div>
           </div>
           <div class="col-md-6 p-none">
