@@ -109,8 +109,8 @@ function validateLoginForm() {
 			  errorDiv.style.display = "none";
 			  $("#loginForm").unbind();
 	  	      $("#loginForm").submit();
-	  	      document.body.innerHTML = document.body.innerHTML.replace('{"isIdpUser":"false","phoneNumber":""}', '');
-  			  document.body.innerHTML = document.body.innerHTML.replace('{"phoneNumber":"","isIdpUser":"false"}', '');
+	  	      //document.body.innerHTML = document.body.innerHTML.replace('{"isIdpUser":"false","phoneNumber":""}', '');
+  			  //document.body.innerHTML = document.body.innerHTML.replace('{"phoneNumber":"","isIdpUser":"false"}', '');
   			  $('#password').val(password);
               $('#email').val(email);         
 	  		}
