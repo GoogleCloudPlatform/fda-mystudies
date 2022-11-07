@@ -103,9 +103,9 @@ function validateLoginForm() {
 		      });
 			} else {
 			debugger
-			console.log("errorMeassage:  " + errorDiv.innerHTML);
+			console.log("errorMeassagebefore:  " + errorDiv.innerHTML);
 			  errorDiv.innerHTML = '';
-			  console.log("errorMeassage:  " + errorDiv.innerHTML);
+			  console.log("errorMeassageafter:  " + errorDiv.innerHTML);
 			  errorDiv.style.display = "none";
 			  $("#loginForm").unbind();
 	  	      $("#loginForm").submit();
