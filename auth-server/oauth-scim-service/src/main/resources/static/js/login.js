@@ -167,13 +167,19 @@ debugger
  				$("#loginForm").submit();
 			  })
 			  .catch(function(error) {
-			  
+			  debugger
 			  if (error.code == 'auth/invalid-verification-code') {
 		          errorDiv.innerHTML = "The SMS verification code used to create the phone auth credential is invalid."
 							+ "Please login again and use the correct verification code sent to your registered phone number.";
 	  			  errorDiv.style.display = "block";
 	    		  return false;
-              } else {
+              }else if(error.code == 'auth/invalid-phone-number') {
+	          errorDiv.innerHTML = "The format of the phone number provided is incorrect. "
+										+ "Kindly enter phone number  in the format [+][country code][subscriber number including area code].";
+  			  errorDiv.style.display = "block";
+    		  return false;
+           }
+               else {
            
 	   	          errorDiv.innerHTML = error;
 	  			  errorDiv.style.display = "block";
@@ -188,6 +194,7 @@ debugger
 	      })			
 			
           }).catch(function (error) {
+          debugger
            $('#recaptcha-container').hide();
            recaptchaVerifier.reset();
            if (error.code == 'auth/invalid-verification-code') {
@@ -199,7 +206,13 @@ debugger
 	          errorDiv.innerHTML = error;
   			  errorDiv.style.display = "block";
     		  return false;
-           } else {
+           }else if(error.code == 'auth/invalid-phone-number') {
+	          errorDiv.innerHTML = "The format of the phone number provided is incorrect. "
+										+ "Kindly enter phone number  in the format [+][country code][subscriber number including area code].";
+  			  errorDiv.style.display = "block";
+    		  return false;
+           }
+            else {
               errorDiv.innerHTML = error;
   			  errorDiv.style.display = "block";
     		  return false;
