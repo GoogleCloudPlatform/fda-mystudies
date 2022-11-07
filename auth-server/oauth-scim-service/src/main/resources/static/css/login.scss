@@ -36,7 +36,7 @@ body.my-login-page {
 
 .my-login-page .card {
   border-color: transparent;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: none;
 }
 
 .my-login-page .card.fat {
@@ -84,9 +84,9 @@ body.my-login-page {
   flex-direction: column;
   min-width: 0;
   word-wrap: break-word;
-  background-color: #fff;
+  background-color: transparent;
   background-clip: border-box;
-  border: 0px solid rgba(0, 0, 0, 0.125) !important;
+  border: none !important;
   border-radius: 0.25rem;
   position: absolute;
   top: 50%;
