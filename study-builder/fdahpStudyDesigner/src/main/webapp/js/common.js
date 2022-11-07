@@ -764,7 +764,7 @@ $(document)
 				     $('#recaptcha-container').hide();
 				     // Ask user for the verification code.
 				     debugger
-				     var form = $('<form><div class="bootbox-font">Please enter the verification code that was sent to your mobile device.</div><div class="float-left mb-xs mt-md"><input name="verificationCode" class="popup_input" autocomplete="off"/></div></form>');
+				     var form = $('<form><div class="bootbox-font">Please enter the verification code that was sent to your mobile device.</div><div class="text-center mb-xs mt-md"><input name="verificationCode" class="popup_input" autocomplete="off"/></div></form>');
 debugger
 				    bootbox.confirm({
 				      closeButton: false,
