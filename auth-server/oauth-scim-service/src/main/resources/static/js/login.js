@@ -15,7 +15,10 @@ $(document).ready(function () {
   
   document.body.innerHTML = document.body.innerHTML.replace('{"isIdpUser":"false","phoneNumber":""}', '');
   document.body.innerHTML = document.body.innerHTML.replace('{"phoneNumber":"","isIdpUser":"false"}', '');
-  
+  console.log("errorMeassage:  " + errorDiv.innerHTML);
+  errorDiv.innerHTML = '';
+  errorDiv.style.display = "none";
+  console.log("errorMeassage:  " + errorDiv.innerHTML);
 debugger
   preventDoubleClick();
   if(idpEnabled) {
@@ -103,7 +106,9 @@ function validateLoginForm() {
 		      });
 			} else {
 			debugger
+			console.log("errorMeassage:  " + errorDiv.innerHTML);
 			  errorDiv.innerHTML = '';
+			  console.log("errorMeassage:  " + errorDiv.innerHTML);
 			  errorDiv.style.display = "none";
 			  $("#loginForm").unbind();
 	  	      $("#loginForm").submit();
