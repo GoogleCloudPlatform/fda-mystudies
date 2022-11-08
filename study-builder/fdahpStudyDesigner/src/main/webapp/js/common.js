@@ -821,6 +821,7 @@ debugger
 					            $("body")
 					                .removeClass(
 					                    "loading");
+					                    $('#loginBtnId').prop('disabled', false);
 					                    setTimeout(function(){
                               window.location.reload();
                                              }, 6000);
@@ -851,6 +852,7 @@ debugger
 		                        $("body")
 		                            .removeClass(
 		                                "loading");
+		                                $('#loginBtnId').prop('disabled', false);
 		                        return false;
 	                        }
                       	 });
@@ -893,6 +895,7 @@ debugger
 				            $("body")
 				                .removeClass(
 				                    "loading");
+				                    $('#loginBtnId').prop('disabled', false);
 				            return false;
 			           }if (error.code == 'auth/invalid-phone-number') {
 			           debugger
@@ -922,6 +925,7 @@ debugger
 					            $("body")
 					                .removeClass(
 					                    "loading");
+					                    $('#loginBtnId').prop('disabled', false);
 					            return false;
 				           }
 			            else {
@@ -950,6 +954,7 @@ debugger
 				            $("body")
 				                .removeClass(
 				                    "loading");
+				                     $('#loginBtnId').prop('disabled', false);
 				            return false;
 			            
 			            }
@@ -1030,6 +1035,8 @@ debugger
                       isValidLoginForm = true;
                     }
                     if (isValidLoginForm) {
+                    debugger
+                    $('#loginBtnId').prop('disabled', true);
                       var email = $('#email').val();
                       var password = $('#password').val();
                       var passwordLength = "";
@@ -1088,6 +1095,7 @@ debugger
 								   	   	multiFactorAuth(fdaLink, email, password, passwordLength, userPhoneNumber);
 								   	  } else {
 								   	    $("body").addClass("loading");
+								   	    $('#loginBtnId').prop('disabled', false);
 								   	    viewDashBoard(fdaLink, email, password, passwordLength); 
 								   	  }
 								   })
@@ -1118,6 +1126,7 @@ debugger
 							            $("body")
 							                .removeClass(
 							                    "loading");
+							                    $('#loginBtnId').prop('disabled', false);
 							            return false;
 						           } else if (error.code == 'auth/too-many-requests') {
 						           		$('#password')
@@ -1145,6 +1154,7 @@ debugger
 							            $("body")
 							                .removeClass(
 							                    "loading");
+							                    $('#loginBtnId').prop('disabled', false);
 							            return false;
 						           } else {
 						   	           $('#password')
@@ -1172,11 +1182,13 @@ debugger
 				                        $("body")
 				                            .removeClass(
 				                                "loading");
+				                                $('#loginBtnId').prop('disabled', false);
 				                        return false;
 				                     }  
 			                       });
 				   	  		} else {
 				   	  		   $("body").addClass("loading");
+				   	  		   $('#loginBtnId').prop('disabled', false);
 				   	  	       viewDashBoard(fdaLink, email, password, passwordLength);
 				   	  		}
 				                 },
@@ -1184,6 +1196,7 @@ debugger
                             });
                             } else {
                                $("body").addClass("loading");
+                               $('#loginBtnId').prop('disabled', false);
 				   	  	       viewDashBoard(fdaLink, email, password, passwordLength);
 				   	  		}
 				   	  		
