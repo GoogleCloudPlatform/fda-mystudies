@@ -172,6 +172,9 @@ debugger
 		          errorDiv.innerHTML = "The SMS verification code used to create the phone auth credential is invalid."
 							+ "Please login again and use the correct verification code sent to your registered phone number.";
 	  			  errorDiv.style.display = "block";
+	  			  setTimeout(function(){
+                              window.location.reload();
+                                             }, 6000);
 	    		  return false;
               }else if(error.code == 'auth/invalid-phone-number') {
 	          errorDiv.innerHTML = "The format of the phone number provided is incorrect. "
@@ -190,6 +193,11 @@ debugger
             box.find(".btn-primary").removeClass("btn-primary").addClass("btn-add");
 			box.find(".btn-dafault").removeClass("btn-dafault").addClass("btn-cancel");
 	          }
+	          else{
+				          location.reload();
+				          $('#password').val(password);
+                          $('#email').val(email); 
+				          }
 	        }
 	      })			
 			
@@ -201,6 +209,9 @@ debugger
 	          errorDiv.innerHTML = "The SMS verification code used to create the phone auth credential is invalid."
 						+ "Please login again and use the correct verification code sent to your registered phone number.";
   			  errorDiv.style.display = "block";
+  			  setTimeout(function(){
+                              window.location.reload();
+                                             }, 6000);
     		  return false;
            } else if(error.code == 'auth/argument-error') {
 	          errorDiv.innerHTML = error;
