@@ -24,7 +24,7 @@ spec:
       containers:
         # application container
         - name: participant-manager-datastore
-          image: gcr.io/<PREFIX>-<ENV>-apps/participant-manager-datastore:latest
+          image: gcr.io/btcsoft-dev-apps/participant-manager-datastore:latest
           env:
             # DB ACCESS
             - name: DB_INSTANCE_URL
@@ -114,12 +114,23 @@ spec:
                 secretKeyRef:
                   name: shared-secrets
                   key: log_path
-            # GOOGLE HEALTH CARE API
-            - name: DATA_PROJECT_ID
+            # GOOGLE IDENTITY PLATFORM
+            - name: IDP_ENABLED_PM
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: data_project_id
+                  key: idp_enabled_pm
+            - name: MFA_ENABLED_PM
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: mfa_enabled_pm      
+            # GOOGLE HEALTH CARE API
+            - name: PROJECT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: project_id
             - name: REGION_ID
               valueFrom:
                 secretKeyRef:
@@ -152,7 +163,7 @@ spec:
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
           command: ["/cloud_sql_proxy",
-            "-instances=<PREFIX>-<ENV>-data:<LOCATION>:mystudies=tcp:3306",
+            "-instances=btcsoft-dev-data:us-east1:mystudies=tcp:3306",
             "-credential_file=/secrets/gcloud_key/key.json"]
           volumeMounts:
           - name: gcloud-key-volume

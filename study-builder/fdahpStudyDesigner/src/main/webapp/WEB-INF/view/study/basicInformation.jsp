@@ -29,6 +29,7 @@ li.dropdown-header {
     padding-bottom: 0px !important;
 }
 
+
  .dropdown-header {
     display: block;
     padding: 3px 20px;
@@ -57,13 +58,16 @@ li.dropdown-header {
 }
 
 
+
 </style>
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
 
       
+
 <div class="col-sm-9.5 col-rc white-bg p-none">
+
   <form:form
       action="/studybuilder/adminStudies/saveOrUpdateBasicInfo.do?${_csrf.parameterName}=${_csrf.token}&_S=${param._S}"
       data-toggle="validator" role="form" id="basicInfoFormId" method="post"
@@ -171,7 +175,9 @@ li.dropdown-header {
       </div>
       
       <!-- phase2a-sp1 -->
+
       <div class="col-md-12 row p-none">
+
         <div class="col-md-6 pl-none">
           <div class="gray-xs-f mb-xs">
             Study website
@@ -180,7 +186,7 @@ li.dropdown-header {
             </small>   
            </div>
           <div class="form-group">
-            <input type="text" class="form-control" id="studyWebsiteId"
+            <input type="url" class="form-control" id="studyWebsiteId"
                    name="studyWebsite" value="${studyBo.studyWebsite}"
                    pattern="^(http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$"
                    title="Include http://" maxlength="100"
@@ -211,7 +217,9 @@ li.dropdown-header {
      
 
       
+
       <div class="col-md-12 row p-none">
+
       
      <div class="col-md-6 pl-none">
         
@@ -290,7 +298,9 @@ li.dropdown-header {
           </div>
         </div>
         
+
          <div class="col-md-6 pl-none hidden hide">
+
           <div class="gray-xs-f mb-xs">
             Study type
             <span class="requiredStar"> *</span>

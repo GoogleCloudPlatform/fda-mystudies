@@ -273,5 +273,7 @@ public interface StudyDAO {
 
   public String deleteById(String studyId, AuditLogEventRequest auditRequest);
 
+
   public void processToFHIR(String id, String customStudyId, String buttonText) throws Exception;
+
 }

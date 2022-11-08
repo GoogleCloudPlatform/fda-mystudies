@@ -223,7 +223,9 @@
                       Step ${destinationStep.sequenceNo}
                       : ${destinationStep.stepShortTitle}</option>
                   </c:forEach>
+
                   <option value="0" ${questionnairesStepsBo.destinationStep eq "0" ? 'selected' :''}>
+
                     Completion Step
                   </option>
                 </select>
@@ -969,8 +971,10 @@
                   </div>
                 </div>
               </div>
+
               <div class="col-md-6 pl-none">
                 <div class="col-md-9 col-lg-9 p-none">
+
                   <div class="gray-xs-f mb-xs">Max fraction digits
                     <span
                         class="requiredStar">*
@@ -2281,7 +2285,9 @@
                           <select name="questionResponseSubTypeList[0].destinationStepId"
                                   id="destinationTextChoiceStepId0"
                                   class="selectpicker destionationYes">
+
                                   <option value="" selected>Select</option>
+
                                   <c:forEach items="${destinationStepList}" var="destinationStep">
                               <option 
                                   value="${destinationStep.stepId}" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq destinationStep.stepId ? 'selected' :''} >
@@ -4697,8 +4703,10 @@
          if(allowedExtensions.includes(fileExtension)){
           img = new Image();
           img.onload = function () {
+
         	var minHeightAndWidth=0;
             var ht = this.height;
+
             var wds = this.width;
             if(ht>120 && wds >120){
             	ht=this.height=120;
@@ -4709,6 +4717,7 @@
             	wds=this.width=minHeightAndWidth;
             	
             }
+
             if ((parseInt(ht) == parseInt(wds)) && (parseInt(ht) >= 90 && parseInt(ht) <= 120)
                 && (parseInt(wds) >= 90 && parseInt(wds) <= 120)) {
               $(thisAttr).parent().find('.form-group').removeClass('has-error has-danger');
@@ -4726,7 +4735,9 @@
               $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
               $(thisAttr).parent().find(".help-block").empty().append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","white-space:nowrap").text(
+
                         "Invalid image size or format"));
+
               $(thisAttr).parent().parent().parent().find(".removeUrl").click();
               var id = $(thisAttr).next().attr("id");
 
@@ -4749,6 +4760,7 @@
             $(thisAttr).parent().parent().parent().find(".removeUrl").click();
           };
           img.src = _URL.createObjectURL(file);
+
          }else{
     	   $(thisAttr).parent().find('img').attr("src", "../images/icons/sm-thumb.jpg");
            $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
@@ -4762,6 +4774,7 @@
            $(thisAttr).parent().parent().parent().find(".removeUrl").click();
            if(response_type == "Image choice"){
          	  $("#" + $(thisAttr).attr("id")).attr('required', true);
+
            }
       }
         }
@@ -4980,6 +4993,7 @@
         ignoreReadonly: true,
         useCurrent: false,
       });
+
     
     function setResponseDate(type) {
 
@@ -5697,6 +5711,7 @@
 
       questionnaireStep.questionReponseTypeBo = questionReponseTypeBo;
       if (quesstionnaireId && shortTitle) {
+
           
     	$('#questionStepId').validator('destroy').validator();
 		$("#scaleMinDescriptionId").parent().find(".help-block").empty();
@@ -5707,6 +5722,7 @@
 		$("#continuesScaleMinDescriptionId").parent().find(".help-block").empty();
 		$("#continuesScaleMinImagePathId").parent().find(".help-block").empty();
 		$("#continuesScaleMaxImagePathId").parent().find(".help-block").empty();
+
         formData.append("questionnaireStepInfo", JSON.stringify(questionnaireStep));
         var data = JSON.stringify(questionnaireStep);
         $.ajax({
@@ -5738,6 +5754,7 @@
               $("#questionId").val(questionId);
               $("#questionResponseTypeId").val(questionResponseId);
               $("#responseQuestionId").val(questionId);
+
               $('.image-choice').find('.requireClass').prop('required', false);
               $('.image-choice').parent().removeClass("has-danger").removeClass("has-error");
               $('.image-choice').parent().find(".help-block").empty();

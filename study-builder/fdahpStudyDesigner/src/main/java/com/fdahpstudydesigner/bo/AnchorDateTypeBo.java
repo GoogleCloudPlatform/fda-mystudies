@@ -40,9 +40,11 @@ import org.hibernate.annotations.GenericGenerator;
   @NamedQuery(
       name = "getAnchorDateType",
       query = "SELECT ADB FROM AnchorDateTypeBo ADB WHERE ADB.studyId =:studyId"),
+
   @NamedQuery(
       name = "getAnchorDateTypeById",
       query = "SELECT ADB FROM AnchorDateTypeBo ADB WHERE ADB.id =:anchorDateTypeId"),
+
 })
 public class AnchorDateTypeBo implements Serializable {
 

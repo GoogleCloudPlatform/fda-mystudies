@@ -33,6 +33,8 @@ import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import io.realm.Realm;
 
+import io.realm.Realm;
+
 public class GatewayPagerAdapter extends PagerAdapter {
 
   private int size;

@@ -352,7 +352,7 @@
                 var elaboratedContent = $(
                     '#elaboratedRTE')
                     .summernote('code');
-                
+
                 var briefSummaryText = replaceSpecialCharacters($(
                     "#briefSummary")
                     .val());

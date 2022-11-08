@@ -13,8 +13,10 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @ConditionalOnProperty(
@@ -59,4 +61,16 @@ public interface UserRegAdminRepository extends JpaRepository<UserRegAdminEntity
               + "WHERE email LIKE %:searchTerm% OR first_name LIKE %:searchTerm% OR last_name LIKE %:searchTerm% ",
       nativeQuery = true)
   public Long countBySearchTerm(String searchTerm);
+
+  @Query(
+      value =
+          "SELECT user.urAdminAuthId FROM UserRegAdminEntity user where email IN (:disabledUsersEmail) ")
+  public List<String> findByUsersEmail(List<String> disabledUsersEmail);
+
+  @Modifying
+  @Transactional
+  @Query(
+      value = "update ur_admin_user set status=:status where email IN (:userEmails) ",
+      nativeQuery = true)
+  public void updateDisableIdPUserToDeactivate(Integer status, List<String> userEmails);
 }

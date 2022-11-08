@@ -64,4 +64,8 @@ public interface UsersDAO {
   public List<RoleBO> getUserRoleList();
 
   public String deleteByUserId(String userId);
+
+
+  public List<UserBO> getIdpUserList();
+
 }

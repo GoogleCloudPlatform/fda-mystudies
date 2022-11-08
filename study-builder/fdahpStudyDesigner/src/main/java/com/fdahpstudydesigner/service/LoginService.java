@@ -58,4 +58,6 @@ public interface LoginService {
   public boolean isInactiveUser(String securityToken);
 
   public boolean isIntialPasswordSetUp(String securityToken);
+
+  public boolean isIdpUser(String userEmail);
 }

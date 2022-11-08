@@ -1,9 +1,31 @@
 /*
- * Copyright 2020-2021 Google LLC
- *
- * Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
- * or at https://opensource.org/licenses/MIT.
- */
+* Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+* Copyright 2020-2021 Google LLC
+* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+* associated documentation files (the "Software"), to deal in the Software without restriction, including
+* without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+* of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+* following conditions:
+*
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial
+* portions of the Software.
+*
+* Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+* HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+* THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+
+* Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
+* or at https://opensource.org/licenses/MIT.
+
+*/
 
 package com.fdahpstudydesigner.dao;
 
@@ -1409,6 +1431,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           String subQuery =
               "select FMBO.questionId from FormMappingBo FMBO where FMBO.formId=:stepId ";
           query = session.createQuery(subQuery).setString("stepId", stepId);
+
           List<String> questionIds = query.list();
           if ((questionIds != null) && !questionIds.isEmpty()) {
             query =
@@ -1489,7 +1512,9 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               "",
               isChange,
               customStudyId);
+
       logger.debug("deleteQuestuionnaireStart2 : " + message);
+
       if (!message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
         return message;
       }
@@ -3767,6 +3792,11 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             getQuestionsResponseTypeBo(
                 questionsBo.getQuestionReponseTypeBo(), session, questionsBo.getCustomStudyId());
         if (addQuestionReponseTypeBo != null) {
+
+          if (StringUtils.isEmpty(addQuestionReponseTypeBo.getQuestionsResponseTypeId())) {
+            addQuestionReponseTypeBo.setQuestionsResponseTypeId(questionsBo.getId());
+          }
+
           session.saveOrUpdate(addQuestionReponseTypeBo);
         }
 
@@ -4137,6 +4167,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                 questionnaireCustomScheduleBo.setTimePeriodToDays(
                     questionnaireCustomScheduleBo.getTimePeriodToDays());
               }
+
               session.saveOrUpdate(questionnaireCustomScheduleBo);
             }
           }
@@ -4302,6 +4333,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
+
       String studyId = this.getStudyIdByCustomStudy(session, customStudyId);
 
       if (questionnairesStepsBo != null) {
@@ -4364,7 +4396,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                       "update questionnaires q set q.status=0 where q.id=:questionnairesId ")
                   .setString(
                       "questionnairesId", addOrUpdateQuestionnairesStepsBo.getQuestionnairesId());
-          query.setHint("javax.persistence.lock.timeout", 15000).executeUpdate();
+
+          query.executeUpdate();
         }
         int count = 0;
         if (questionnairesStepsBo.getQuestionsBo() != null) {
@@ -5603,7 +5636,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       String studyId,
       SessionObject sessionObject,
       Map<String, String> anchorDateMap,
-      Integer count) {
+      Integer sequenceNumber) {
+
     logger.info("StudyQuestionnaireDAOImpl - copyStudyQuestionnaireBo() - Starts");
     QuestionnaireBo questionnaireBo = null;
     QuestionnaireBo newQuestionnaireBo = null;
@@ -5623,7 +5657,9 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         newQuestionnaireBo.setCustomStudyId(null);
         newQuestionnaireBo.setLive(0);
         newQuestionnaireBo.setStudyId(studyId);
+
         // newQuestionnaireBo.setCreatedDate(FdahpStudyDesignerUtil.getCurrentDateTime());
+
         newQuestionnaireBo.setCreatedBy(sessionObject.getUserId());
         newQuestionnaireBo.setModifiedBy(null);
         newQuestionnaireBo.setModifiedDate(null);
@@ -5631,7 +5667,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         newQuestionnaireBo.setIsChange(1);
         newQuestionnaireBo.setShortTitle(questionnaireBo.getShortTitle());
         newQuestionnaireBo.setAnchorDateId(anchorDateMap.get(questionnaireBo.getAnchorDateId()));
-        newQuestionnaireBo.setSequenceNumber(count);
+        newQuestionnaireBo.setSequenceNumber(sequenceNumber);
+
         session.save(newQuestionnaireBo);
 
         /** Questionnaire Schedule Purpose copying Start * */

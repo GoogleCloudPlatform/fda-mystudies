@@ -3,7 +3,7 @@ name: lint-oauth-scim
 on:
   pull_request:
     branches:
-      - develop
+      - btc-dev2dev-deployment
     paths:
       - 'auth-server/oauth-scim-service/**'
       - '.github/workflows/lint-oauth-scim-service.yml'

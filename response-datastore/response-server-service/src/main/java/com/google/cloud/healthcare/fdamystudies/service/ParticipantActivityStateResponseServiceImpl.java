@@ -131,6 +131,7 @@ public class ParticipantActivityStateResponseServiceImpl
               participantActivityExisting.setActivityState(
                   participantActivityInput.getActivityState());
 
+
               if (StringUtils.isNotBlank(participantActivityInput.getActivityRunId())) {
                 participantActivityExisting.setActivityRunId(
                     participantActivityInput.getActivityRunId());
@@ -141,6 +142,7 @@ public class ParticipantActivityStateResponseServiceImpl
               if (participantActivityInput.getTotalCount() != null) {
                 participantActivityExisting.setTotalCount(participantActivityInput.getTotalCount());
               }
+
 
               if (participantActivityInput.getCompletedCount() != null) {
                 participantActivityExisting.setCompletedCount(

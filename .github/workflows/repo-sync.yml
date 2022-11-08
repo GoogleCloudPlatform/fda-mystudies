@@ -1,0 +1,25 @@
+name: Repo Sync develop->develop-du
+
+on:
+  schedule: 
+  - cron: "*/30 06 * * *" # every 15 minutes. set to whatever interval you like
+
+jobs:
+  repo-sync:
+    name: Repo Sync
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: repo-sync/github-sync@v2
+      name: Sync repo to branch
+      with:
+        source_repo: ${{ secrets.SOURCE_REPO }}
+        source_branch: develop
+        destination_branch: ${{ secrets.INTERMEDIATE_BRANCH }}
+        github_token: ${{ secrets.PERSONAL_KEY }}
+    - uses: repo-sync/pull-request@v2
+      name: Create pull request
+      with:
+        source_branch: ${{ secrets.INTERMEDIATE_BRANCH }}
+        destination_branch: develop-du
+        github_token: ${{ secrets.PERSONAL_KEY }}

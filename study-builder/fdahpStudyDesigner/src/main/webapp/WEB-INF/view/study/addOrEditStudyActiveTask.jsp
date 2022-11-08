@@ -98,10 +98,12 @@
     var actionType = '${actionPage}';
     var selectedTask = $('.targetOption').find("option:selected").text();
     
+
         if(actionType == 'view'){
       		  $('.manuallyContainer').find('input:text').attr('disabled', 'disabled');
         }
      
+
 
     if (activeTaskInfoId) {
       $('.targetOption').prop('disabled', true);
@@ -137,9 +139,11 @@
       var activeTaskInfoId = $(this).attr('taskId');
       $('.changeContent').empty();
       $(document).find('#saveId').unbind();
+
       //$(document).off('click', '#saveId');
       $(document).off('click', '#doneId');
       loadSelectedATask(typeOfActiveTask, activeTaskInfoId, actionType); 
+
       $('.actBut').show();
       $('.scheduleTaskClass').prop('disabled', false);
       $('.scheduleTaskClass').removeClass('linkDis');
@@ -159,8 +163,7 @@
             actionType: actionType
           } ,
           function () {
-            $(this).parents('form').attr('action',
-                '/studybuilder/adminStudies/saveOrUpdateActiveTaskContent.do?_S=${param._S}');
+            
             resetValidation($(this).parents('form'));
             var dt = new Date();
             $('#inputClockId').datetimepicker({
@@ -308,4 +311,5 @@
    		  $('.manuallyContainer').find('input:text').attr('disabled', 'disabled');
      }
   })
+
 </script>

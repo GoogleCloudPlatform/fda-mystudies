@@ -13,7 +13,9 @@
     width: 100px !important;
   }
 </style>
+
 <div class="col-sm-9.5 col-rc white-bg p-none" id="settingId">
+
   <form:form
       action="/studybuilder/adminApps/saveOrUpdateAppDeveloperConfig.do?_S=${param._S}"
       data-toggle="validator" role="form" id="developerConfigFormId" method="post"
@@ -57,7 +59,9 @@
     
          <!-- Start Section-->
 
+
                          <div class="row ">
+
                             <div class="col-md-6 pl-none">
                                 <div class="gray-xs-f mb-xs mt-md">Android Bundle ID 
                                 <small>(100 characters max)</small>
@@ -105,10 +109,12 @@
                             </div>
                             
                             <div class="clearfix"></div>
+
                             <div class="col-md-12 pl-none">
                               <div class="blue-md-f mb-md mt-md text-uppercase"> APP VERSION INFORMATION </div>
                             </div>
                             
+
                 <div class="clearfix"></div>
                             
                               <div class="col-md-6 pl-none">

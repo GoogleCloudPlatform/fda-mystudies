@@ -65,11 +65,13 @@ public class HibernateTestConfig {
 
     hibernateProperties.setProperty("hibernate.hbm2ddl.import_files", "import.sql");
     hibernateProperties.setProperty("hibernate.c3p0.acquire_increment", "2");
+
     hibernateProperties.setProperty("hibernate.c3p0.max_size", "500");
 
     hibernateProperties.setProperty("hibernate.c3p0.min_size", "5");
     hibernateProperties.setProperty("hibernate.c3p0.timeout", "1800");
     hibernateProperties.setProperty("hibernate.c3p0.idle_test_period", "200");
+
     return hibernateProperties;
   }
 

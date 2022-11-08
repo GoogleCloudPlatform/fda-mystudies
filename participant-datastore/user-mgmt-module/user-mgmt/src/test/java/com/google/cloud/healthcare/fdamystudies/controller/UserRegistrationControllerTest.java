@@ -194,7 +194,9 @@ public class UserRegistrationControllerTest extends BaseMockIT {
     String subject = appConfig.getConfirmationMailSubject();
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("securitytoken", userDetails.getEmailCode());
+
     /*templateArgs.put("orgName", optApp.get().getOrganizationName());*/
+
     templateArgs.put("contactEmail", optApp.get().getContactUsToEmail());
     String body =
         PlaceholderReplacer.replaceNamedPlaceholders(appConfig.getConfirmationMail(), templateArgs);

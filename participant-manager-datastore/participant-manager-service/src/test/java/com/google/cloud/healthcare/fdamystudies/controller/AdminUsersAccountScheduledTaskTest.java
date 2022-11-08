@@ -46,7 +46,6 @@ public class AdminUsersAccountScheduledTaskTest extends BaseMockIT {
 
   @Test
   public void shouldSendEmailInvitationForNewAdmin() throws Exception {
-
     UserRegAdminEntity admin = testDataHelper.createNonSuperAdmin();
     admin.setSecurityCode(IdGenerator.id());
     testDataHelper.getUserRegAdminRepository().saveAndFlush(admin);
@@ -82,7 +81,6 @@ public class AdminUsersAccountScheduledTaskTest extends BaseMockIT {
 
   @Test
   public void shouldSendEmailInvitationForUpdateAdmin() throws Exception {
-
     UserRegAdminEntity admin = testDataHelper.createNonSuperAdmin();
     admin.setSecurityCode(IdGenerator.id());
     testDataHelper.getUserRegAdminRepository().saveAndFlush(admin);

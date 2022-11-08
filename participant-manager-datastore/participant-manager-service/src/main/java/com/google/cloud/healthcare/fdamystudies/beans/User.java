@@ -27,11 +27,19 @@ public class User {
 
   private String lastName;
 
+  private String phoneNum;
+
   private boolean superAdmin;
 
   private Integer manageLocations;
 
   private String status;
+
+  private boolean idpUser;
+
+  private boolean deletedOrDisabledInIdp;
+
+  private boolean mfaEnabledForPM;
 
   private List<UserAppDetails> apps = new ArrayList<>();
 }

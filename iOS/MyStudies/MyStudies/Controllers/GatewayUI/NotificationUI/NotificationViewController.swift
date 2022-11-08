@@ -230,6 +230,10 @@ class NotificationViewController: UIViewController {
         NotificationHandler.instance.appOpenFromNotification = true
         viewController?.selectedIndex = 0
         self.navigationController?.pushViewController(viewController!, animated: true)
+        
+      case .announcement:
+        viewController?.selectedIndex = 0
+        self.navigationController?.pushViewController(viewController!, animated: true)
 
       default:
         self.navigationController?.setNavigationBarHidden(false, animated: true)

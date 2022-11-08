@@ -53,7 +53,7 @@ public class UserProfileController {
 
   @Autowired private UserProfileService userProfileService;
 
-  @ApiOperation(value = "Returns user profile information")
+  @ApiOperation(value = "fetch user profile")
   @GetMapping(value = "/users/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<UserProfileResponse> getUserProfile(
       @PathVariable String userId, HttpServletRequest request) {
@@ -64,7 +64,7 @@ public class UserProfileController {
     return ResponseEntity.status(profileResponse.getHttpStatusCode()).body(profileResponse);
   }
 
-  @ApiOperation(value = "Returns a response containing user profile by security code")
+  @ApiOperation(value = "fetch user profile by security code")
   @GetMapping(
       value = "/users/securitycodes/{securityCode}",
       produces = MediaType.APPLICATION_JSON_VALUE)
@@ -79,7 +79,7 @@ public class UserProfileController {
     return ResponseEntity.status(userProfileResponse.getHttpStatusCode()).body(userProfileResponse);
   }
 
-  @ApiOperation(value = "Updates user account details")
+  @ApiOperation(value = "update user account details")
   @PutMapping(
       value = "/users/{userId}/profile",
       consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -99,7 +99,7 @@ public class UserProfileController {
     return ResponseEntity.status(userProfileResponse.getHttpStatusCode()).body(userProfileResponse);
   }
 
-  @ApiOperation(value = "Set up an account by activating user after registration")
+  @ApiOperation(value = "set up account by activating user after registration")
   @PostMapping(
       value = "/users/setUpAccount",
       consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -117,7 +117,7 @@ public class UserProfileController {
         .body(setUpAccountResponse);
   }
 
-  @ApiOperation(value = "Updates user account status")
+  @ApiOperation(value = "update user account status")
   @PatchMapping(
       value = "/users/{userId}",
       consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -139,7 +139,7 @@ public class UserProfileController {
     return ResponseEntity.status(deactivateResponse.getHttpStatusCode()).body(deactivateResponse);
   }
 
-  @ApiOperation(value = "Delete invitation of the user")
+  @ApiOperation(value = "delete invitation of the user")
   @DeleteMapping(value = "/users/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> deleteInvitation(
       @RequestHeader(name = "userId") String signedInUserId,

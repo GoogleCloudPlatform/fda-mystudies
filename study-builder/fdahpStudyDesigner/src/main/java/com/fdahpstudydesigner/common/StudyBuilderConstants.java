@@ -35,4 +35,8 @@ public final class StudyBuilderConstants {
   public static final String LOCK_TIME = "lock_time";
 
   public static final String FAILED_ATTEMPT = "failed_attempt";
+
+  // Temporary password for Google cloud platform users. Spring security authentication is not
+  // required for IDP users, as we will be using Firebase authentication
+  public static final String IDP_TEMP_PASSWORD = "password123";
 }

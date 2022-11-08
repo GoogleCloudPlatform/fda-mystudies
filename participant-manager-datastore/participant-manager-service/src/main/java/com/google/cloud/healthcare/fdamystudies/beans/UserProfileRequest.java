@@ -36,4 +36,6 @@ public class UserProfileRequest implements Serializable {
   private String lastName;
 
   private String userId;
+
+  @ToString.Exclude private String phoneNum;
 }

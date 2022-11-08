@@ -3,7 +3,7 @@ name: lint-response-datastore
 on:
   pull_request:
     branches:
-      - develop
+      - btc-dev2dev-deployment
     paths:
       - 'response-datastore/response-server-service/**'
       - '.github/workflows/lint-response-datastore.yml'

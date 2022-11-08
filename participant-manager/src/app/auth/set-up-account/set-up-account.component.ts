@@ -29,6 +29,7 @@ export class SetUpAccountComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   user = {} as SetUpUser;
+
   setUpCode = '';
   tempRegId = '';
   setupAccountForm: FormGroup;
@@ -45,6 +46,8 @@ export class SetUpAccountComponent
   consecutiveCharacter = '';
   passwordLength = '';
   userName = '';
+  isMfa?: boolean;
+
   constructor(
     private readonly fb: FormBuilder,
     private readonly setUpAccountService: SetUpAccountService,
@@ -68,6 +71,10 @@ export class SetUpAccountComponent
           // eslint-disable-next-line @typescript-eslint/unbound-method
           [Validators.required],
         ],
+        phoneNum: [
+          '',
+          // eslint-disable-next-line @typescript-eslint/unbound-method
+        ],
         password: [
           '',
           // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -82,7 +89,7 @@ export class SetUpAccountComponent
       {
         validator: [
           mustMatch('password', 'confirmPassword'),
-          newPasswordValidator('firstName', 'lastName', 'password'),
+          newPasswordValidator('firstName', 'lastName', 'password', 'phoneNum'),
         ],
       },
     );
@@ -104,6 +111,7 @@ export class SetUpAccountComponent
       }),
     );
     this.passCriteria = `Your password must be at least 8 characters long    
+
     and contain lower case, upper case, numeric and
     special characters.`;
   }
@@ -115,7 +123,41 @@ export class SetUpAccountComponent
   getPreStoredDetails(): void {
     this.setUpAccountService.get(this.setUpCode).subscribe((user) => {
       this.setupAccountForm.patchValue(user);
+      this.isMfa = user.mfaEnabledForPM;
+      console.log(this.isMfa);
+      this.changeValidation(this.isMfa);
     });
+  }
+
+  /*changeValidation(): void{
+    if(this.isMfa) {
+    console.log(1);
+    console.log('true');
+      // this.setupAccountForm.get('phoneNum')?.setValidators((Validators.required));
+      this.setupAccountForm.get('phoneNum')?.clearValidators();
+    } else {
+     console.log(2);
+     console.log('true');
+     this.setupAccountForm.get('phoneNum')?.setValidators((Validators.required));
+     // this.setupAccountForm.get('phoneNum')?.clearValidators();
+    }
+  }
+*/
+
+  changeValidation(IsMfa: any): void {
+    if (IsMfa) {
+      console.log(1);
+      console.log('true');
+      this.setupAccountForm.controls['phoneNum'].setValidators([
+        Validators.required,
+        Validators.pattern('[+][0-9s]{11,15}'),
+      ]);
+      this.setupAccountForm.controls['phoneNum'].updateValueAndValidity();
+    } else {
+      console.log(2);
+      console.log('false');
+      this.setupAccountForm.controls['phoneNum'].clearValidators();
+    }
   }
 
   registerUser(): void {
@@ -124,6 +166,7 @@ export class SetUpAccountComponent
       lastName: String(this.setupAccountForm.controls['lastName'].value),
       email: String(this.setupAccountForm.controls['email'].value),
       password: String(this.setupAccountForm.controls['password'].value),
+      phoneNum: String(this.setupAccountForm.controls['phoneNum'].value),
     };
     this.subs.add(
       this.setUpAccountService
@@ -146,6 +189,7 @@ export class SetUpAccountComponent
       const secretkeylenth = String(
         this.setupAccountForm.controls['password'].value,
       );
+
       if (secretkeylenth.length === 0) {
         this.passwordMeterLow = ' ';
         this.passwordMeterHigh = ' ';

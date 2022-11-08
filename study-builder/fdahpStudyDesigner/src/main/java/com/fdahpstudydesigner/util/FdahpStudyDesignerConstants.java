@@ -506,6 +506,7 @@ public class FdahpStudyDesignerConstants {
   public static final String VIEW_ASSOCIATED_STUDIES_MESSAGE =
       "Studies seen in the list are based on the permissions you have in the Study Builder";
 
+
   public static final String FAILURE_CONSENT_STORE_MESSAGE =
       "Sorry, an error has occurred and your request could not be processed. Please try again later";
 
@@ -546,6 +547,7 @@ public class FdahpStudyDesignerConstants {
   public static final String LENGTH_OF_WALK = "length_of_walk_period";
   public static final String LENGTH_OF_REST_WALK = "length_of_rest_period_walk";
   public static final String AUDIO_PROMPT_INTERVAL_WALK = "Audio_prompt_interval_walk";
+
 
   private FdahpStudyDesignerConstants() {
     // Do nothing

@@ -13,7 +13,9 @@
     width: 100px !important;
   }
 </style>
+
 <div class="col-sm-9.5 col-rc white-bg p-none" id="settingId">
+
   <form:form
       action="/studybuilder/adminApps/saveOrUpdateAppProperties.do?_S=${param._S}"
       data-toggle="validator" role="form" id="appPropertiesFormId" method="post"
@@ -103,8 +105,10 @@
                                 <small>(250 characters max)</small>
                                 <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter a URL for the app's Terms"></span></div>
                                 <div class="form-group mb-none">
+
                                     <input type="text" class="form-control" value="${appBo.appTermsUrl}" name="appTermsUrl" 
                                     pattern="^(http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$"
+
                    					title="Include http://" maxlength="250"
                   					data-pattern-error="Please enter a valid URL" required data-error="Please fill out this field"/>
                                     <div class="help-block with-errors red-txt"></div>
@@ -118,7 +122,9 @@
                                 <small>(100 characters max)</small>
                                 <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter a URL for the app's Privacy Policy"></span></div>
                                 <div class="form-group mb-none">
+
                                     <input type="text" class="form-control" value="${appBo.appPrivacyUrl}" name="appPrivacyUrl" 
+
                                     pattern="^(http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$"
                    					title="Include http://" maxlength="100"
                   					data-pattern-error="Please enter a valid URL" required data-error="Please fill out this field"/>
@@ -143,7 +149,9 @@
                                 <small>(250 characters max)</small>
                                 <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the App Store URL from where the app can be downloaded for iPhone users"></span></div>
                                 <div class="form-group mb-none">
+
                                     <input type="text" class="form-control" value="${appBo.appStoreUrl}" name="appStoreUrl" id="appStoreUrlId"
+
                                     pattern="^(http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$"
                    					title="Include http://" maxlength="250" 
                   					data-pattern-error="Please enter a valid URL" required data-error="Please fill out this field"/>
@@ -156,7 +164,9 @@
                                 <small>(250 characters max)</small>
                                 <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the Play Store URL from where the app can be downloaded for Android users"></span></div>
                                 <div class="form-group mb-none">
+
                                     <input type="text" class="form-control" value="${appBo.playStoreUrl}" name="playStoreUrl" id="playStoreUrlId"
+
                                     pattern="^(http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$"
                    					title="Include http://" maxlength="250" 
                   					data-pattern-error="Please enter a valid URL" required data-error="Please fill out this field"/>
@@ -184,7 +194,9 @@
                                 <small>(100 characters max)</small>
                                 <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the URL of a website that describes your app, if you have one."></span></div>
                                 <div class="form-group mb-none">
+
                                     <input type="text" class="form-control" value="${appBo.appWebsiteUrl}" name="appWebsiteUrl"
+
                                     pattern="^(http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$"
                    					title="Include http://" maxlength="100" 
                   					data-pattern-error="Please enter a valid URL" required data-error="Please fill out this field"/>

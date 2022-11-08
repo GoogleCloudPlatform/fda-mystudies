@@ -65,7 +65,9 @@ public class UserSupportControllerTest extends BaseMockIT {
   @Test
   @Disabled
   public void shouldSendFeedbackEmail() throws Exception {
+
     /*appConfig.setFeedbackToEmail("feedback_app_test@grr.la");*/
+
 
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.USER_ID_HEADER);
     headers.set("appName", Constants.APP_NAME);
@@ -102,7 +104,9 @@ public class UserSupportControllerTest extends BaseMockIT {
   @Test
   @Disabled
   public void shouldSendEmailForContactUs() throws Exception {
+
     /*appConfig.setContactusToEmail("contactus_app_test@grr.la");*/
+
 
     HttpHeaders headers =
         TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.USER_ID_HEADER);

@@ -3,7 +3,7 @@ name: lint-participant-user-datastore
 on:
   pull_request:
     branches:
-      - develop
+      - btc-dev2dev-deployment
     paths:
       - 'participant-datastore/user-mgmt-module/**'
       - '.github/workflows/lint-participant-user-datastore.yml'

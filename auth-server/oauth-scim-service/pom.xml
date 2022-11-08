@@ -100,10 +100,10 @@
       <version>29.0-jre</version>
     </dependency>
     <dependency>
-      <groupId>com.google.firebase</groupId>
-      <artifactId>firebase-admin</artifactId>
-      <version>6.11.0</version>
-    </dependency>
+	  <groupId>com.google.firebase</groupId>
+	  <artifactId>firebase-admin</artifactId>
+	  <version>6.11.0</version>
+	</dependency>
     <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>jquery</artifactId>

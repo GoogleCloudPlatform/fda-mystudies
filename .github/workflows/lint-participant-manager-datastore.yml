@@ -4,7 +4,7 @@ name: lint-participant-manager-datastore
 on:
   pull_request:
     branches:
-      - develop
+      - btc-dev2dev-deployment
     paths:
       - 'participant-manager-datastore/participant-manager-service/**'
       - '.github/workflows/lint-participant-manager-datastore.yml'

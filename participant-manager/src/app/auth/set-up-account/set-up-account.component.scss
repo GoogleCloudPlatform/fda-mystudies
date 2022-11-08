@@ -93,6 +93,11 @@ meter::-webkit-meter-even-less-good-value{background:red;} */
 /* meter::-moz-meter-bar { 
   background: red;
 } */
+
+.passCriteria {
+  float: right;
+}
+
 @media only screen and (max-width: 1020px) and (min-width: 320px) {
   #desktop-menu {
     display: block !important;
@@ -104,5 +109,9 @@ meter::-webkit-meter-even-less-good-value{background:red;} */
 }
 
 .form-group .custom__labels label:before {
+  display: none !important;
+}
+
+.search-icon {
   display: none !important;
 }

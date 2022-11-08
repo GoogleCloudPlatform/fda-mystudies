@@ -21,6 +21,9 @@ export class AccountProfileComponent
   implements OnInit {
   profileForm: FormGroup;
   user = {} as Profile;
+  idpUser = true;
+  isMfa?: boolean;
+
   constructor(
     private readonly fb: FormBuilder,
     private readonly accountService: AccountService,
@@ -44,6 +47,10 @@ export class AccountProfileComponent
         // eslint-disable-next-line @typescript-eslint/unbound-method
         [Validators.required],
       ],
+      phoneNum: [
+        '',
+        // eslint-disable-next-line @typescript-eslint/unbound-method
+      ],
     });
   }
 
@@ -58,7 +65,27 @@ export class AccountProfileComponent
   getProfileDetails(): void {
     this.accountService.fetchUserProfile().subscribe((data) => {
       this.profileForm.patchValue(data);
+      this.user = data;
+      this.isMfa = data.mfaEnabledForPM;
+      console.log(this.isMfa);
+      this.changeValidation(this.isMfa);
     });
+  }
+
+  changeValidation(IsMfa: any): void {
+    if (IsMfa) {
+      console.log(1);
+      console.log('true');
+      this.profileForm.controls['phoneNum'].setValidators([
+        Validators.required,
+        Validators.pattern('[+][0-9s]{11,15}'),
+      ]);
+      this.profileForm.controls['phoneNum'].updateValueAndValidity();
+    } else {
+      console.log(2);
+      console.log('false');
+      this.profileForm.controls['phoneNum'].clearValidators();
+    }
   }
 
   updateProfile(): void {
@@ -66,6 +93,7 @@ export class AccountProfileComponent
     const profileToBeUpdated: UpdateProfile = {
       firstName: String(this.profileForm.controls['firstName'].value),
       lastName: String(this.profileForm.controls['lastName'].value),
+      phoneNum: String(this.profileForm.controls['phoneNum'].value),
     };
 
     this.accountService.updateUserProfile(profileToBeUpdated).subscribe(
@@ -76,6 +104,9 @@ export class AccountProfileComponent
         );
         this.user.lastName = String(
           this.profileForm.controls['lastName'].value,
+        );
+        this.user.phoneNum = String(
+          this.profileForm.controls['phoneNum'].value,
         );
         sessionStorage.setItem('user', JSON.stringify(this.user));
         this.userState.setCurrentUserName(

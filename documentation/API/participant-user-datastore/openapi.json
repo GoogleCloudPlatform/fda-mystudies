@@ -12,6 +12,9 @@
   "host" : "localhost:8080",
   "basePath" : "/participant-user-datastore",
   "tags" : [ {
+    "name" : "Apps",
+    "description" : "Operations pertaining to Apps in user management service"
+  }, {
     "name" : "Get Health",
     "description" : "Provides an indication about the health of the service"
   }, {
@@ -31,6 +34,136 @@
     "description" : "Operation pertaining to verify email in user management service"
   } ],
   "paths" : {
+    "/apps" : {
+      "get" : {
+        "tags" : [ "Apps" ],
+        "summary" : "Fetch app contact us and from email id",
+        "operationId" : "getAppContactEmailsUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "appId",
+          "in" : "query",
+          "description" : "appId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/AppContactEmailsResponse"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/apps/appmetadata" : {
+      "post" : {
+        "tags" : [ "Apps" ],
+        "summary" : "Add or update appmetadata",
+        "operationId" : "addUpdateAppMetadataUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "appMetadataBean",
+          "description" : "appMetadataBean",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/AppMetadataBean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/apps/{customAppId}/appDeactivate" : {
+      "put" : {
+        "tags" : [ "Apps" ],
+        "summary" : "Deactivate apps and associated users",
+        "operationId" : "deactivateAppAndUsersUsingPUT",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "customAppId",
+          "in" : "path",
+          "description" : "customAppId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
     "/contactUs" : {
       "post" : {
         "tags" : [ "Support" ],
@@ -39,6 +172,12 @@
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
         "parameters" : [ {
+          "name" : "appId",
+          "in" : "header",
+          "description" : "appId",
+          "required" : true,
+          "type" : "string"
+        }, {
           "name" : "appName",
           "in" : "header",
           "description" : "appName",
@@ -140,6 +279,12 @@
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
         "parameters" : [ {
+          "name" : "appId",
+          "in" : "header",
+          "description" : "appId",
+          "required" : true,
+          "type" : "string"
+        }, {
           "name" : "appName",
           "in" : "header",
           "description" : "appName",
@@ -339,7 +484,7 @@
     "/studies/sendNotification" : {
       "post" : {
         "tags" : [ "Studies" ],
-        "summary" : "Sends notifications to users",
+        "summary" : "Send Notification",
         "operationId" : "SendNotificationUsingPOST",
         "consumes" : [ "application/json" ],
         "produces" : [ "*/*" ],
@@ -384,7 +529,7 @@
     "/studies/studymetadata" : {
       "post" : {
         "tags" : [ "Studies" ],
-        "summary" : "Add or update metadata details of the study",
+        "summary" : "Add or update studymetadata",
         "operationId" : "addUpdateStudyMetadataUsingPOST",
         "consumes" : [ "application/json" ],
         "produces" : [ "*/*" ],
@@ -572,6 +717,144 @@
     }
   },
   "definitions" : {
+    "AppContactEmailsResponse" : {
+      "type" : "object",
+      "properties" : {
+        "appName" : {
+          "type" : "string"
+        },
+        "appWebsite" : {
+          "type" : "string"
+        },
+        "code" : {
+          "type" : "string"
+        },
+        "contactUsEmail" : {
+          "type" : "string"
+        },
+        "fromEmail" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "privacyPolicyUrl" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "supportEmail" : {
+          "type" : "string"
+        },
+        "termsUrl" : {
+          "type" : "string"
+        },
+        "version" : {
+          "$ref" : "#/definitions/AppDetailsVersionBean"
+        }
+      },
+      "title" : "AppContactEmailsResponse"
+    },
+    "AppDetailsVersionBean" : {
+      "type" : "object",
+      "properties" : {
+        "android" : {
+          "$ref" : "#/definitions/DeviceVersionBean"
+        },
+        "ios" : {
+          "$ref" : "#/definitions/DeviceVersionBean"
+        }
+      },
+      "title" : "AppDetailsVersionBean"
+    },
+    "AppMetadataBean" : {
+      "type" : "object",
+      "required" : [ "appId", "appName" ],
+      "properties" : {
+        "androidBundleId" : {
+          "type" : "string"
+        },
+        "androidForceUpgrade" : {
+          "type" : "boolean"
+        },
+        "androidServerKey" : {
+          "type" : "string"
+        },
+        "androidVersion" : {
+          "type" : "string"
+        },
+        "appId" : {
+          "type" : "string"
+        },
+        "appName" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 64
+        },
+        "appPlatform" : {
+          "type" : "string"
+        },
+        "appPrivacyUrl" : {
+          "type" : "string"
+        },
+        "appStatus" : {
+          "type" : "string"
+        },
+        "appStoreUrl" : {
+          "type" : "string"
+        },
+        "appSupportEmail" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 320
+        },
+        "appTermsUrl" : {
+          "type" : "string"
+        },
+        "appType" : {
+          "type" : "string"
+        },
+        "appWebSiteUrl" : {
+          "type" : "string"
+        },
+        "contactEmail" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 320
+        },
+        "feedBackEmail" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 320
+        },
+        "fromEmail" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 320
+        },
+        "iosBundleId" : {
+          "type" : "string"
+        },
+        "iosForceUpgrade" : {
+          "type" : "boolean"
+        },
+        "iosServerKey" : {
+          "type" : "string"
+        },
+        "iosVersion" : {
+          "type" : "string"
+        },
+        "organizationName" : {
+          "type" : "string"
+        },
+        "playStoreUrl" : {
+          "type" : "string"
+        }
+      },
+      "title" : "AppMetadataBean"
+    },
     "BaseResponse" : {
       "type" : "object",
       "properties" : {
@@ -592,6 +875,9 @@
       "type" : "object",
       "required" : [ "body", "email", "firstName", "subject" ],
       "properties" : {
+        "appId" : {
+          "type" : "string"
+        },
         "appName" : {
           "type" : "string"
         },
@@ -622,6 +908,18 @@
       },
       "title" : "DeactivateAcctBean"
     },
+    "DeviceVersionBean" : {
+      "type" : "object",
+      "properties" : {
+        "forceUpdate" : {
+          "type" : "string"
+        },
+        "latestVersion" : {
+          "type" : "string"
+        }
+      },
+      "title" : "DeviceVersionBean"
+    },
     "EmailIdVerificationForm" : {
       "type" : "object",
       "required" : [ "code", "emailId" ],
@@ -639,6 +937,9 @@
       "type" : "object",
       "required" : [ "body", "subject" ],
       "properties" : {
+        "appId" : {
+          "type" : "string"
+        },
         "appName" : {
           "type" : "string"
         },
@@ -686,8 +987,7 @@
           "type" : "string"
         },
         "notificationId" : {
-          "type" : "integer",
-          "format" : "int32"
+          "type" : "string"
         },
         "notificationSubType" : {
           "type" : "string"
@@ -739,6 +1039,9 @@
       "type" : "object",
       "properties" : {
         "emailId" : {
+          "type" : "string"
+        },
+        "verificationTime" : {
           "type" : "string"
         }
       },
@@ -803,11 +1106,6 @@
           "minLength" : 0,
           "maxLength" : 255
         },
-        "studyCategory" : {
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 64
-        },
         "studyEnrolling" : {
           "type" : "string",
           "minLength" : 0,
@@ -816,20 +1114,10 @@
         "studyId" : {
           "type" : "string"
         },
-        "studySponsor" : {
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 128
-        },
         "studyStatus" : {
           "type" : "string",
           "minLength" : 0,
           "maxLength" : 32
-        },
-        "studyTagline" : {
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 128
         },
         "studyTitle" : {
           "type" : "string",

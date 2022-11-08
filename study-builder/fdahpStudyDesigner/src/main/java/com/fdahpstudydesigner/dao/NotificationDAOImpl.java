@@ -288,6 +288,9 @@ public class NotificationDAOImpl implements NotificationDAO {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
+
+      StudyBo studyDetails = studyDAO.getStudyByLatestVersion(notificationBO.getCustomStudyId());
+
       if (StringUtils.isEmpty(notificationBO.getNotificationId())) {
         notificationBOUpdate = new NotificationBO();
         notificationBOUpdate.setNotificationText(notificationBO.getNotificationText().trim());
@@ -318,8 +321,9 @@ public class NotificationDAOImpl implements NotificationDAO {
           notificationBOUpdate.setNotificationType(FdahpStudyDesignerConstants.NOTIFICATION_ST);
           notificationBOUpdate.setCustomStudyId(notificationBO.getCustomStudyId());
           notificationBOUpdate.setStudyId(notificationBO.getStudyId());
-          StudyBo studyDetails =
-              studyDAO.getStudyByLatestVersion(notificationBO.getCustomStudyId());
+
+          studyDetails = studyDAO.getStudyByLatestVersion(notificationBO.getCustomStudyId());
+
           notificationBOUpdate.setPlatform(studyDetails.getPlatform());
           notificationBOUpdate.setNotificationAction(notificationBO.isNotificationAction());
         } else {
@@ -376,11 +380,14 @@ public class NotificationDAOImpl implements NotificationDAO {
         if (notificationType.equals(FdahpStudyDesignerConstants.STUDYLEVEL)) {
           notificationBOUpdate.setNotificationDone(notificationBO.isNotificationDone());
           notificationBOUpdate.setNotificationType(FdahpStudyDesignerConstants.NOTIFICATION_ST);
+          notificationBOUpdate.setPlatform(studyDetails.getPlatform());
           notificationBOUpdate.setNotificationAction(notificationBO.isNotificationAction());
         } else {
           notificationBOUpdate.setNotificationDone(notificationBOUpdate.isNotificationDone());
           notificationBOUpdate.setNotificationType(FdahpStudyDesignerConstants.NOTIFICATION_GT);
           notificationBOUpdate.setNotificationAction(notificationBOUpdate.isNotificationAction());
+          notificationBOUpdate.setPlatform(
+              FdahpStudyDesignerConstants.STUDY_PLATFORM_TYPE_IOS_ANDROID);
         }
         notificationBOUpdate.setNotificationSubType(
             FdahpStudyDesignerConstants.NOTIFICATION_SUBTYPE_ANNOUNCEMENT);
@@ -523,7 +530,9 @@ public class NotificationDAOImpl implements NotificationDAO {
     String searchQuery = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
+
       if (copyVersion.equals(FdahpStudyDesignerConstants.WORKING_VERSION)) {
+
         searchQuery =
             "From NotificationBO where studyId=:studyId AND notificationType =:notificationType";
         notificationBOs =

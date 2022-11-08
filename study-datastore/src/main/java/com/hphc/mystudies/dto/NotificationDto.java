@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -45,8 +46,10 @@ public class NotificationDto implements Serializable {
   @Column(name = "study_id")
   private String studyId;
 
+
   @Column(name = "platform")
   private String platform;
+
 
   @Column(name = "notification_text")
   private String notificationText;
@@ -107,6 +110,7 @@ public class NotificationDto implements Serializable {
 
   @Column(name = "app_id")
   private String appId;
+
 
   @Column(name = "schedule_timestamp")
   private String scheduleTimestamp;

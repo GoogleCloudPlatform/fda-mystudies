@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: participant-manager
-          image: gcr.io/<PREFIX>-<ENV>-apps/participant-manager:latest
+          image: gcr.io/btcsoft-dev-apps/participant-manager:latest
           ports:
             - containerPort: 80
           readinessProbe:

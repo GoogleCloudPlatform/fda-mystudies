@@ -37,6 +37,7 @@ import com.fdahpstudydesigner.mapper.AuditEventMapper;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.SessionObject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,11 @@ public class DashBoardAndProfileServiceImpl implements DashBoardAndProfileServic
   @Override
   public String isEmailValid(String email) {
     return dashBoardAndProfiledao.isEmailValid(email);
+  }
+
+  @Override
+  public void getIDPUserData(HttpServletResponse response, String email) {
+    dashBoardAndProfiledao.getIDPUserData(response, email);
   }
 
   @Override

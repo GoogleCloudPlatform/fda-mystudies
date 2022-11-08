@@ -12,8 +12,10 @@
     pointer-events: none;
   }
 
+
  .tooltip {
     width: 230px !important;
+
   }
   
   .display__flex__ {
@@ -878,7 +880,9 @@
                 </div>
               </div>
             </div>
+
             <div class="col-md-6 pl-none">
+
               <div class="col-md-9 col-lg-9 p-none">
                 <div class="gray-xs-f mb-xs">Max fraction digits
                   <span class="requiredStar">*</span>
@@ -3473,6 +3477,7 @@ if(document.getElementById("singleSelect").checked==true){
         img = new Image();
         img.onload = function () {
         	var minHeightAndWidth=0;
+
        	 var ht = this.height;
             var wds = this.width;
             if(ht>120 && wds >120){
@@ -3484,6 +3489,7 @@ if(document.getElementById("singleSelect").checked==true){
             	wds=this.width=minHeightAndWidth;
             	
             }
+
           if ((parseInt(ht) == parseInt(wds)) && (parseInt(ht) >= 90 && parseInt(ht) <= 120)
               && (parseInt(wds) >= 90 && parseInt(wds) <= 120)) {
             $(thisAttr).parent().find('.form-group').removeClass('has-error has-danger');
@@ -3498,7 +3504,9 @@ if(document.getElementById("singleSelect").checked==true){
             $(thisAttr).parent().find('img').attr("src", "../images/icons/sm-thumb.jpg");
             $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
             $(thisAttr).parent().find(".help-block").empty().append(
+
               $("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","white-space:nowrap").text("Invalid image size or format"));
+
             $(thisAttr).parent().parent().parent().find(".removeUrl").click();
             var id = $(thisAttr).next().attr("id");
             $("#" + id).val('');
@@ -3507,7 +3515,9 @@ if(document.getElementById("singleSelect").checked==true){
             if (response_type == "Scale" || response_type == "Continuous scale") {
               $("#" + id).next().addClass("hide");
             }else if(response_type == "Image choice"){
+
           	  $("#" + $(thisAttr).attr("id")).attr('required', true);
+
             }
           }
         };
@@ -3515,11 +3525,14 @@ if(document.getElementById("singleSelect").checked==true){
           $(thisAttr).parent().find('img').attr("src", "../images/icons/sm-thumb.jpg");
           $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
           $(thisAttr).parent().find(".help-block").empty().append(
+
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Invalid image size or format"));
+
           $(thisAttr).parent().parent().parent().find(".removeUrl").click();
         };
         img.src = _URL.createObjectURL(file);
           }else{
+
        	   $(thisAttr).parent().find('img').attr("src", "../images/icons/sm-thumb.jpg");
               $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
               $(thisAttr).parent().find(".help-block").empty().append(
@@ -3534,6 +3547,7 @@ if(document.getElementById("singleSelect").checked==true){
             	  $("#" + $(thisAttr).attr("id")).attr('required', true);
               }
          }
+
       }
     });
     $('.textScaleValue').on('blur', function () {
@@ -4236,6 +4250,7 @@ if(document.getElementById("singleSelect").checked==true){
                 != 'undefined') {
               $("#prevStatShortNameId").val(statShortName);
             }
+
             $('.image-choice').find('.requireClass').prop('required', false);
             $('.image-choice').parent().removeClass("has-danger").removeClass("has-error");
             $('.image-choice').parent().find(".help-block").empty();

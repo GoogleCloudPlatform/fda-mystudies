@@ -24,8 +24,11 @@ import com.google.cloud.healthcare.fdamystudies.beans.EmailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.GetAdminDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.GetUsersResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.IDPAdminDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SitePermissionDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyPermissionDetails;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.User;
 import com.google.cloud.healthcare.fdamystudies.beans.UserAppDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.UserAppPermissionRequest;
@@ -43,6 +46,8 @@ import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
+import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
+import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
@@ -64,6 +69,12 @@ import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionReposi
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserAccountEmailSchedulerTaskRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
+import com.google.cloud.healthcare.fdamystudies.util.ParticipantManagerUtil;
+import com.google.firebase.auth.ExportedUserRecord;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.ListUsersPage;
+import com.google.firebase.auth.UserRecord;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -77,6 +88,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
@@ -84,6 +96,7 @@ import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -122,15 +135,20 @@ public class ManageUserServiceImpl implements ManageUserService {
 
   @Autowired private OAuthService oauthService;
 
+  @Autowired private AppPropertyConfig appPropertyConfig;
+
+  @Autowired private ParticipantManagerUtil participantManagerUtil;
+
   @Override
   @Transactional
   public AdminUserResponse createUser(UserRequest user, AuditLogEventRequest auditRequest) {
-    logger.entry(String.format("createUser() with isSuperAdmin=%b", user.isSuperAdmin()));
+    logger.debug(String.format("createUser() with isSuperAdmin=%b", user.isSuperAdmin()));
     ErrorCode errorCode = validateUserRequest(user);
     if (errorCode != null) {
       throw new ErrorCodeException(errorCode);
     }
 
+    logger.debug("createUser()2 ");
     AdminUserResponse userResponse =
         user.isSuperAdmin()
             ? saveSuperAdminDetails(user, auditRequest)
@@ -141,6 +159,7 @@ public class ManageUserServiceImpl implements ManageUserService {
       Map<String, String> map = new HashMap<>();
       map.put(CommonConstants.NEW_USER_ID, userResponse.getUserId());
       map.put("new_user_access_level", accessLevel);
+      logger.info("userId" + userResponse.getUserId());
       participantManagerHelper.logEvent(NEW_ADMIN_ADDED, auditRequest, map);
     }
 
@@ -159,6 +178,7 @@ public class ManageUserServiceImpl implements ManageUserService {
       throw new ErrorCodeException(ErrorCode.NOT_SUPER_ADMIN_ACCESS);
     }
 
+    logger.debug("user.getEmail(): " + user.getEmail());
     Optional<UserRegAdminEntity> optUsers = userAdminRepository.findByEmail(user.getEmail());
     logger.exit("Successfully validated user request");
     return optUsers.isPresent() ? ErrorCode.EMAIL_EXISTS : null;
@@ -598,6 +618,12 @@ public class ManageUserServiceImpl implements ManageUserService {
         optAdminDetails.orElseThrow(() -> new ErrorCodeException(ErrorCode.ADMIN_NOT_FOUND));
 
     User user = UserMapper.prepareUserInfo(adminDetails);
+    user.setIdpUser((null != adminDetails.getIdpUser()) ? adminDetails.getIdpUser() : false);
+    user.setDeletedOrDisabledInIdp(
+        isIdpDeletedOrDisabled(
+            (null != adminDetails.getIdpUser()) ? adminDetails.getIdpUser() : false,
+            adminDetails.getEmail()));
+    user.setMfaEnabledForPM(appConfig.isMfaEnabled());
     if (adminDetails.isSuperAdmin()) {
       logger.exit(String.format("superadmin=%b, status=%s", user.isSuperAdmin(), user.getStatus()));
       return new GetAdminDetailsResponse(MessageCode.GET_ADMIN_DETAILS_SUCCESS, user);
@@ -707,6 +733,22 @@ public class ManageUserServiceImpl implements ManageUserService {
             "total apps=%d, superadmin=%b, status=%s",
             user.getApps().size(), user.isSuperAdmin(), user.getStatus()));
     return new GetAdminDetailsResponse(MessageCode.GET_ADMIN_DETAILS_SUCCESS, user);
+  }
+
+  private boolean isIdpDeletedOrDisabled(boolean idpUser, String email) {
+    boolean idpDisabledOrDeleted = false;
+    if (idpUser) {
+      try {
+        UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmail(email);
+        if (userRecord.isDisabled()) {
+          idpDisabledOrDeleted = true;
+        }
+      } catch (FirebaseAuthException e) {
+        idpDisabledOrDeleted = true;
+        e.printStackTrace();
+      }
+    }
+    return idpDisabledOrDeleted;
   }
 
   private void sortUserStudyDetailsSitesByLocationName(UserStudyDetails userStudyDetails) {
@@ -896,6 +938,10 @@ public class ManageUserServiceImpl implements ManageUserService {
 
         invokeAuditEvent(adminRecordToSendEmail, admin, auditEnum);
 
+        //        logger.info("audit Request=" + ReflectionToStringBuilder.toString(auditEnum));
+
+
+
         userAccountEmailSchedulerTaskRepository.deleteByUserId(adminRecordToSendEmail.getUserId());
       } else {
         auditEnum =
@@ -969,5 +1015,121 @@ public class ManageUserServiceImpl implements ManageUserService {
               templateArgs);
     }
     return emailService.sendMimeMail(emailRequest);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public IDPAdminDetailsResponse getIDPAdminDetails(String signedInUserId) {
+    logger.entry("getIDPAdminDetails()");
+    List<String> idpEmails = new ArrayList<>();
+    Optional<UserRegAdminEntity> optUserRegAdminEntity =
+        userAdminRepository.findById(signedInUserId);
+    if (!(optUserRegAdminEntity.isPresent() && optUserRegAdminEntity.get().isSuperAdmin())) {
+      throw new ErrorCodeException(ErrorCode.NOT_SUPER_ADMIN_ACCESS);
+    }
+
+    if (appPropertyConfig.isIdpEnabled()) {
+      List<UserRegAdminEntity> users = userAdminRepository.findAll();
+      List<String> usersEmail =
+          users.stream().map(UserRegAdminEntity::getEmail).collect(Collectors.toList());
+
+      List<String> idpEmail = participantManagerUtil.getIDPUsers();
+
+      idpEmails =
+          idpEmail.stream().filter(e -> !usersEmail.contains(e)).collect(Collectors.toList());
+    }
+
+    return new IDPAdminDetailsResponse(
+        MessageCode.GET_IDP_USERS_SUCCESS, idpEmails, appConfig.isMfaEnabled());
+  }
+
+  @Override
+  public void updateIdpUsers() {
+    logger.entry("updateIdpUsers()");
+    List<String> idpDisbledUsers = new ArrayList<>();
+    List<String> idpUsers = new ArrayList<>();
+    List<UserRegAdminEntity> users = userAdminRepository.findAll();
+    if (CollectionUtils.isNotEmpty(users)) {
+      List<String> idpEmails =
+          users
+              .stream()
+              .filter(
+                  user ->
+                      ((null != user.getIdpUser()) ? user.getIdpUser() : false)
+                          && (user.getStatus().equals(UserStatus.ACTIVE.getValue())
+                              || user.getStatus().equals(UserStatus.INVITED.getValue())))
+              .map(UserRegAdminEntity::getEmail)
+              .collect(Collectors.toList());
+      if (appPropertyConfig.isIdpEnabled()) {
+        getIdpUser(idpDisbledUsers, idpUsers);
+        List<String> deletedIdpUsers = ListUtils.removeAll(idpEmails, idpUsers);
+        List<String> deactivateUsers = new ArrayList<>();
+        deactivateUsers.addAll(deletedIdpUsers);
+        List<String> idpDisabledEmails =
+            users
+                .stream()
+                .filter(
+                    user ->
+                        idpDisbledUsers.contains(user.getEmail())
+                            && user.getIdpUser()
+                            && (user.getStatus().equals(UserStatus.ACTIVE.getValue())
+                                || user.getStatus().equals(UserStatus.INVITED.getValue())))
+                .map(UserRegAdminEntity::getEmail)
+                .collect(Collectors.toList());
+        deactivateUsers.addAll(idpDisabledEmails);
+        if (!deactivateUsers.isEmpty()) {
+          updateIdpAuthUserAccountStatus(deactivateUsers);
+          userAdminRepository.updateDisableIdPUserToDeactivate(
+              UserStatus.DEACTIVATED.getValue(), deactivateUsers);
+        }
+      } else {
+        if (CollectionUtils.isNotEmpty(idpEmails)) {
+          updateIdpAuthUserAccountStatus(idpEmails);
+          userAdminRepository.updateDisableIdPUserToDeactivate(
+              UserStatus.DEACTIVATED.getValue(), idpEmails);
+        }
+      }
+    }
+  }
+
+  private void getIdpUser(List<String> idpDisbledUsers, List<String> idpUsers) {
+    ListUsersPage page;
+    try {
+      page = FirebaseAuth.getInstance().listUsers(null);
+      while (page != null) {
+        for (ExportedUserRecord exportedUserRecord : page.iterateAll()) {
+          if (exportedUserRecord.isDisabled()
+              & StringUtils.isNotBlank(exportedUserRecord.getEmail())) {
+            idpDisbledUsers.add(exportedUserRecord.getEmail());
+          }
+          idpUsers.add(exportedUserRecord.getEmail());
+        }
+        page = page.getNextPage();
+      }
+    } catch (FirebaseAuthException e1) {
+      logger.error("Failed with Firebase Exception");
+      e1.printStackTrace();
+    }
+  }
+
+  private void updateIdpAuthUserAccountStatus(List<String> idpEmails) {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
+    List<String> authUserIds = userAdminRepository.findByUsersEmail(idpEmails);
+    for (String authUserId : authUserIds) {
+      if (authUserId != null) {
+        UpdateEmailStatusRequest emailStatusRequest = new UpdateEmailStatusRequest();
+        emailStatusRequest.setStatus(UserAccountStatus.DEACTIVATED.getStatus());
+        HttpEntity<UpdateEmailStatusRequest> request =
+            new HttpEntity<>(emailStatusRequest, headers);
+        restTemplate.exchange(
+            appPropertyConfig.getAuthServerUpdateStatusUrl(),
+            HttpMethod.PUT,
+            request,
+            UpdateEmailStatusResponse.class,
+            authUserId);
+      }
+    }
   }
 }

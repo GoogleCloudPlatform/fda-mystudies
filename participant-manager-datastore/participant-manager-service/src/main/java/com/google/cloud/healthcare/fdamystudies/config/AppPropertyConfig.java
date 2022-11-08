@@ -75,6 +75,13 @@ public class AppPropertyConfig implements Serializable {
   @Value("${study.builder.cloud.bucket.name}")
   private String studyBuilderCloudBucketName;
 
+
+  @Value("${idpEnabledForPM}")
+  private boolean idpEnabled;
+
+  @Value("${mfaEnabledForPM}")
+  private boolean mfaEnabled;
+
   @Value("${projectId}")
   private String projectId;
 
@@ -83,4 +90,5 @@ public class AppPropertyConfig implements Serializable {
 
   @Value("${enableConsentManagementAPI}")
   private String enableConsentManagementAPI;
+
 }

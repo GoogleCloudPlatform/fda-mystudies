@@ -104,7 +104,7 @@
               <label for="inlineRadio2">Send immediately</label>
             </span>
             <div class="help-block with-errors red-txt"></div>
-           
+
             <div class="clearfix"></div>
           </div>
         </div>
@@ -140,15 +140,19 @@
      <div class=" ">
           <div class="form-group">
             <div class="gray-xs-f mb-xs">App to which the notification must be sent
+
              <span class="requiredStar">*</span></div>
 			<c:choose>
              <c:when test="${notificationBO.actionPage eq 'view' || notificationBO.actionPage eq 'resend'}">
+
                  <input type="text" id="notificationAppId"
                     value="${notificationBO.appId}" disabled/>
              </c:when>
              <c:otherwise>
+
               <select id="appId" class="selectpicker" name="appId" required data-error="Please fill out this field">
               <option selected value=''>Select app ID</option>
+
               <c:forEach items="${gatewayAppList}" var="app">
                 <option
                     value="${app}" ${notificationBO.appId eq app ? 'selected' : ''}>${app}</option>
@@ -168,6 +172,7 @@
                 <br><br>
               </c:forEach>
             </c:if>
+
       </div>
     </div>
   </div>
@@ -411,6 +416,7 @@
     });
 
     var today, datepicker;
+
    <c:if test="${ empty notificationBO.scheduleDate}">
    today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
    </c:if>
@@ -419,6 +425,7 @@
    today=${notificationBO.scheduleDate};
    </c:if>
    
+
     $('.datepicker').datetimepicker({
       format: 'MM/DD/YYYY',
       ignoreReadonly: true,
@@ -462,7 +469,7 @@
         $('#timepicker1').val('');
         $('.timepicker').parent().addClass('has-error has-danger').find('.help-block.with-errors')
             .empty().append(
-            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please select a time that has not already passed for the current date"));
+            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please select a time in the future"));
         valid = false;
       } else {
         $('.timepicker').parent().removeClass('has-error has-danger').find(

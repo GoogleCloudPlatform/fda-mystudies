@@ -344,7 +344,9 @@ display: block;
            target="_blank">
   <input type="hidden" value="studyResources" name="fileFolder"/>
   <input type="hidden" value="${resourceBO.pdfUrl}" name="fileName"/>
+
    <input type="hidden" value="${resourceBO.studyId}" name="studyId"/>
+
 </form:form>
 <script type="text/javascript">
   $(document).ready(function () {
@@ -579,21 +581,27 @@ display: block;
       		  $("#uploadImg").parent().addClass('has-error has-danger').find(".help-block").empty().append(
                 		$("<ul><li> </li></ul>").attr("class","list-unstyled").text("File size should not exceed 5MB"));
       		 $("#delete").click();
+
       	  	}
         	reader = new FileReader();
         	reader.onload = function () {
+
           if ($.inArray($(thisAttr).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
         	  
             $("#uploadImg").parent().addClass('has-error has-danger').find(".help-block").empty().append(
             		$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please select a pdf file"));
             $("#delete").click();
             
+
+
             // file should be less than or equal to 5 mb i.e 500000 bytes
+
             if(file.size > 5000000){
       		  $("#uploadImg").parent().addClass('has-error has-danger').find(".help-block").empty().append(
                 		$("<ul><li> </li></ul>").attr("class","list-unstyled").text("File size should not exceed 5MB"));
       		 $("#delete").click();
       	  	}
+
           } else if ($("#uploadImg").val()) {
             $('#pdfClk').attr('href', 'javascript:void(0)').css('cursor', 'default');
             $('.pdfDiv').show();
@@ -655,7 +663,9 @@ display: block;
       chkDaysValid(false);
     });
 
+
     var startToday, endToday, datepicker;
+
     
     <c:if test="${ empty resourceBO.startDate}">
     startToday = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
@@ -686,7 +696,7 @@ display: block;
     });
 
 
-    
+
     $(".datepicker").on("click", function (e) {
     	
       $('#StartDate').data("DateTimePicker").minDate(

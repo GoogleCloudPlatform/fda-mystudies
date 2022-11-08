@@ -1,23 +1,46 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC Permission is hereby granted, free of charge, to any person obtaining a
- * copy of this software and associated documentation files (the "Software"), to deal in the
- * Software without restriction, including without limitation the rights to use, copy, modify,
- * merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
- * to whom the Software is furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all copies or
- * substantial portions of the Software.
- *
- * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as
- * Contract no. HHSF22320140030I/HHSF22301006T (the "Prime Contract").
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
- * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
+* Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+
+* Copyright 2020-2021 Google LLC
+* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+* associated documentation files (the "Software"), to deal in the Software without restriction, including
+* without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+* of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+* following conditions:
+*
+* The above copyright notice and this permission notice shall be included in all copies or substantial
+* portions of the Software.
+*
+* Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+* HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+* THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+* OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+* OTHER DEALINGS IN THE SOFTWARE.
+
+* Copyright 2020 Google LLC Permission is hereby granted, free of charge, to any person obtaining a
+* copy of this software and associated documentation files (the "Software"), to deal in the
+* Software without restriction, including without limitation the rights to use, copy, modify,
+* merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
+* to whom the Software is furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in all copies or
+* substantial portions of the Software.
+*
+* Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as
+* Contract no. HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+* NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+* NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+* DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+*/
 
 package com.fdahpstudydesigner.controller;
 
@@ -146,11 +169,11 @@ public class StudyController {
 
   @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
 
-  @Autowired private OAuthService oauthService;
-
   @Autowired private StudyExportImportService studyExportImportService;
 
   @Autowired private StudyDAO studyDao;
+
+  @Autowired private OAuthService oauthService;
 
   @Autowired private AppService appService;
 
@@ -260,7 +283,9 @@ public class StudyController {
           map.addAttribute("liveStudyBo", liveStudyBo);
           map.addAttribute("studyPermissionBO", studyPermissionBO);
           map.addAttribute("markAsCompleted", markAsCompleted);
+
           map.addAttribute("signedUrlExpiryTime", propMap.get("signed.url.expiration.in.hour"));
+
           map.addAttribute("releaseVersion", propMap.get("release.version"));
           map.addAttribute(
               "exportSignedUrl",
@@ -1932,7 +1957,9 @@ public class StudyController {
                   "sucMsgViewAssocStudies",
                   FdahpStudyDesignerConstants.VIEW_ASSOCIATED_STUDIES_MESSAGE);
         }
+
         map.addAttribute("studyListId", "true");
+
         map.addAttribute("appBos", appList);
         auditLogEventHelper.logEvent(STUDY_LIST_VIEWED, auditRequest);
 
@@ -4684,6 +4711,31 @@ public class StudyController {
               FdahpStudyDesignerUtil.getImageResources(
                   FdahpStudyDesignerConstants.STUDIES
                       + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                      + studyBo.getCustomStudyId()
+                      + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                      + FdahpStudyDesignerConstants.STUDTYLOGO
+                      + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                      + studyBo.getThumbnailImage()));
+        } else if (StringUtils.isEmpty(studyBo.getCustomStudyId())
+            && StringUtils.isNotEmpty(studyBo.getDestinationCustomStudyId())) {
+
+          if (studyBo.getDestinationCustomStudyId().contains("@")) {
+            String[] copyCustomIdArray = studyBo.getDestinationCustomStudyId().split("@");
+            String customId = "";
+            if (copyCustomIdArray[1].contains("COPY")) {
+              customId = copyCustomIdArray[0];
+              studyBo.setDestinationCustomStudyId(customId);
+            } else if (copyCustomIdArray[1].equalsIgnoreCase("EXPORT")) {
+              customId = copyCustomIdArray[0];
+              studyBo.setDestinationCustomStudyId(customId + "@Export");
+            }
+          }
+
+          map.addAttribute(
+              "signedUrl",
+              FdahpStudyDesignerUtil.getImageResources(
+                  FdahpStudyDesignerConstants.STUDIES
+                      + FdahpStudyDesignerConstants.PATH_SEPARATOR
                       + studyBo.getDestinationCustomStudyId()
                       + FdahpStudyDesignerConstants.PATH_SEPARATOR
                       + FdahpStudyDesignerConstants.STUDTYLOGO
@@ -5428,6 +5480,7 @@ public class StudyController {
     String message = "";
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     if (StringUtils.isNotEmpty(studyId)) {
+
       message =
           studyExportImportService.exportStudy(
               studyId, sesObj.getUserId(), auditRequest, copyVersion);

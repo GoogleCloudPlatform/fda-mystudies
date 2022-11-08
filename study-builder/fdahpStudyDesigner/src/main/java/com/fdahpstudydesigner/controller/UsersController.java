@@ -1,6 +1,9 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+
+
  * Copyright 2020-2021 Google LLC
+
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -38,6 +41,7 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_RECORD_V
 
 import com.fdahpstudydesigner.bean.AppListBean;
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
+import com.fdahpstudydesigner.bean.IdpAdminList;
 import com.fdahpstudydesigner.bean.StudyListBean;
 import com.fdahpstudydesigner.bo.AppsBo;
 import com.fdahpstudydesigner.bo.RoleBO;
@@ -45,6 +49,7 @@ import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.common.StudyBuilderConstants;
+import com.fdahpstudydesigner.dao.UsersDAO;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
 import com.fdahpstudydesigner.service.AppService;
 import com.fdahpstudydesigner.service.LoginService;
@@ -53,17 +58,29 @@ import com.fdahpstudydesigner.service.UsersService;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
+import com.google.firebase.auth.ExportedUserRecord;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.ListUsersPage;
+import com.google.firebase.auth.UserRecord;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import java.util.HashSet;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.collections.CollectionUtils;
+
+import org.apache.commons.collections.ListUtils;
+
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.slf4j.ext.XLogger;
@@ -89,6 +106,14 @@ public class UsersController {
   @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
 
   @Autowired private AppService appService;
+
+
+  @Autowired private UsersDAO usersDAO;
+
+  Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
+  String idpEnabled = configMap.get("idpEnabledForSB");
+  String mfaEnabled = configMap.get("mfaEnabledForSB");
+
 
   @RequestMapping("/adminUsersEdit/activateOrDeactivateUser.do")
   public void activateOrDeactivateUser(
@@ -131,6 +156,14 @@ public class UsersController {
     String usrId = null;
     List<AppListBean> appBos = null;
     List<AppsBo> appList = new ArrayList<>();
+
+    List<UserBO> userList = null;
+    List<IdpAdminList> idpAdminList = new ArrayList<IdpAdminList>();
+    Set<String> sbUserList = new HashSet<>();
+    Set<String> idpUserList = new HashSet<>();
+    List<String> adminList = new ArrayList<String>();
+
+
     try {
       if (FdahpStudyDesignerUtil.isSession(request)) {
         String userId =
@@ -142,10 +175,51 @@ public class UsersController {
                 ? ""
                 : request.getParameter("checkRefreshFlag");
         if (!"".equalsIgnoreCase(checkRefreshFlag)) {
+
           if (!"".equals(userId)) {
+            userBO = usersService.getUserDetails(userId);
+          }
+          if (Boolean.parseBoolean(idpEnabled)) {
+            userList = usersService.getUserList();
+
+            List<IdpAdminList> users = new ArrayList<IdpAdminList>();
+            Map<String, IdpAdminList> userMap = new HashMap<>();
+            for (UserBO user : userList) {
+              IdpAdminList sbUser = new IdpAdminList();
+              // Study builder user email list
+              sbUserList.add(user.getUserEmail());
+              sbUser.setEmailId(user.getUserEmail());
+              users.add(sbUser);
+              userMap.put(user.getUserEmail(), sbUser);
+            }
+
+            // Start listing users from the beginning, 1000 at a time.
+            ListUsersPage page = FirebaseAuth.getInstance().listUsers(null);
+
+            for (ExportedUserRecord exportedUserRecord : page.iterateAll()) {
+              // Google identity platform user email list
+              idpUserList.add(exportedUserRecord.getEmail());
+              IdpAdminList admin = new IdpAdminList();
+              if (!exportedUserRecord.isDisabled()
+                  & StringUtils.isNotBlank(exportedUserRecord.getEmail())) {
+                admin.setEmailId(exportedUserRecord.getEmail());
+                admin.setUid(exportedUserRecord.getUid());
+                idpAdminList.add(admin);
+              }
+            }
+
+            for (IdpAdminList a1 : idpAdminList) {
+              if (!userMap.containsKey(a1.getEmailId())) {
+                adminList.add(a1.getEmailId());
+              }
+            }
+          }
+
+          if (!"".equals(userId)) {
+
             usrId = userId;
+
             actionPage = FdahpStudyDesignerConstants.EDIT_PAGE;
-            userBO = usersService.getUserDetails(usrId);
             if (null != userBO) {
               studyBOs = studyService.getStudyListByUserId(userBO.getUserId());
               appBos = appService.getAppList(userBO.getUserId());
@@ -153,6 +227,9 @@ public class UsersController {
             }
           } else {
             actionPage = FdahpStudyDesignerConstants.ADD_PAGE;
+            if (!adminList.isEmpty()) {
+              map.addAttribute("adminList", adminList);
+            }
           }
 
           // Remove App from the list if Deactivated
@@ -166,6 +243,7 @@ public class UsersController {
             }
           }
 
+
           roleBOList = usersService.getUserRoleList();
           studyBOList = studyService.getAllStudyList();
           appList = appService.getAllApps();
@@ -178,6 +256,9 @@ public class UsersController {
           map.addAttribute("studyBOs", studyBOs);
           map.addAttribute("apps", appList);
           map.addAttribute("appBos", appBos);
+          map.addAttribute("idpEnabled", idpEnabled);
+          map.addAttribute("mfaEnabled", mfaEnabled);
+
           mav = new ModelAndView("addOrEditUserPage", map);
         } else {
           mav = new ModelAndView("redirect:/adminUsersView/getUserList.do");
@@ -458,22 +539,32 @@ public class UsersController {
           map.addAttribute(FdahpStudyDesignerConstants.ERR_MSG, errMsg);
           request.getSession().removeAttribute(FdahpStudyDesignerConstants.ERR_MSG);
         }
+
+
         if (null != request.getSession().getAttribute("sucMsgAppActions")) {
           request.getSession().removeAttribute("sucMsgAppActions");
         }
+
         if (null != request.getSession().getAttribute("errMsgAppActions")) {
           request.getSession().removeAttribute("errMsgAppActions");
         }
+
+
         if (null != request.getSession().getAttribute("sucMsgViewAssocStudies")) {
           request.getSession().removeAttribute("sucMsgViewAssocStudies");
         }
 
         ownUser = (String) request.getSession().getAttribute("ownUser");
         userList = usersService.getUserList();
+        List<UserBO> idpUserList = usersDAO.getIdpUserList();
+        getIdpUserInfo(userList, idpUserList);
+
         roleList = usersService.getUserRoleList();
         map.addAttribute("roleList", roleList);
         map.addAttribute("userList", userList);
         map.addAttribute("ownUser", ownUser);
+        map.addAttribute("idpEnabled", idpEnabled);
+
         mav = new ModelAndView("userListPage", map);
       }
     } catch (Exception e) {
@@ -481,6 +572,48 @@ public class UsersController {
     }
     logger.exit("getUserList() - Ends");
     return mav;
+  }
+
+  private void getIdpUserInfo(List<UserBO> userList, List<UserBO> idpUserList)
+      throws FirebaseAuthException {
+    List<String> userEmail = new ArrayList<>();
+    List<String> idpEmail = new ArrayList<>();
+    List<String> idpDisabledEmail = new ArrayList<>();
+    if (Boolean.parseBoolean(idpEnabled)) {
+      for (UserBO user : idpUserList) {
+        userEmail.add(user.getUserEmail());
+      }
+      // Start listing users from the beginning, 1000 at a time.
+      ListUsersPage page = FirebaseAuth.getInstance().listUsers(null);
+      for (ExportedUserRecord exportedUserRecord : page.iterateAll()) {
+        if (exportedUserRecord.isDisabled()
+            & StringUtils.isNotBlank(exportedUserRecord.getEmail())) {
+          idpDisabledEmail.add(exportedUserRecord.getEmail());
+        }
+        idpEmail.add(exportedUserRecord.getEmail());
+      }
+
+      List<String> deletedIdpUser = ListUtils.removeAll(userEmail, idpEmail);
+      List<String> disableUsers = new ArrayList<>();
+      disableUsers.addAll(deletedIdpUser);
+      disableUsers.addAll(idpDisabledEmail);
+
+      for (UserBO user : userList) {
+        for (String disableUser : disableUsers) {
+          if (user.getUserEmail().equals(disableUser) && user.isIdpUser()) {
+            user.setDisableIdpUser("Y");
+          }
+        }
+      }
+    } else {
+      if (!idpUserList.isEmpty()) {
+        for (UserBO user : userList) {
+          if (user.isIdpUser()) {
+            user.setDisableIdpUser("Y");
+          }
+        }
+      }
+    }
   }
 
   @RequestMapping("/adminUsersEdit/resendActivateDetailsLink.do")
@@ -558,6 +691,23 @@ public class UsersController {
           if (!"".equals(userId)) {
             userBO = usersService.getUserDetails(userId);
             if (null != userBO) {
+              if (Boolean.parseBoolean(idpEnabled)) {
+                if (userBO.isIdpUser()) {
+                  try {
+                    UserRecord userRecord =
+                        FirebaseAuth.getInstance().getUserByEmail(userBO.getUserEmail());
+                    if (userRecord.isDisabled()) {
+                      map.addAttribute("idpDisableUser", "Y");
+                    }
+                  } catch (Exception e) {
+                    map.addAttribute("idpDisableUser", "Y");
+                  }
+                }
+              } else {
+                if (userBO.isIdpUser()) {
+                  map.addAttribute("idpDisableUser", "Y");
+                }
+              }
               studyBOs = studyService.getStudyListByUserId(userBO.getUserId());
               appBos = appService.getAppList(userBO.getUserId());
               permissions = usersService.getPermissionsByUserId(userBO.getUserId());
@@ -583,6 +733,9 @@ public class UsersController {
           map.addAttribute("studyBOs", studyBOs);
           map.addAttribute("apps", appList);
           map.addAttribute("appBos", appBos);
+          map.addAttribute("idpEnabled", idpEnabled);
+          map.addAttribute("mfaEnabled", mfaEnabled);
+
 
           mav = new ModelAndView("addOrEditUserPage", map);
         } else {
@@ -598,9 +751,14 @@ public class UsersController {
 
   @RequestMapping(value = "/adminUsersView/deleteUser.do")
   public ModelAndView deleteByUserId(HttpServletRequest request) {
-    logger.entry("begin deleteAdminDetails()");
+
+    
     ModelAndView mav = new ModelAndView();
     String msg = "";
+    UserBO userBo = null;
+
+    logger.entry("begin deleteAdminDetails()");
+
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     try {

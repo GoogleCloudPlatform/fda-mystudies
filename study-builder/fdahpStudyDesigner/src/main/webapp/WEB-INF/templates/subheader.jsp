@@ -75,6 +75,7 @@ color: #95a2ab;
 	margin-right: 0px !important;
 }
 
+
 .filter_btn::after {
     float: right;
     margin: 8px -8px 0px 0px;
@@ -111,6 +112,7 @@ margin-bottom: 0px;
 <script src="/studybuilder/vendor/bootstrap-multiselect/bootstrap-multiselect.min.js"></script>
 <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css" /> -->
 <link rel="stylesheet" href="/studybuilder/vendor/bootstrap-multiselect/bootstrap-multiselect.css">  
+
   
 <!-- create Study Section Start -->
 <div id="" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mt-md tit_con">
@@ -132,7 +134,9 @@ margin-bottom: 0px;
       </div>
       
         <div class="dropdown dropdown_chk_box pl-lg">
+
       <button class="btn btn-default dropdown-toggle filter_btn" type="button" data-toggle="dropdown">
+
         <span class="dropdown-text">Filter by apps</span>
         <span class="caret"></span>
       </button>
@@ -163,7 +167,7 @@ margin-bottom: 0px;
 			 </div> </label>
           </a>
         </li>
-        
+
         </c:forEach>
       </ul>
     </div>

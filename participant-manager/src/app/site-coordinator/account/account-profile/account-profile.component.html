@@ -19,7 +19,7 @@
               </div>
             </div>
           </div>
-          <div class="row">
+          <div class="row border-bottom__c4d1e6">
             <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6">
               <div class="form-group">
                 <label for="firstName" class="txt_style_unset">
@@ -90,6 +90,45 @@
               </div>
             </div>
           </div>
+          <div class="row">
+            <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6">
+              <div class="form-group">
+                <label for="phoneNum" class="txt_style_unset">
+                  Phone number (+X XXX XXX XXXX)
+                </label>
+                <input
+                  type="text"
+                  maxlength="16"
+                  minlength="12"
+                  class="form-control"
+                  id="phoneNum"
+                  placeholder="Enter phone number"
+                  formControlName="phoneNum"
+                  pattern="[+][0-9\s]{11,15}"
+                />
+
+                <div
+                  *ngIf="
+                    f.phoneNum.invalid &&
+                    (f.phoneNum.dirty || f.phoneNum.touched)
+                  "
+                >
+                  <span
+                    class="help-block with-errors error__msg"
+                    *ngIf="f.phoneNum.errors?.required"
+                  >
+                    Enter phone number
+                  </span>
+                  <span
+                    class="help-block with-errors error__msg"
+                    *ngIf="f.phoneNum.errors?.pattern"
+                  >
+                    Phone number is invalid
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="btn__container flex__justify__space-between mb-lg">
@@ -120,7 +159,7 @@
           </button>
         </div>
       </div>
-      <span>
+      <span *ngIf="!user.idpUser">
         <a [routerLink]="['change-password']" class="font12 change__password">
           <span class="under-below">Change password?</span>
         </a>

@@ -3,7 +3,7 @@ name: SwiftLint
 on:
   pull_request:
     branches:
-      - develop
+      - btc-dev2dev-deployment
     paths:
       - 'iOS/**'
       - '.github/workflows/lint-iOS.yml'

@@ -383,6 +383,7 @@ public class UserProfileControllerTest extends BaseMockIT {
     SetUpAccountRequest request = setUpAccountRequest();
     userRegAdminEntity.setEmail(USER_EMAIL_VALUE);
     request.setPassword("AuthServerError@b0ston");
+    request.setPhoneNum("+919999999999");
     testDataHelper.getUserRegAdminRepository().saveAndFlush(userRegAdminEntity);
 
     // Step 2: Call the API and expect APPLICATION_ERROR error
@@ -457,7 +458,7 @@ public class UserProfileControllerTest extends BaseMockIT {
     verifyTokenIntrospectRequest();
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setUserId(user.getId());
+    auditRequest.setUserId(userRegAdminEntity.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(ADMIN_DEACTIVATED.getEventCode(), auditRequest);
@@ -500,7 +501,7 @@ public class UserProfileControllerTest extends BaseMockIT {
     verifyTokenIntrospectRequest();
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setUserId(user.getId());
+    auditRequest.setUserId(userRegAdminEntity.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(ADMIN_REACTIVATED.getEventCode(), auditRequest);

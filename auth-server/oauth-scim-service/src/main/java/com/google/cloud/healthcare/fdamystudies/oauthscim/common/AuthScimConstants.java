@@ -103,6 +103,17 @@ public final class AuthScimConstants {
 
   public static final String LOGIN_VIEW_NAME = "login";
 
+
+  public static final String IDP_ENABLED = "idpEnabledForPM";
+
+  public static final String MFA_ENABLED = "mfaEnabledForPM";
+
+  public static final String IDP_API_KEY = "idpApiKey";
+
+  public static final String IDP_AUTH_DOMAIN = "idpAuthDomain";
+
+  public static final String SERVER_CONTEXT_PATH = "serverContextPath";
+
   public static final String APPLICATION_JSON = "application/json";
 
   public static final String ACCOUNT_STATUS = "accountStatus";

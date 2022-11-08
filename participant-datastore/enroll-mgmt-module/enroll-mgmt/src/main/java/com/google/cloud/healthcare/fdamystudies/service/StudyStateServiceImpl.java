@@ -266,7 +266,9 @@ public class StudyStateServiceImpl implements StudyStateService {
         studyStateBean.setBookmarked(participantStudy.getBookmark());
         studyStateBean.setAdherence(participantStudy.getAdherence());
         studyStateBean.setUserStudyVersion(participantStudy.getUserStudyVersion());
+
         studyStateBean.setDataSharingPermission(participantStudy.getSharing());
+
         if (participantStudy.getEnrolledDate() != null) {
           studyStateBean.setEnrolledDate(
               MyStudiesUserRegUtil.getIsoDateFormat(participantStudy.getEnrolledDate()));

@@ -3,7 +3,7 @@ name: lint-participant-enroll-datastore
 on:
   pull_request:
     branches:
-      - develop
+      - btc-dev2dev-deployment
     paths:
       - 'participant-datastore/enroll-mgmt-module/**'
       - '.github/workflows/lint-participant-enroll-datastore.yml'

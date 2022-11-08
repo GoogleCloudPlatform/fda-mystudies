@@ -12,6 +12,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.AdminUserResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.GetAdminDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.GetUsersResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.IDPAdminDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 
 public interface ManageUserService {
@@ -37,5 +38,11 @@ public interface ManageUserService {
 
   public void sendUserEmail();
 
+
+  public IDPAdminDetailsResponse getIDPAdminDetails(String signedInUserId);
+
+  public void updateIdpUsers();
+
   public void logoutAdminUser(String urAdminAuthId, AuditLogEventRequest auditRequest);
+
 }

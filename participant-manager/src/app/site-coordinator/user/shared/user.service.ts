@@ -64,6 +64,13 @@ export class UserService {
       `${environment.participantManagerDatastoreUrl}/users/${adminId}/`,
     );
   }
+
+  getIdpUsers(): Observable<any> {
+    return this.http.get<any>(
+      `${environment.participantManagerDatastoreUrl}/users/idpAdmins`,
+    );
+  }
+
   getUsers(
     offset: number,
     limit: number,

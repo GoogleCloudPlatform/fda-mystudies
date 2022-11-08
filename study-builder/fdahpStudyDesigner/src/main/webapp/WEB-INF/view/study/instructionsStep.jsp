@@ -121,7 +121,9 @@
                   Step ${destinationStep.sequenceNo} : ${destinationStep.stepShortTitle}</option>
               </c:forEach>
               <option
+
                   value="0" ${instructionsBo.questionnairesStepsBo.destinationStep eq "0" ? 'selected' :''}>
+
                 Completion Step
               </option>
             </select>
@@ -154,7 +156,9 @@
     	validatesummernote();
       });
   //summernote editor initialization
+
   var maxwords=500;  
+
     $('#summernote')
         .summernote(
             {
@@ -234,6 +238,7 @@
   function saveIns() {
     $("body").addClass("loading");
     $("#saveId").attr("disabled", true);
+
     var valid = validatesummernote();
     var richTextVal = $('#summernote').val();
     if (null == richTextVal || richTextVal == '' || typeof richTextVal == 'undefined' || richTextVal == '<p><br></p>'){
@@ -299,6 +304,7 @@
 	           '<ul class="list-unstyled"><li>Please fill out this field</li></ul>');
       }
   }
+
   function validateShortTitle(item, callback) {
     var shortTitle = $("#shortTitleId").val();
     var questionnaireId = $("#questionnaireId").val();

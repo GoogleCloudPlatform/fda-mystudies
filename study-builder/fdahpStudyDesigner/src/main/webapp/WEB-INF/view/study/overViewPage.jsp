@@ -68,7 +68,7 @@
           <small>(300 characters max)</small>
         </div>
         <div class="form-group">
-          <input autofocus="autofocus" type="text" class="form-control"
+          <input autofocus="autofocus" type="url" class="form-control"
                  id="studyMediaLinkId" name="mediaLink"
                  value="${studyBo.mediaLink}" maxlength="300"
                  pattern="^(http(s)?:\/\/)?(www\.)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$"
@@ -563,7 +563,9 @@
           "<div class='collapse panel-collapse' id='collapse" + count + "'>" +
           "<div class=panel-body  pt-none>" +
           "<div>" +
+
           "<div class='gray-xs-f mb-sm'>Image <span><span class='filled-tooltip' data-toggle='tooltip' data-placement='top' data-html='true' title='' src='/studybuilder/images/icons/tooltip.png' data-original-title='Image requirements: The default image shown below will be used for the study overview screen (second page onwards) in the mobile app. Upload an alternate image if you wish to override it.</br></br>The image must be of type .JPG or .PNG or .JPEG. The minimum image size required is 750 x 570. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger'></span></span> </div>"
+
           +
           "<div>" +
           "<div class=thumb style='display: inline-block;width:77px !important'><img src='${defaultPageOverviewImageSignedUrl}' class=wid100></div>" +
@@ -702,11 +704,13 @@
       $('#actTy').remove();
       $('<input />').attr('type', 'hidden').attr('name', "actionType").attr('value',
           $(this).attr('actType')).attr('id', 'actTy').appendTo('#overViewFormId');
+
 //       if ($(this).attr('actType') == 'save') {
 //         e.preventDefault();
 //         $('#overViewFormId').validator('destroy');
 //         $('#overViewFormId').submit();
 //       }
+
     });
 
     function validateSummernote(){   
@@ -808,7 +812,7 @@
         if(allowedExtensions.includes(fileExtension)){ 
         img = new Image();
         img.onload = function () {
-        	           
+
           if (thisId != '' && thisId == 1) {
         	  if(this.height>=1334 && this.width>=750){
               	  this.height=1334;
@@ -816,8 +820,10 @@
                 }
                   var ht = this.height;
                   var wds = this.width;
+
               	
             if (ht == 1334 && wds == 750 ) {
+
               $(thisAttr).parent().parent().find('.removeUrl').css("visibility", "visible");
               $(thisAttr).parent().parent().parent().find(".thumb img")
                   .attr('src', img.src)
@@ -827,12 +833,14 @@
               $(thisAttr).parent().find(".help-block").empty();
             } else {
             	if(this.height>=570 && this.width>=750){
+
                	 this.height=570;
                    this.width=750;
                  }
           	
               var ht = this.height;
               var wds = this.width;
+
               $(thisAttr).val("");
               $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
               $(thisAttr).parent().find(".help-block").empty().append(
@@ -842,12 +850,14 @@
             }
           } else {
         	  if(this.height>=570 && this.width>=750){
+
                	 this.height=570;
                    this.width=750;
                  }
          	  var ht = this.height;
                var wds = this.width;
                
+
             if (ht == 570 && wds == 750) {
               $(thisAttr).parent().parent().find('.removeUrl').css("visibility", "visible");
               $(thisAttr).parent().parent().parent().find(".thumb img")
@@ -876,7 +886,9 @@
           $(thisAttr).parent().parent().parent().find(".removeUrl").click();
         };
         img.src = _URL.createObjectURL(file);
+
         }else{
+
         	  $(thisAttr).val("");
               $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
               $(thisAttr).parent().find(".help-block").empty().append(

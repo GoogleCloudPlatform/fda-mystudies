@@ -36,6 +36,10 @@ export class UpdateUserComponent
   permission = Permission;
   adminId = '';
   userStatus = Status;
+  idpUser = true;
+  deletedOrDisabledInIdp = true;
+  mfaEnabledForPM = true;
+
   sitesMessageMapping: {[k: string]: string} = {
     '=0': '0 sites',
     '=1': '1 site',
@@ -94,6 +98,7 @@ export class UpdateUserComponent
     this.subs.add(
       this.appsService.getAllAppsWithStudiesAndSites().subscribe((data) => {
         this.appDetails = data;
+
         this.appDetailsBackup = JSON.parse(
           JSON.stringify(this.appDetails),
         ) as AppDetails;

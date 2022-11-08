@@ -47,4 +47,6 @@ public class SetUpAccountRequest {
   @NotBlank
   @Size(max = 320)
   private String lastName;
+
+  @ToString.Exclude private String phoneNum;
 }

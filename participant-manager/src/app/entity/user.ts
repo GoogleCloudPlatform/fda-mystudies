@@ -4,6 +4,12 @@ import {Status} from '../shared/enums';
 import {ApiResponse} from './api.response.model';
 
 export interface User extends ApiResponse {
+  idpUser: any;
+
+  deletedOrDisabledInIdp: boolean;
+
+  mfaEnabledForPM: any;
+
   id: string;
 
   email?: string;
@@ -12,7 +18,7 @@ export interface User extends ApiResponse {
 
   lastName?: string;
 
-  phoneNumber: string;
+  phoneNum: string;
 
   emailChanged: number;
 
@@ -56,4 +62,11 @@ export interface SetUpUser {
   firstName: string;
   lastName: string;
   password: string;
+  phoneNum: string;
+}
+export interface idpUser {
+  idpUser: boolean;
+}
+export interface mfaEnabledForPM {
+  mfaEnabledForPM: boolean;
 }

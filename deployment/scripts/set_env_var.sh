@@ -9,22 +9,22 @@
 
 # PREFIX is a name you choose for your deployment that will be prepended to various
 # directories, cloud resources and URLs (for example this could be `mystudies`)
-export PREFIX=
+export PREFIX=btcsoft
 
 # ENV is a label you choose that will be appended to PREFIX in your directories
 # and cloud resources (for example this could be `dev`, `test` or `prod`)
-export ENV=
+export ENV=dev
 
 # GIT_ROOT is the local path to the root of your cloned FDA MyStudies repository
-export GIT_ROOT=
+export GIT_ROOT=/home/yugandhare/btcsoft-dev/develop-fda-mystudies
 
 # LOCATION is the loctaion you specified for your deployment in
 # deployment.hcl, for example `us-central1`
-export LOCATION=
+export LOCATION=us-east1
 
 # DOMAIN is the domain you will be using for your URLs (for example, 
 # `your_company_name.com` or `your_medical_center.edu`)
-export DOMAIN=
+export DOMAIN=boston-technology.com
 
 # ENGINE_CONFIG and MYSTUDIES_TEMPLATE do not need to be changed unless
 # you have moved these files within your GitHub repo

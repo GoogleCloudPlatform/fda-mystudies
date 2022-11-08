@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.oauthscim.model;
 
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.ID_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.XS_LENGTH;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_LENGTH;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -25,6 +26,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 @Setter
 @Getter
@@ -71,4 +73,12 @@ public class UserEntity {
   /** Refer UserAccountStatus enum for values. */
   @Column(name = "status", nullable = false)
   private Integer status;
+
+  @Column(name = "idp_user", nullable = false)
+  @Type(type = "yes_no")
+  private Boolean idpUser = false;
+
+  @ToString.Exclude
+  @Column(name = "phone_number", length = XS_LENGTH)
+  private String phoneNumber;
 }

@@ -608,6 +608,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
               activeTaskBo.getActiveTaskCustomScheduleBo()) {
             if (activeTaskCustomScheduleBo.getActiveTaskId() == null) {
               activeTaskCustomScheduleBo.setActiveTaskId(activeTaskBo.getId());
+
             }
             if ((activeTaskCustomScheduleBo.getFrequencyStartDate() != null)
                 && !activeTaskCustomScheduleBo.getFrequencyStartDate().isEmpty()) {
@@ -617,6 +618,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
                       FdahpStudyDesignerConstants.UI_SDF_DATE,
                       FdahpStudyDesignerConstants.SD_DATE_FORMAT));
             }
+
             if ((activeTaskCustomScheduleBo.getFrequencyEndDate() != null)
                 && !activeTaskCustomScheduleBo.getFrequencyEndDate().isEmpty()) {
               activeTaskCustomScheduleBo.setFrequencyEndDate(

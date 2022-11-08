@@ -27,6 +27,10 @@ terraform {
     google      = "~> 3.0"
     google-beta = "~> 3.0"
   }
+  backend "gcs" {
+    bucket = "btcsoft-dev-terraform-state"
+    prefix = "devops"
+  }
 }
 
 # Create the project, enable APIs, and create the deletion lien, if specified.
@@ -34,10 +38,10 @@ module "project" {
   source  = "terraform-google-modules/project-factory/google"
   version = "~> 9.1.0"
 
-  name                    = "example-dev-devops"
+  name                    = "btcsoft-dev-devops"
   org_id                  = ""
-  folder_id               = "0000000000"
-  billing_account         = "XXXXXX-XXXXXX-XXXXXX"
+  folder_id               = "274914618000"
+  billing_account         = "010BB2-E7A763-738CAE"
   lien                    = true
   default_service_account = "keep"
   skip_gcloud_download    = true
@@ -55,22 +59,21 @@ module "state_bucket" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
-  name       = "example-dev-terraform-state"
+  name       = "btcsoft-dev-terraform-state"
   project_id = module.project.project_id
-  location   = "us-central1"
+  location   = "us-east1"
 }
 
 # Project level IAM permissions for devops project owners.
 resource "google_project_iam_binding" "devops_owners" {
   project = module.project.project_id
   role    = "roles/owner"
-  members = ["group:example-dev-devops-owners@example.com"]
-
+  members = ["group:btcsoft-dev-devops-owners@boston-technology.com"]
 }
 
 # Org level IAM permissions for org admins.
 resource "google_folder_iam_member" "admin" {
-  folder = "folders/0000000000"
+  folder = "folders/274914618000"
   role   = "roles/resourcemanager.folderAdmin"
-  member = "group:example-dev-folder-admins@example.com"
+  member = "group:btcsoft-dev-folder-admins@boston-technology.com"
 }

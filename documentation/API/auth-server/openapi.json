@@ -124,6 +124,12 @@
           "required" : true,
           "type" : "string"
         }, {
+          "name" : "fromEmail",
+          "in" : "header",
+          "description" : "fromEmail",
+          "required" : true,
+          "type" : "string"
+        }, {
           "in" : "body",
           "name" : "resetPasswordRequest",
           "description" : "resetPasswordRequest",
@@ -131,6 +137,12 @@
           "schema" : {
             "$ref" : "#/definitions/ResetPasswordRequest"
           }
+        }, {
+          "name" : "supportEmail",
+          "in" : "header",
+          "description" : "supportEmail",
+          "required" : false,
+          "type" : "string"
         } ],
         "responses" : {
           "200" : {
@@ -262,6 +274,12 @@
         "operationId" : "deleteUserAccountUsingDELETE",
         "produces" : [ "*/*" ],
         "parameters" : [ {
+          "name" : "appAndUserDeactivate",
+          "in" : "query",
+          "description" : "appAndUserDeactivate",
+          "required" : false,
+          "type" : "string"
+        }, {
           "name" : "userId",
           "in" : "path",
           "description" : "userId",
@@ -505,6 +523,11 @@
           "minLength" : 0,
           "maxLength" : 320
         },
+        "fromEmail" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 320
+        },
         "password" : {
           "type" : "string",
           "pattern" : "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?=\\S+$).{8,64}$"
@@ -512,6 +535,11 @@
         "status" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "supportEmail" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 320
         }
       },
       "title" : "UserRequest"

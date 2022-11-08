@@ -42,7 +42,9 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
-     <dependency>
+
+	<dependency>
+
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-log4j2</artifactId>
 		<exclusions>
@@ -52,7 +54,9 @@
 			</exclusion>
 		</exclusions>
 	</dependency>
+
 	<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
+
 	<dependency>
 		<groupId>org.apache.logging.log4j</groupId>
 		<artifactId>log4j-core</artifactId>

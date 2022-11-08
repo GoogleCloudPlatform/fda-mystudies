@@ -3,18 +3,20 @@ import {
   ElementRef,
   OnInit,
   QueryList,
+  TemplateRef,
   ViewChildren,
 } from '@angular/core';
 import {UserService} from '../shared/user.service';
 import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import {AppDetails, App, Study, Site} from '../shared/app-details';
-import {User} from 'src/app/entity/user';
+import {idpUser, User} from 'src/app/entity/user';
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {getMessage} from 'src/app/shared/success.codes.enum';
 import {Permission} from 'src/app/shared/permission-enums';
 import {AppsService} from '../../apps/shared/apps.service';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
+import {BsModalService, BsModalRef} from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'user-new',
@@ -28,6 +30,7 @@ export class AddNewUserComponent
   appDetailsBackup = {} as AppDetails;
   selectedApps: App[] = [];
   user = {} as User;
+
   permission = Permission;
   sitesMessageMapping: {[k: string]: string} = {
     '=0': '0 sites',
@@ -35,9 +38,13 @@ export class AddNewUserComponent
     'other': '# sites',
   };
   disableButton = false;
+  mfaEnabledForPM = false;
+
   @ViewChildren('permissionCheckBox')
   selectedPermission: QueryList<ElementRef> = new QueryList();
   constructor(
+    private readonly modalService: BsModalService,
+    public modalRef: BsModalRef,
     private readonly router: Router,
     private readonly userService: UserService,
     private readonly appsService: AppsService,
@@ -45,11 +52,27 @@ export class AddNewUserComponent
   ) {
     super();
   }
+  userEmail: any = [];
 
   ngOnInit(): void {
     this.getAllApps();
+
+    this.getIdpUsersDetails();
   }
 
+  getIdpUsersDetails(): void {
+    // console.log('working')
+    this.userService.getIdpUsers().subscribe((data) => {
+      this.userEmail = data.email;
+      this.mfaEnabledForPM = data.mfaEnabledForPM;
+      console.log(this.mfaEnabledForPM);
+    });
+  }
+  idpUserStatus(): void {
+    {
+      this.user.idpUser = true;
+    }
+  }
   getAllApps(): void {
     this.subs.add(
       this.appsService.getAllAppsWithStudiesAndSites().subscribe((data) => {
@@ -187,6 +210,7 @@ export class AddNewUserComponent
       );
       return;
     }
+    this.modalRef.hide();
   }
   removeExtraAttributesFromApiRequest(): void {
     delete this.user.manageLocationsSelected;
@@ -197,6 +221,24 @@ export class AddNewUserComponent
       this.appDetails = this.appDetailsBackup;
       this.user.manageLocationsSelected = false;
       this.user.manageLocations = null;
+    }
+  }
+  openModal(template: TemplateRef<any>): void {
+    let idpUser = false;
+    let userEmail = this.userEmail;
+    userEmail.forEach((element: any) => {
+      if (this.user.email === element) {
+        idpUser = true;
+        this.idpUserStatus();
+        this.add();
+      }
+    });
+
+    if (!idpUser == true) {
+      this.modalRef.hide();
+      this.add();
+    } else {
+      this.modalRef.hide();
     }
   }
 }

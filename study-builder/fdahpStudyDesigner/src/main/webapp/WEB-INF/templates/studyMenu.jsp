@@ -224,7 +224,9 @@
     <c:if test="${(empty studyBo.status || studyBo.status eq 'Pre-launch') && ((empty studyBo.studySequenceBo) || not studyBo.studySequenceBo.basicInfo)}">
     $('.commonCls').addClass('cursor-none-without-event');
     </c:if>
+
     <c:if test="${(empty studyBo.status ||studyBo.status eq 'Pre-launch') && studyBo.studySequenceBo.basicInfo && not studyBo.studySequenceBo.settingAdmins}">
+
     $('.commonCls').not('.second').addClass('cursor-none-without-event');
     </c:if>
     $(window).on('load resize', function () {

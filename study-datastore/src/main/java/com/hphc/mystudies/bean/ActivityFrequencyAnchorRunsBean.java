@@ -55,6 +55,8 @@ public class ActivityFrequencyAnchorRunsBean {
 
   public void setStartTime(String startTime) {
     this.startTime = startTime;
+
+ 
   }
 
   public String getEndTime() {
@@ -65,3 +67,4 @@ public class ActivityFrequencyAnchorRunsBean {
     this.endTime = endTime;
   }
 }
+

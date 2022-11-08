@@ -220,7 +220,9 @@
               </div>
             </c:forEach>
             <c:if test="${fn:length(comprehensionQuestionBo.responseList) eq 1}">
+
             <div class="ans-opts col-md-12 row p-none" id="1">
+
               <div class='col-md-6 pl-none'>
                 <div class='form-group'>
                   <input type='text' class='form-control' name="responseList[1].responseOption"
@@ -234,7 +236,9 @@
                 <div class="form-group">
                   <select class='selectpicker wid100' name="responseList[1].correctAnswer"
                           id="correctAnswerId1" required data-error='Please choose one option'>
+
                     <option selected value=''>Select</option>
+
                     <option value="true">Yes</option>
                     <option value="false">No</option>
                   </select>
