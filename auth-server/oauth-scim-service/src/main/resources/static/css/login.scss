@@ -84,7 +84,7 @@ body.my-login-page {
   flex-direction: column;
   min-width: 0;
   word-wrap: break-word;
-  background-color: transparent;
+  background-color: transparent !important;
   background-clip: border-box;
   border: none !important;
   border-radius: 0.25rem;
