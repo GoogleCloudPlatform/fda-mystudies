@@ -12,10 +12,21 @@
 <title>Sign in</title>
 
 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="viewport" content="width=device-width, height=device-height,  initial-scale=1.0, user-scalable=no;user-scalable=0;"/>
+<meta name="viewport" content="user-scale=no"/>
+<meta name="viewport" content="width=device-width"/>
+<meta name="viewport" content="width=device-width, maximum-scale=0.9"/>
+	
+<link rel="stylesheet"
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
 
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+
+
+
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
+
 <link rel="stylesheet" th:href="@{/css/style.css}">
 <link rel="stylesheet" th:href="@{/css/utilities.css}">
 <link rel="stylesheet" th:href="@{/css/login.scss}">
@@ -23,21 +34,30 @@
   href="https://fonts.googleapis.com/css?family=Muli:200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap">
 <!-- Bootstrap core CSS -->
 
-<!--  <link	 href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"	rel="stylesheet" />  -->
 
-<link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css"  rel="stylesheet" />
+<link	 href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"	rel="stylesheet" />
+
+<!-- <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css"  rel="stylesheet" /> -->
+
 
 
 <!-- Custom styles for this template -->
 <link
   href="https://getbootstrap.com/docs/4.0/examples/sticky-footer/sticky-footer.css"
   rel="stylesheet" />
-<link 
-  rel="icon"
-  type="image/x-icon"
-  th:href="@{/images/favicon_pm.png}"/>
 
+  <link
+      rel="icon"
+      type="image/x-icon"
+      th:href="@{/images/favicon_pm.png}"
+    />
 <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.0/firebase.js"></script>
+
 <script type="text/javascript" th:src="@{/js/login.js}"></script>
 
 <!--  plugin adde due to eye icon funactionality -->
@@ -75,6 +95,56 @@
   input {
     filter: none !important;
   }
+
+  
+  .btn-cancel {
+width: 110px !important;
+    height: 38px !important;
+    line-height: 100% !important;
+    font-size: 100% !important;
+    background: var(--pigeon-gray) !important;
+    color: var(--river-gray)!important;
+}
+
+.btn-add {
+width: 110px !important;
+    height: 38px !important;
+    line-height: 100% !important;
+    font-size: 100% !important;
+    background: var(--blue) !important;
+    color: var(--white) !important;
+}
+
+.visibility__hidden {
+    visibility: hidden !important;
+}
+
+.popup_input{
+	text-align: center;
+	border: 1px solid #c9d2d6;
+	color: #2d2926;
+	outline: none !important;
+	box-shadow: none;
+	-webkit-box-shadow: none;
+	transition: none;
+	-webkit-transition: none;
+	resize: none;
+	background-color: #fff;
+	width: 384px;
+	height: 34px;
+	border-radius: 4px;
+	display: inline-block;
+}
+
+#password_error {
+display: block;
+    position: relative !important;
+    top: 0px !important;
+    width: 80% !important;
+    padding-bottom: 15px !important;
+}
+
+
 
 .visibility__hidden {
   visibility: hidden !important;
@@ -116,6 +186,7 @@ input::-ms-clear, input::-ms-reveal {
   }
 }
 
+
 </style>
 </head>
 <body class="my-login-page bg__aqua-gray">
@@ -124,10 +195,15 @@ input::-ms-clear, input::-ms-reveal {
       <div class="row justify-content-md-center h-100">
         <div class="card-wrapper">
           <div class="card fat">
-            <div class="card-body bg__aqua-gray">
+            <div class="card-body">
               <form th:action="@{/login}" method="POST" id="loginForm"
                 novalidate onsubmit="return validateform();"
                 th:object="${loginRequest}">
+                 <input type="hidden" id="idpEnabled" th:value="${idpEnabledForPM}" name="idpEnabled"/>
+                 <input type="hidden" id="mfaEnabled" th:value="${mfaEnabledForPM}" name="mfaEnabled"/>
+                 <input type="hidden" id="idpApiKey" th:value="${idpApiKey}" name="idpApiKey"/>
+                 <input type="hidden" id="idpAuthDomain" th:value="${idpAuthDomain}" name="idpAuthDomain"/>
+                 <input type="hidden" id="serverContextPath" th:value="${serverContextPath}" name="serverContextPath"/>
                 <div
                   class="centered__div centered__div__mobile box__shadow-cmn">
                   <div class="signin__container">
@@ -143,9 +219,9 @@ input::-ms-clear, input::-ms-reveal {
                       </div>
                       <div class="input__field">
                         <label>Email</label> <input type="email"
-                          name="email" th:field="*{email}" id="email"
-                          placeholder="Enter your email" value=""
-                          required="required"
+                          name="email" th:field="*{email}" id="email" autocomplete="email"
+                          placeholder="Enter your email"
+                          required="required" value=""
                           onblur="validateField('email');" />
                         <div class="err__msg" id="email_error"
                           style="display: none">Enter an email</div>
@@ -169,6 +245,7 @@ input::-ms-clear, input::-ms-reveal {
                             class="btn btn-primary width__auto blue__btn">Sign
                             in</button>
 							
+
                         </div>
 						<div
                         class="input__feild pb-2 pt-2 login__btn__container col-md-9 pr-none pl-none text-right">
@@ -177,6 +254,7 @@ input::-ms-clear, input::-ms-reveal {
                           <a class="pb-3 blue__link forgot__pwd"
                             th:href="${forgot_password_link}">Forgot<span class="visibility__hidden">_</span>password?</a>
                         </div>
+
                       </div>
                       </div>
 						<span
@@ -185,6 +263,9 @@ input::-ms-clear, input::-ms-reveal {
                             th:href="${signup_link}" class="blue__link">Sign
                               up</a>
                           </span>
+
+                      <div id="recaptcha-container" style="margin: auto;width: 68%;padding: 10px;"></div>
+
                       <div class="clearfix"></div>
                     </div>
                   </div>
@@ -212,7 +293,6 @@ input::-ms-clear, input::-ms-reveal {
     </div>
   </footer>
   </div>
-  
 
 </body>
 </html>

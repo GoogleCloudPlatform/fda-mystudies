@@ -63,6 +63,9 @@ public class AppPropertyConfig implements Serializable {
   @Value("${auth.server.updateStatusUrl}")
   private String authServerUpdateStatusUrl;
 
+  @Value("${auth.server.updateAdminPhoneUrl}")
+  private String authServerUpdateAdminPhoneUrl;
+
   @Value("${auth.server.logout.user.url}")
   private String authLogoutUserUrl;
 
@@ -74,6 +77,12 @@ public class AppPropertyConfig implements Serializable {
 
   @Value("${study.builder.cloud.bucket.name}")
   private String studyBuilderCloudBucketName;
+
+  @Value("${idpEnabledForPM}")
+  private boolean idpEnabled;
+
+  @Value("${mfaEnabledForPM}")
+  private boolean mfaEnabled;
 
   @Value("${projectId}")
   private String projectId;

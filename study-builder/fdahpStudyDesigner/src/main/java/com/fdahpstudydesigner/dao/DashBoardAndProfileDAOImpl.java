@@ -27,10 +27,14 @@ package com.fdahpstudydesigner.dao;
 import com.fdahpstudydesigner.bo.MasterDataBO;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
+import java.io.PrintWriter;
+import javax.servlet.http.HttpServletResponse;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.json.JSONObject;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,6 +99,42 @@ public class DashBoardAndProfileDAOImpl implements DashBoardAndProfileDAO {
     return message;
   }
 
+  @Override
+  public void getIDPUserData(HttpServletResponse response, String email) {
+    logger.entry("begin DashBoardAndProfileDAOImpl- getIDPUserData()");
+    Boolean idpUser = false;
+    Session session = null;
+    Query query = null;
+    UserBO userBO = null;
+    PrintWriter out = null;
+    JSONObject jsonobject = new JSONObject();
+    ObjectMapper mapper = new ObjectMapper();
+    String userPhoneNumber = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      query = session.getNamedQuery("getUserByEmail").setString("email", email);
+      userBO = (UserBO) query.uniqueResult();
+
+      if (null != userBO) {
+        idpUser = userBO.isIdpUser();
+        userPhoneNumber = userBO.getPhoneNumber();
+      }
+
+      jsonobject.put("idpUser", idpUser);
+      jsonobject.put("userPhoneNumber", userPhoneNumber);
+      response.setContentType(FdahpStudyDesignerConstants.APPLICATION_JSON);
+      out = response.getWriter();
+      out.print(jsonobject);
+    } catch (Exception e) {
+      logger.error("DashBoardAndProfileDAOImpl - getIDPUserData() - ERROR " + e);
+    } finally {
+      if (null != session) {
+        session.close();
+      }
+    }
+    logger.exit("DashBoardAndProfileDAOImpl - getIDPUserData() - Ends");
+  }
+
   @Autowired
   public void setSessionFactory(SessionFactory sessionFactory) {
     this.hibernateTemplate = new HibernateTemplate(sessionFactory);
@@ -102,7 +142,12 @@ public class DashBoardAndProfileDAOImpl implements DashBoardAndProfileDAO {
 
   @Override
   public String updateProfileDetails(UserBO userBO, String userId) {
+
+    logger.info("DashBoardAndProfileDAOImpl - updateProfileDetails() - Starts");
+
+
     logger.entry("begin updateProfileDetails()");
+
     Session session = null;
     Query query = null;
     String queryString = "";

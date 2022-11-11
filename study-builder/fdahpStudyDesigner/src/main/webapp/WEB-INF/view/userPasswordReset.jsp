@@ -85,11 +85,13 @@
         <div>
           <form:form id="passwordResetForm" data-toggle="validator"
                      role="form" action="addPassword.do" method="post"
+
                      autocomplete="off" 
                      style="margin-top: 0px !important;
     margin-bottom: 0 !important;
     padding-top: 0 !important;
     padding-bottom: 0 !important;">
+
             <div id="errMsg" class="error_msg">${errMsg}</div>
             <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
             <c:if test="${not isInactiveUser && isValidToken}">

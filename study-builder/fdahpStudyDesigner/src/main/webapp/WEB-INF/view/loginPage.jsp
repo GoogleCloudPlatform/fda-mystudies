@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 <!DOCTYPE html>
 <html class="overflow-hidden" lang="en">
   <head>
@@ -64,11 +65,30 @@
     <script src="/studybuilder/vendor/slimscroll/jquery.slimscroll.min.js"></script>
     <script src="/studybuilder/vendor/select2/bootstrap-select.min.js"></script>
     <script type="text/javascript" src="/studybuilder/js/loader.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0/firebase.js"></script>
+    <script async src="https://www.google.com/recaptcha/api.js"></script>
     
     <style>
 		.hover_text_white { color:#fff !important;}
 		.hover_text_white:hover { color:#fff !important;}
 		.hover_text_white:focus { color:#fff !important;}
+		
+		.popup_input{
+		    text-align: center;
+		    border: 1px solid #c9d2d6;
+		    color: #2d2926;
+		    outline: none !important;
+		    box-shadow: none;
+		    -webkit-box-shadow: none;
+		    transition: none;
+		    -webkit-transition: none;
+		    resize: none;
+		    background-color: #fff;
+		    width: 384px;
+		    height: 34px;
+		    border-radius: 4px;
+		    display: inline-block;
+		}
 	</style>
 
   </head>
@@ -83,7 +103,9 @@
       <!-- new login -->
       <!-- Logo-->
       <div class="logo__space">
+
         <a href="/studybuilder/login.do"><img src="images/logo/logo_landing_welcome.png" alt=""/></a>
+
       </div>
       <div class="clearfix"></div>
       <div class="login__container">
@@ -99,8 +121,13 @@
           <form:form id="loginForm" data-toggle="validator" role="form" action="#" name="loginForm"
                      method="post"
                      autocomplete="off">
+
+            <input type="hidden" id="idp" value="${idpEnabled}" name="idp"/>
+            <input type="hidden" id="mfa" value="${mfaEnabled}" name="mfa"/>
             <div id="errMsg" class="error_msg" style="display: contents;">${errMsg}</div>
             <div id="sucMsg" class="suceess_msg" style="display: contents;">${sucMsg}</div>
+           
+
             <div class="login pt-lg">
               <div class="mb-lg form-group">
                 <input type="text" class="input-field wow_input" id="email" name="username"
@@ -127,6 +154,7 @@
                    href="javascript:void(0)">Forgot password?
                 </a>
               </div>
+               <div id="recaptcha-container" class="mb-lg form-group"></div>
             </div>
             <input type="password" name="password" id="hidePass" style="display: none;"/>
           </form:form>
@@ -186,6 +214,14 @@
       </div>
     </div>
 
+	<div id="js-exampleDiv" hidden>
+	  <form class="js-exampleForm">
+	    <div class="col-sm-12">
+	      <input placeholder="Example placeholder 1" id="ex1" />
+	    </div>
+	  </form>
+	</div>
+	
     <div class="modal fade" id="privacyModal" role="dialog">
       <div class="modal-dialog modal-lg">
         <!-- Modal content-->
@@ -218,6 +254,15 @@
     <script>
       var isChanged = true;
       $(document).ready(function (e) {
+   	  var idpEnabled = ${idpEnabled};
+   	  if(idpEnabled == true){
+        var config = {
+    		  apiKey: "${idpApiKey}",
+    	   	  authDomain: "${idpAuthDomain}",
+   	    };
+   	    firebase.initializeApp(config);
+      }
+  	    
         // Internet Explorer 6-11
         var isIE = false || !!document.documentMode;
 

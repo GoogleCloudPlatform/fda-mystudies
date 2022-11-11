@@ -55,6 +55,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -73,6 +74,11 @@ public class DashBoardAndProfileController {
   @Autowired private StudyBuilderAuditEventHelper auditLogHelper;
 
   @Autowired private AppService appService;
+
+  Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
+  String idpEnabled = configMap.get("idpEnabledForSB");
+  String idpAuthDomain = configMap.get("idpAuthDomain");
+  String idpApiKey = configMap.get("idpApiKey");
 
   @RequestMapping("/adminDashboard/changePassword.do")
   public void changePassword(HttpServletRequest request, HttpServletResponse response) {
@@ -113,8 +119,12 @@ public class DashBoardAndProfileController {
   public ModelAndView getAdminDashboard() {
     logger.entry("begin getAdminDashboard");
     ModelAndView mav = new ModelAndView();
+    ModelMap map = new ModelMap();
     try {
-      mav = new ModelAndView("fdaAdminDashBoardPage");
+      map.addAttribute("idpEnabled", idpEnabled);
+      map.addAttribute("idpApiKey", idpApiKey);
+      map.addAttribute("idpAuthDomain", idpAuthDomain);
+      mav = new ModelAndView("fdaAdminDashBoardPage", map);
     } catch (Exception e) {
       logger.error("DashBoardAndProfileController - getAdminDashboard - ERROR", e);
     }
@@ -141,6 +151,20 @@ public class DashBoardAndProfileController {
       logger.error("DashBoardAndProfileController - isEmailValid() - ERROR " + e);
     }
     logger.exit("isEmailValid() - Ends ");
+  }
+
+  @RequestMapping(value = "/getIDPUserData.do", method = RequestMethod.POST)
+  public void getIDPUserData(HttpServletResponse response, String email) {
+    logger.entry("begin DashBoardAndProfileController - getIDPUserData()");
+    try {
+      if (FdahpStudyDesignerUtil.isNotEmpty(email)) {
+        dashBoardAndProfileService.getIDPUserData(response, email);
+      }
+    } catch (Exception e) {
+      response.setContentType(FdahpStudyDesignerConstants.APPLICATION_JSON);
+      logger.error("DashBoardAndProfileController - getIDPUserData() - ERROR " + e);
+    }
+    logger.exit("DashBoardAndProfileController - getIDPUserData() - Ends ");
   }
 
   @RequestMapping("/adminDashboard/updateUserDetails.do")
@@ -203,6 +227,7 @@ public class DashBoardAndProfileController {
     RoleBO roleBO = null;
     String sucMsg = "";
     String errMsg = "";
+
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       HttpSession session = request.getSession();

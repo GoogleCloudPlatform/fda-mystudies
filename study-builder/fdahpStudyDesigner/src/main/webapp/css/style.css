@@ -9,6 +9,7 @@
 /*
 
 Name: 			style.css
+Written by: 	BTC - Madhu D V
 Version: 		1.0
 
 */
@@ -391,6 +392,11 @@ input[type=file]:focus, input[type=checkbox]:focus, input[type=radio]:focus, .ch
   border-bottom: 1px solid #cfd4d7 !important;
 }
 
+.app-selected-item{
+  padding: 10px 0px;
+  border-bottom: 1px solid #cfd4d7;
+}
+
 .blue-link {
   color: #036eb7;
 }
@@ -505,6 +511,7 @@ div.mce-edit-area {
   font-size: 11px !important;
   line-height: 12px;
   margin:0px;
+  width: auto;
 }
 
 .help-block ul li:first-child {
@@ -527,10 +534,12 @@ div.mce-edit-area {
   margin: 0 auto;
   text-align: center;
   position: absolute;
+
   /* top: 12%;
   bottom: 0;
   left: 0;
   right: 0; */
+
   top: 50% !important;
   left: 50% !important;
   transform: translate(-50%,-50%) !important;
@@ -815,7 +824,9 @@ select.bs-select-hidden, select.selectpicker {
 
 
 .bootbox .modal-dialog {
-  width: 480px !important;
+
+  width: 550px !important;
+
   text-align: center !important;
 }
 
@@ -1205,8 +1216,12 @@ input[type=radio]:disabled + label::after {
   max-height: 0px !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
-  min-height: 100% !important;
+
+  min-height: 110px !important;
+
 }
+
+
 
 .changeView div.dropdown-menu {
   width: 100% !important;
@@ -2744,7 +2759,9 @@ width:100% !important;
 
 .checkbox input[type="checkbox"] {
     margin-top: 1px !important;
-     margin-left: -18px !important;
+
+    margin-left: -18px !important;
+
 }
 
 .bootstrap-select.btn-group.show-tick .dropdown-menu li a span.text {
@@ -2753,6 +2770,7 @@ width:100% !important;
 
 .changeView div.dropdown-menu ul.dropdown-menu > li > a {
     padding: 8px 0px 8px 20px !important;
+
     white-space: inherit !important;
 }
 .note-icon-menu-check:before {
@@ -3018,3 +3036,4 @@ strong {
 }
 
  /* css end here */
+

@@ -48,6 +48,10 @@
               <div class="participant__label">{{ user.lastName }}</div>
             </div>
             <div>
+              <div class="blue__text__md txt_style_unset">Phone number</div>
+              <div class="participant__label">&nbsp;{{ user.phoneNum }}</div>
+            </div>
+            <div>
               <div class="blue__text__md">Role</div>
               <div class="participant__label">
                 <span *ngIf="user.superAdmin == true">Superadmin</span>

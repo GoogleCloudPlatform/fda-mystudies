@@ -53,7 +53,7 @@ public class UserProfileController {
 
   @Autowired private UserProfileService userProfileService;
 
-  @ApiOperation(value = "Returns user profile information")
+  @ApiOperation(value = "fetch user profile")
   @GetMapping(value = "/users/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<UserProfileResponse> getUserProfile(
       @PathVariable String userId, HttpServletRequest request) {
@@ -64,7 +64,7 @@ public class UserProfileController {
     return ResponseEntity.status(profileResponse.getHttpStatusCode()).body(profileResponse);
   }
 
-  @ApiOperation(value = "Returns a response containing user profile by security code")
+  @ApiOperation(value = "fetch user profile by security code")
   @GetMapping(
       value = "/users/securitycodes/{securityCode}",
       produces = MediaType.APPLICATION_JSON_VALUE)

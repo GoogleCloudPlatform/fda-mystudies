@@ -1614,6 +1614,8 @@ public class SiteServiceImpl implements SiteService {
       auditRequest.setParticipantId(participantRegistrySiteEntity.getId());
       auditRequest.setStudyVersion(String.valueOf(site.getStudy().getVersion()));
 
+      // EmailResponse emailResponse = emailService.sendMimeMailWithImages(emailRequest,
+      // inlineImages);
       if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER
           .getMessage()
           .equals(emailResponse.getMessage())) {

@@ -109,6 +109,7 @@ public final class CommonConstants {
 
   public static final String AUTO_EXPIRATION = "autoExpiration";
 
+
   public static final String VERSION = "Version";
   public static final String CONSENT_DATE = "ConsentDate";
   public static final String PDF_PATH = "PdfPath";
@@ -125,4 +126,5 @@ public final class CommonConstants {
 
   public static final String PARTICIPANT_STUDY_ID = "ParticipantStudyInfoId";
   public static final String IMAGE_PATH = "ImagePath";
+
 }

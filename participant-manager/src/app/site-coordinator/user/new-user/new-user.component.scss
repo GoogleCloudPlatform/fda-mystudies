@@ -16,3 +16,15 @@
     padding: 4px;
   }
 }
+
+.myarrow:after {
+  content: "";
+  width: 0;
+  position: absolute;
+  top: 63%;
+  right: 28px;
+  border-width: 4px 4px;
+  border-style: solid;
+  pointer-events: none;
+  border-color: #999 transparent transparent transparent;
+}

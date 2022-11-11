@@ -33,6 +33,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.Transient;
 
 @ToString
@@ -98,6 +99,10 @@ public class UserRegAdminEntity implements Serializable {
   @ToString.Exclude
   @Column(name = "security_code", length = SMALL_LENGTH)
   private String securityCode;
+
+  @Column(name = "idp_user")
+  @Type(type = "yes_no")
+  private Boolean idpUser = false;
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "urAdminUser")
   private List<AppPermissionEntity> appPermissions = new ArrayList<>();

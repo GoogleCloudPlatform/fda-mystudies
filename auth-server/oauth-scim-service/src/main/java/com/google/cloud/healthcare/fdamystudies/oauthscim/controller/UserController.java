@@ -15,6 +15,7 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.AuthUserUpdate;
 import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordRequest;
@@ -193,5 +194,15 @@ public class UserController {
     userService.deleteUserAccount(userId);
 
     logger.exit("user account deleted.");
+  }
+
+  @ApiOperation(value = "update user phone in auth sever")
+  @PostMapping(value = "/users/phone", produces = MediaType.APPLICATION_JSON_VALUE)
+  public void updateUserAdmin(
+      @Valid @RequestBody AuthUserUpdate userRequest, HttpServletRequest request)
+      throws JsonProcessingException {
+    logger.entry(String.format("Begin"));
+    userService.updateUserAdmin(userRequest);
+    logger.exit(String.format("Exit"));
   }
 }

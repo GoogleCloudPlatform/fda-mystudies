@@ -78,7 +78,9 @@
                      id="userEmail" name="userEmail" value="${userBO.userEmail}"
                      oldVal="${userBO.userEmail}" maxlength="100"
                      pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,24}$"
-                     data-pattern-error="Email address is invalid" required data-error="Please fill out this field" readonly/>
+
+                     data-pattern-error="Email address is invalid" data-error="Please fill out this field" required data-error="Please fill out this field" readonly/>
+
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
@@ -88,15 +90,15 @@
       <div class="b-bor mt-md">
         <div class="ed-user-layout row">
           <div class="col-md-4 p-none">
-            <div class="gray-xs-f line34">Phone (XXX - XXX - XXXX)
+            <div class="gray-xs-f line34">Phone (+X XXX XXX XXXX)
             </div>
           </div>
           <div class="col-md-6 p-none">
             <div class="form-group cursAllow">
               <input type="text"
-                     class="form-control edit-field bor-trans phoneMask resetVal linkDis"
+                     class="form-control edit-field bor-trans resetVal linkDis"
                      name="phoneNumber" value="${userBO.phoneNumber}"
-                     oldVal="${userBO.phoneNumber}" maxlength="12" data-minlength="12"
+                     oldVal="${userBO.phoneNumber}" maxlength="16" data-minlength="11"
                      readonly/>
               <div class="help-block with-errors red-txt"></div>
             </div>
@@ -133,6 +135,7 @@
       </div>
     </div>
   </div>
+  <c:if test="${userBO.idpUser eq false}">
   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mb-md">
     <div class="white-bg box-space">
       <div class="row" id="hideChangePwd">
@@ -163,8 +166,8 @@
                 <div class="form-group">
                   <input autofocus="autofocus" type="password"
                          class="input-field wow_input emptyField" maxlength="64" id="oldPassword"
-                         name="oldPassword"
-                         required data-error="Please fill out this field" tabindex="1" autocomplete="off"/>
+                         name="oldPassword" data-error="Please fill out this field"
+                         required tabindex="1" autocomplete="off"/>
                   <div class="help-block with-errors red-txt"></div>
                 </div>
               </div>
@@ -224,6 +227,7 @@
       </div>
     </div>
   </div>
+  </c:if>
 </form:form>
  <c:if test="${not fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN')}">
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mb-md">
@@ -245,6 +249,7 @@
         </span>
       </div>
       </c:if>
+
 
       <!-- Assigned Permissions List-->
       <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APPS')}">
@@ -280,7 +285,7 @@
         </c:if>
       </div>
       </c:if>
-      
+
       <!-- Assigned Permissions List-->
       <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">
       <div class="edit-user-list-widget">
@@ -315,7 +320,7 @@
         </c:if>
       </div>
       </c:if>
-       
+
     </div>
   </div>
 </div>
@@ -329,6 +334,8 @@
     addPasswordPopup();
     $("#myAccount").addClass("active");
 
+    console.log("${(sessionObject.userPermissions)}");
+    
     var button = $('#ed-update');
     $('input').each(function () {
       $(this).data('val', $(this).val());

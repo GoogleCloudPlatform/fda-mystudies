@@ -36,6 +36,7 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESE
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_SUCCEEDED;
+import static com.fdahpstudydesigner.common.StudyBuilderConstants.IDP_TEMP_PASSWORD;
 
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.UserAttemptsBo;
@@ -46,11 +47,15 @@ import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.common.StudyBuilderConstants;
 import com.fdahpstudydesigner.common.UserAccessLevel;
 import com.fdahpstudydesigner.dao.LoginDAOImpl;
+import com.fdahpstudydesigner.dao.UsersDAO;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
 import com.fdahpstudydesigner.util.EmailNotification;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserRecord;
+import com.google.firebase.auth.UserRecord.UpdateRequest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -80,7 +85,18 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
 
   @Autowired private EmailNotification emailNotification;
 
+
+  @Autowired private UsersService usersService;
+
   private LoginDAOImpl loginDAO;
+
+  @Autowired private UsersDAO usersDAO;
+
+  Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
+  String idpEnabled = configMap.get("idpEnabledForSB");
+
+
+
 
   @Override
   public String authAndAddPassword(
@@ -117,6 +133,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                         : userBO.getLastName()))) {
           isValidPassword = false;
         }
+
         if (isValidPassword) {
           passwordHistories = loginDAO.getPasswordHistory(userBO.getUserId());
           if ((passwordHistories != null) && !passwordHistories.isEmpty()) {
@@ -141,7 +158,28 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                 null != userBO2.getPhoneNumber()
                     ? userBO2.getPhoneNumber().trim()
                     : userBO.getPhoneNumber());
-            userBO.setUserPassword(FdahpStudyDesignerUtil.getEncryptedPassword(password));
+
+            if (isIdpUser(userBO.getUserEmail())) {
+
+              UserRecord userRecord =
+                  FirebaseAuth.getInstance().getUserByEmail(userBO.getUserEmail());
+              // See the UserRecord reference doc for the contents of userRecord.
+              logger.info("Successfully fetched user data: ", userRecord.getEmail());
+              // IDP user password update
+              UpdateRequest updateRequest =
+                  new UpdateRequest(userRecord.getUid())
+                      .setEmailVerified(true)
+                      .setPassword(password);
+
+              UserRecord userRecordUpdated = FirebaseAuth.getInstance().updateUser(updateRequest);
+              logger.info("Successfully updated user data: ", userRecordUpdated.getEmail());
+
+              userBO.setUserPassword(
+                  FdahpStudyDesignerUtil.getEncryptedPassword(IDP_TEMP_PASSWORD));
+              userBO.setIdpUser(true);
+            } else {
+              userBO.setUserPassword(FdahpStudyDesignerUtil.getEncryptedPassword(password));
+            }
             userBO.setTokenUsed(true);
             userBO.setEnabled(true);
             userBO.setAccountNonExpired(true);
@@ -440,11 +478,14 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
         if (flag) {
           flag = false;
           if (null != userdetails) {
-            userdetails.setSecurityToken(passwordResetToken);
-            userdetails.setTokenUsed(false);
-            userdetails.setTokenExpiryDate(
-                FdahpStudyDesignerUtil.addHours(
-                    FdahpStudyDesignerUtil.getCurrentDateTime(), passwordResetLinkExpirationInDay));
+            if (!userdetails.isIdpUser()) {
+              userdetails.setSecurityToken(passwordResetToken);
+              userdetails.setTokenUsed(false);
+              userdetails.setTokenExpiryDate(
+                  FdahpStudyDesignerUtil.addHours(
+                      FdahpStudyDesignerUtil.getCurrentDateTime(),
+                      passwordResetLinkExpirationInDay));
+            }
 
             if (!"USER_UPDATE".equals(type)) {
               message = loginDAO.updateUser(userdetails);
@@ -525,7 +566,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                         email,
                         null,
                         null);
-              } else if ("enforcePasswordChange".equals(type)) {
+              } else if ("enforcePasswordChange".equals(type) && !userdetails.isIdpUser()) {
                 dynamicContent =
                     FdahpStudyDesignerUtil.genarateEmailContent(
                         "mailForEnforcePasswordChangeContent", keyValueForSubject);
@@ -545,15 +586,17 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                         null,
                         null);
               } else if ("".equals(type) && userdetails.isEnabled()) {
-                dynamicContent =
-                    FdahpStudyDesignerUtil.genarateEmailContent(
-                        "passwordResetLinkContent", keyValueForSubject);
-                flag =
-                    emailNotification.sendEmailNotification(
-                        "passwordResetLinkSubject", dynamicContent, email, null, null);
-                StudyBuilderAuditEvent auditLogEvent =
-                    flag ? PASSWORD_HELP_EMAIL_SENT : PASSWORD_HELP_EMAIL_FAILED;
-                auditLogEventHelper.logEvent(auditLogEvent, auditRequest);
+                if (!userdetails.isIdpUser()) {
+                  dynamicContent =
+                      FdahpStudyDesignerUtil.genarateEmailContent(
+                          "passwordResetLinkContent", keyValueForSubject);
+                  flag =
+                      emailNotification.sendEmailNotification(
+                          "passwordResetLinkSubject", dynamicContent, email, null, null);
+                  StudyBuilderAuditEvent auditLogEvent =
+                      flag ? PASSWORD_HELP_EMAIL_SENT : PASSWORD_HELP_EMAIL_FAILED;
+                  auditLogEventHelper.logEvent(auditLogEvent, auditRequest);
+                }
               } else if ("USER_UPDATE".equals(type) && !userdetails.isEnabled()) {
                 flag = true;
               }
@@ -566,6 +609,9 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
               }
               if ("".equals(type) && StringUtils.isEmpty(userdetails.getUserPassword())) {
                 message = propMap.get("user.not.found.msg");
+              }
+              if ("".equals(type) && userdetails.isIdpUser()) {
+                message = propMap.get("idp.user.msg");
               }
             }
           }
@@ -667,5 +713,21 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
     boolean isIntialPasswordSetUp = StringUtils.isBlank(user.getUserPassword());
     logger.exit("isIntialPasswordSetUp() - Ends");
     return isIntialPasswordSetUp;
+  }
+
+  @Override
+  public boolean isIdpUser(String userEmail) {
+    boolean isIdpUser = false;
+    if (Boolean.parseBoolean(idpEnabled)) {
+      try {
+        UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmail(userEmail);
+        if (userRecord != null) {
+          isIdpUser = true;
+        }
+      } catch (Exception e) {
+        return isIdpUser;
+      }
+    }
+    return isIdpUser;
   }
 }

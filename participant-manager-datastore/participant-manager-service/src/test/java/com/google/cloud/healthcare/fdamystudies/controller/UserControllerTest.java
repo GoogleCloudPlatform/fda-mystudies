@@ -25,6 +25,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -58,12 +59,14 @@ import com.google.cloud.healthcare.fdamystudies.repository.AppPermissionReposito
 import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
+import com.google.cloud.healthcare.fdamystudies.util.ParticipantManagerUtil;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -72,6 +75,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -94,6 +98,8 @@ public class UserControllerTest extends BaseMockIT {
   @Autowired private SitePermissionRepository sitePermissionRepository;
 
   @Autowired private AppPermissionRepository appPermissionRepository;
+
+  @Autowired @MockBean private ParticipantManagerUtil participantManagerUtil;
 
   private AppEntity appEntity;
 
@@ -1170,6 +1176,50 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath("$.error_description")
                 .value(ErrorCode.NOT_SUPER_ADMIN_ACCESS.getDescription()));
+  }
+
+  @Test
+  public void shouldReturnNotSuperAdminErrorForIdp() throws Exception {
+    UserRegAdminEntity nonSuperAdmin = testDataHelper.createNonSuperAdmin();
+    // Step 1: Call API and expect NOT_SUPER_ADMIN_ACCESS error
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, nonSuperAdmin.getId());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_IDP_USERS.getPath()).headers(headers).contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(
+            jsonPath("$.error_description")
+                .value(ErrorCode.NOT_SUPER_ADMIN_ACCESS.getDescription()));
+  }
+
+  @Test
+  public void shouldReturnIdpUsers() throws Exception {
+    UserRegAdminEntity superAdmin = testDataHelper.createSuperAdmin();
+    // Step 1: Call API and expect SUPER_ADMIN_ACCESS
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, superAdmin.getId());
+    when(participantManagerUtil.getIDPUsers()).thenReturn(getIDPUsers());
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_IDP_USERS.getPath()).headers(headers).contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.message").value(MessageCode.GET_IDP_USERS_SUCCESS.getMessage()))
+        .andExpect(jsonPath("$.email").isArray())
+        .andExpect(jsonPath("$.email", hasSize(1)))
+        .andExpect(jsonPath("$.email[0]").value(TestConstants.USER_EMAIL_VALUE))
+        .andReturn();
+  }
+
+  private List<String> getIDPUsers() {
+    // TODO Auto-generated method stub
+    List<String> users = new ArrayList<>();
+    users.add(TestDataHelper.EMAIL_VALUE);
+    users.add(TestConstants.USER_EMAIL_VALUE);
+    return users;
   }
 
   private UserRequest newUserRequestForUpdate() {

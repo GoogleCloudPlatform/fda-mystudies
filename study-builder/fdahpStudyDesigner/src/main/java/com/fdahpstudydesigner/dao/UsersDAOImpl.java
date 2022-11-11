@@ -572,7 +572,9 @@ public class UsersDAOImpl implements UsersDAO {
       query =
           session.createSQLQuery(
               " SELECT u.user_id,u.first_name,u.last_name,u.email,r.role_name,u.status,"
-                  + "u.password,u.email_changed,u.access_level FROM users u,roles r WHERE r.role_id = u.role_id  "
+
+                  + "u.password,u.email_changed,u.access_level,u.created_by, u.idp_user FROM users u,roles r WHERE r.role_id = u.role_id  "
+
                   + " ORDER BY u.user_id DESC ");
       objList = query.list();
       if ((null != objList) && !objList.isEmpty()) {
@@ -589,6 +591,10 @@ public class UsersDAOImpl implements UsersDAO {
           userBO.setEmailChanged(null != obj[7] ? Byte.toUnsignedInt((Byte) (obj[7])) : 0);
           userBO.setAccessLevel(null != obj[8] ? String.valueOf(obj[8]) : "");
           userBO.setUserFullName(userBO.getFirstName() + " " + userBO.getLastName());
+          userBO.setCreatedBy(null != obj[9] ? String.valueOf(obj[9]) : "");
+          boolean isIdpUser = ((null != obj[10] ? (char) obj[10] : 'N') == 'Y') ? true : false;
+          userBO.setIdpUser(isIdpUser);
+          userBO.setDisableIdpUser("N");
           userList.add(userBO);
         }
       }
@@ -696,6 +702,15 @@ public class UsersDAOImpl implements UsersDAO {
               .setParameter("userId", userId);
       query.executeUpdate();
 
+      /*query =
+          session
+              .createSQLQuery(
+                  " DELETE t1, t2 FROM user_permission_mapping t1"
+                      + " INNER JOIN users t2 ON t1.user_id = t2.user_id where t1.user_id =:userId ")
+              .setParameter("userId", userId);
+      query.executeUpdate()*/ ;
+
+
       transaction.commit();
       message = FdahpStudyDesignerConstants.SUCCESS;
     } catch (Exception e) {
@@ -711,4 +726,28 @@ public class UsersDAOImpl implements UsersDAO {
     logger.exit("deleteByUserId() - Ends");
     return message;
   }
+
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public List<UserBO> getIdpUserList() {
+    logger.entry("begin getIdpUserList()");
+    List<UserBO> userBOList = null;
+    Query query = null;
+    Session session = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      query = session.createQuery(" FROM UserBO UBO where UBO.idpUser='Y'");
+      userBOList = query.list();
+    } catch (Exception e) {
+      logger.error("UsersDAOImpl - getIdpUserList() - ERROR", e);
+    } finally {
+      if (null != session) {
+        session.close();
+      }
+    }
+    logger.exit("getIdpUserList() - Ends");
+    return userBOList;
+  }
+
 }

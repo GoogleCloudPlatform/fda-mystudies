@@ -17,8 +17,13 @@
     <task:annotation-driven/>
     <bean id="myAppScheduleJobs"
           class="com.fdahpstudydesigner.scheduler.FDASchedulerService"/>
+
+
 	<bean id="myAppScheduleJobsToMoveFromCloudStorage"
           class="com.fdahpstudydesigner.scheduler.MoveCloudStorageSchedulerService"/>
+     <bean id="myAppScheduleJobsForIDP"
+          class="com.fdahpstudydesigner.scheduler.IDPSchedulerService"/>     
+
     <bean id="restTemplate"
           class="org.springframework.web.client.RestTemplate">
       <property name="interceptors">

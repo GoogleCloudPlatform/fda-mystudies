@@ -326,7 +326,9 @@
           <tr>
             <th>Date of enrollment</th>
             <th>Date of withdrawal</th>
+
             <th>Last enrollment</th>
+
             <th class="xs-none">&nbsp;</th>
             <th class="xs-none">&nbsp;</th>
             <th class="xs-none">&nbsp;</th>
@@ -378,7 +380,9 @@
       </table>
 
       <h2 class="subheader__title text-weight-semibold mb-sm">
-        Consent history
+        Consent
+        <span class="visibility__hidden">_</span>
+        history
       </h2>
 
       <div class="cards1 m-none">
@@ -391,7 +395,7 @@
           <thead class="custom__thead">
             <tr>
               <span
-                class="sort__by__text mobile__view mr-sm"
+                class="sort__by__text mobile__view mr-sm pt-2"
                 style="background: transparent"
               >
                 Sort by:
@@ -454,6 +458,7 @@
               </td>
             </tr>
           </tfoot>
+
           <tfoot>
             <tr
               *ngIf="participant.participantDetails.consentHistory.length === 0"

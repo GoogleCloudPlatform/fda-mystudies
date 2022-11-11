@@ -94,6 +94,8 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     UserProfileResponse userProfileResponse =
         UserProfileMapper.toUserProfileResponse(adminUser, MessageCode.GET_USER_PROFILE_SUCCESS);
+    userProfileResponse.setMfaEnabledForPM(appPropertyConfig.isMfaEnabled());
+
     logger.exit(userProfileResponse.getMessage());
     return userProfileResponse;
   }
@@ -125,6 +127,8 @@ public class UserProfileServiceImpl implements UserProfileService {
     UserProfileResponse userProfileResponse =
         UserProfileMapper.toUserProfileResponse(
             user, MessageCode.GET_USER_PROFILE_WITH_SECURITY_CODE_SUCCESS);
+    userProfileResponse.setMfaEnabledForPM(appPropertyConfig.isMfaEnabled());
+
     logger.exit(String.format("message=%s", userProfileResponse.getMessage()));
     return userProfileResponse;
   }
@@ -148,9 +152,24 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
     adminUser.setFirstName(userProfileRequest.getFirstName());
     adminUser.setLastName(userProfileRequest.getLastName());
+    adminUser.setPhoneNumber(userProfileRequest.getPhoneNum());
     userRegAdminRepository.saveAndFlush(adminUser);
 
-    auditRequest.setUserId(adminUser.getId());
+    // to update mobile no in Auth server db in Users table
+    if (adminUser.getIdpUser()) {
+      logger.debug("begin updateUserProfileWithupdateAdminPhoneNoInOauth");
+      if (StringUtils.isNotEmpty(adminUser.getUrAdminAuthId())) {
+        String UrAdminAuthId =
+            adminUser.getUrAdminAuthId(); // UrAdminAuthId is userId of User table in auth db
+        manageUserService.updateAdminPhoneNoInOauth(
+            UrAdminAuthId, userProfileRequest.getPhoneNum());
+      }
+      logger.debug("ends updateUserProfileWithupdateAdminPhoneNoInOauth");
+    }
+    //
+
+    auditRequest.setUserId(userProfileRequest.getUserId());
+    logger.info("UserId" + userProfileRequest.getUserId());
     participantManagerHelper.logEvent(ACCOUNT_UPDATE_BY_ADMIN, auditRequest);
 
     logger.exit(MessageCode.PROFILE_UPDATE_SUCCESS);
@@ -174,15 +193,17 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     // Bad request and errors handled in RestResponseErrorHandler class
     UserResponse authRegistrationResponse =
-        registerUserInAuthServer(setUpAccountRequest, auditRequest);
+        registerUserInAuthServer(setUpAccountRequest, auditRequest, optUsers.get().getIdpUser());
 
     UserRegAdminEntity userRegAdminUser = optUsers.get();
     userRegAdminUser.setUrAdminAuthId(authRegistrationResponse.getUserId());
     userRegAdminUser.setFirstName(setUpAccountRequest.getFirstName());
     userRegAdminUser.setLastName(setUpAccountRequest.getLastName());
+    userRegAdminUser.setPhoneNumber(setUpAccountRequest.getPhoneNum());
     userRegAdminUser.setStatus(UserStatus.ACTIVE.getValue());
     userRegAdminUser.setSecurityCode(null);
     userRegAdminUser.setSecurityCodeExpireDate(null);
+    userRegAdminUser.setIdpUser(optUsers.get().getIdpUser());
     userRegAdminUser = userRegAdminRepository.saveAndFlush(userRegAdminUser);
 
     SetUpAccountResponse setUpAccountResponse =
@@ -200,7 +221,7 @@ public class UserProfileServiceImpl implements UserProfileService {
   }
 
   private UserResponse registerUserInAuthServer(
-      SetUpAccountRequest setUpAccountRequest, AuditLogEventRequest auditRequest) {
+      SetUpAccountRequest setUpAccountRequest, AuditLogEventRequest auditRequest, boolean idpUser) {
     logger.entry("registerUserInAuthServer()");
 
     AuthUserRequest userRequest =
@@ -208,7 +229,9 @@ public class UserProfileServiceImpl implements UserProfileService {
             "Participant Manager",
             setUpAccountRequest.getEmail(),
             setUpAccountRequest.getPassword(),
-            UserAccountStatus.ACTIVE.getStatus());
+            UserAccountStatus.ACTIVE.getStatus(),
+            idpUser,
+            setUpAccountRequest.getPhoneNum());
 
     HttpHeaders headers = new HttpHeaders();
     headers.add("Authorization", "Bearer " + oauthService.getAccessToken());

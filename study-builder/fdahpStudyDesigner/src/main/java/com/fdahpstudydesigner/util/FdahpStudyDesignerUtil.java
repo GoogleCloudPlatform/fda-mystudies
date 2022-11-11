@@ -91,6 +91,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class FdahpStudyDesignerUtil {
 
   /* Read Properties file */
+  private static Map<String, String> appProperties = null;
+
   private static XLogger logger = XLoggerFactory.getXLogger(FdahpStudyDesignerUtil.class.getName());
 
   protected static final Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
@@ -267,6 +269,12 @@ public class FdahpStudyDesignerUtil {
   public static Map<String, String> getAppProperties() {
     HashMap hm = new HashMap<String, String>();
     logger.entry("begin getAppProperties() :: Properties Initialization");
+
+    if (appProperties != null && !appProperties.isEmpty()) {
+      return appProperties;
+    }
+    appProperties = new HashMap<>();
+
     Enumeration<String> keys = null;
     Enumeration<Object> objectKeys = null;
     Resource resource = null;
@@ -741,7 +749,9 @@ public class FdahpStudyDesignerUtil {
         }
       } else {
         if (validCharacters.equalsIgnoreCase(FdahpStudyDesignerConstants.ALLCHARACTERS)) {
+
           if (StringUtils.isNotEmpty(exceptCharacters)) {
+
             String[] exceptChar = exceptCharacters.split("");
             StringBuilder except = new StringBuilder();
             String escapeSplChar = "";
@@ -1118,7 +1128,9 @@ public class FdahpStudyDesignerUtil {
 
     String timestampInString = inputDate + " " + inputTime;
     try {
+
       System.out.println("timestamp of notification " + timestampInString);
+
       return timestampInString;
     } catch (Exception e) {
       logger.error("Exception in getTimeStamp(): " + e);
@@ -1166,6 +1178,29 @@ public class FdahpStudyDesignerUtil {
     }
 
     try {
+
+      Storage storage = StorageOptions.getDefaultInstance().getService();
+      Blob blob = storage.get(BlobId.of(configMap.get("cloud.bucket.name"), oldFilePath));
+
+      if (blob != null) {
+        blob.copyTo(configMap.get("cloud.bucket.name"), newFilePath);
+        // Delete the original blob now that we've copied to where we want it, finishing the "move"
+        // operation
+        if (delete) {
+          blob.delete();
+        }
+      }
+
+    } catch (Exception e) {
+      logger.error("Save Image in cloud storage failed", e);
+    }
+  }
+
+  /*public static String getSignedUrlForExportedStudy(String filePath, int signedUrlDurationInHours) {
+    try {
+      BlobInfo blobInfo =
+          BlobInfo.newBuilder(configMap.get("cloud.bucket.name.export.studies"), filePath).build();
+
       Storage storage = StorageOptions.getDefaultInstance().getService();
       Blob blob = storage.get(BlobId.of(configMap.get("cloud.bucket.name"), oldFilePath));
 
@@ -1181,7 +1216,7 @@ public class FdahpStudyDesignerUtil {
     } catch (Exception e) {
       //   logger.error("Save Image in cloud storage failed", e);
     }
-  }
+  }*/
 
   public static String getSignedUrlForExportedStudy(String filePath, int signedUrlDurationInHours) {
     try {
@@ -1227,11 +1262,13 @@ public class FdahpStudyDesignerUtil {
             .setContentType("application/zip")
             .build();
     try {
+
       Storage storage =
           StorageOptions.newBuilder()
               .setProjectId(configMap.get("dataProjectId"))
               .build()
               .getService();
+
       storage.create(blobInfo, Files.readAllBytes(Paths.get(filePath)));
 
     } catch (Exception e) {
@@ -1368,7 +1405,9 @@ public class FdahpStudyDesignerUtil {
         }
       }
     } catch (Exception e) {
+
       //   logger.error("Unable to getImageResources", e);
+
     }
     return null;
   }

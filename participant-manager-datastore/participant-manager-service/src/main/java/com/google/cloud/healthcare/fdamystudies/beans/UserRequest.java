@@ -48,6 +48,8 @@ public class UserRequest {
 
   @NotNull private boolean superAdmin;
 
+  private boolean idpUser = false;
+
   private List<UserAppPermissionRequest> apps;
 
   private String id;
@@ -55,4 +57,6 @@ public class UserRequest {
   private String superAdminUserId;
 
   private String signedInUserId;
+
+  @ToString.Exclude private String phoneNum;
 }

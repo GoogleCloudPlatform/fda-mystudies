@@ -21,6 +21,12 @@
 .bootstrap-select.btn-group .dropdown-toggle .filter-option {
     text-transform: inherit; !important
 	}
+
+	
+.help-block .list-unstyled {
+      width: max-content !important;
+}
+
 </style>
 
 <div class="changeContent">
@@ -33,6 +39,7 @@
   <input type="hidden" value="" id="buttonText" name="buttonText">
   <input type="hidden" value="${actionPage}" id="actionPage" name="actionPage">
   <input type="hidden" value="${currentPage}" id="currentPageId" name="currentPage">
+  <input type="hidden" name="activeTaskCreated" id="activeTaskCreated" value="${activeTaskBo.activeTaskCreated}">
   <div class="pt-lg">
     <div class="gray-xs-f mb-sm">Activity short title or key
       <small>(50 characters max)</small>
@@ -53,7 +60,9 @@
         <div id="activityvalidate" class="validateActiveTask with-errors red-txt"></div>
         <div class="help-block with-errors red-txt"></div>
       </div>
+
       <div class="clearfix"></div>
+
   </div>
   <div>
     <div class="gray-xs-f mb-sm">Display name

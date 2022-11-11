@@ -4,6 +4,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <style>
+
+    .help-block .list-unstyled {
+      width: max-content !important;
+    }
+
+
 	.bootstrap-select.btn-group .dropdown-toggle .filter-option {
 	    text-transform: inherit; !important
 		}
@@ -28,6 +34,7 @@
          name="actionPage">
   <input type="hidden" value="${currentPage}" id="currentPageId"
          name="currentPage">
+         <input type="hidden" name="activeTaskCreated" id="activeTaskCreated" value="${activeTaskBo.activeTaskCreated}">
   <div class="pt-lg">
     <div class="gray-xs-f mb-sm">
       Activity short title or key
@@ -48,7 +55,9 @@
                maxlength="50" required data-error="Please fill out this field" />
         <div class="help-block with-errors red-txt"></div>
       </div>
+
       <div class="clearfix"></div>
+
   </div>
   <div>
     <div class="gray-xs-f mb-sm">

@@ -4,6 +4,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ page import = "java.util.ResourceBundle" %>
 
 <style>
 .disabled {
@@ -65,6 +66,7 @@ input::-webkit-calendar-picker-indicator {
   display: none !important;
 }
 
+
 .dropdown-menu>.inner { 
 overflow-y: hidden !important;
 }
@@ -76,7 +78,21 @@ overflow-y: hidden !important;
     min-height: 100% !important;
     height: 100% !important;
 }
+
+.myarrow:after {
+  content: "";
+  width: 0;
+  position: absolute;
+  top: 45%;
+  right: 28px;
+  border-width: 4px 4px;
+  border-style: solid;
+  pointer-events: none;
+  border-color: #999 transparent transparent transparent;
+}
+
 </style>
+
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mt-md mb-md">
 
@@ -103,7 +119,9 @@ overflow-y: hidden !important;
       <div class="dis-line pull-right">
         <div class="form-group mb-none">
           <c:if
-              test="${not empty userBO.userPassword && userBO.enabled && userBO.emailChanged eq '0'}">
+
+              test="${(userBO.idpUser eq true || not empty userBO.userPassword) && userBO.enabled && userBO.emailChanged  eq '0'}">
+
             <div class="dis-inline mt-sm">
               <span class="stat">
                 <span class="black-sm-f">Account status:
@@ -115,7 +133,7 @@ overflow-y: hidden !important;
             </div>
           </c:if>
           <c:if
-              test="${not empty userBO.userPassword &&  not userBO.enabled}">
+              test="${(userBO.idpUser eq true || not empty userBO.userPassword) &&  not userBO.enabled}">
             <div class="dis-inline mt-sm">
               <span class="black-sm-f">Account status:
                 <span
@@ -124,7 +142,7 @@ overflow-y: hidden !important;
               </span>
             </div>
           </c:if>
-          <c:if test="${empty userBO.userPassword}">
+          <c:if test="${userBO.idpUser eq false && empty userBO.userPassword}">
             <div class="dis-inline mt-sm">
               <span class="black-sm-f">Account status:
                 <span
@@ -150,7 +168,9 @@ overflow-y: hidden !important;
 	      	 </c:choose> 
             </div>
           </c:if>
-          <c:if test="${userBO.emailChanged eq '1'}">
+
+          <c:if test="${userBO.emailChanged  eq '1'}">
+
             <div class="dis-inline mt-sm">
               <span class="black-sm-f">Account status:
                 <span
@@ -182,11 +202,12 @@ overflow-y: hidden !important;
   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none">
     <div class="white-bg box-space">
       <c:if
-          test="${actionPage eq 'EDIT_PAGE' && not empty userBO.userPassword && userBO.emailChanged eq '0'}">
+
+          test="${actionPage eq 'EDIT_PAGE' && (userBO.idpUser eq false && not empty userBO.userPassword) && userBO.emailChanged  eq '0'}">
+
         <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN')}">
           <div class="gray-xs-f text-weight-semibold pull-right">
-            <button type="button" class="btn btn-default gray-btn"
-                    id="enforcePasswordId">Enforce password change
+            <button type="button" class="btn btn-default gray-btn"id="enforcePasswordId">Enforce password change
             </button>
           </div>
         </c:if>
@@ -204,7 +225,9 @@ overflow-y: hidden !important;
             </div>
             <div class="form-group">
               <input autofocus="autofocus" type="text" class="form-control"
-                     name="firstName" value="${fn:escapeXml(userBO.firstName)}"
+
+                     id="firstName" name="firstName" value="${fn:escapeXml(userBO.firstName)}"
+
                      maxlength="50" required data-error="Please fill out this field"
                      <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if> />
               <div class="help-block with-errors red-txt"></div>
@@ -217,7 +240,9 @@ overflow-y: hidden !important;
               <span class="requiredStar"> *</span>
             </div>
             <div class="form-group">
-              <input type="text" class="form-control" name="lastName"
+
+              <input type="text" class="form-control" id="lastName" name="lastName"
+
                      value="${fn:escapeXml(userBO.lastName)}" maxlength="50" required data-error="Please fill out this field"
                      <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if> />
               <div class="help-block with-errors red-txt"></div>
@@ -236,28 +261,55 @@ overflow-y: hidden !important;
               </c:if>
               <span class="requiredStar"> *</span>
             </div>
-            <div class="form-group myarrow">
+
+            <c:set var="idpEnabled" value="${idpEnabled}"/>
+            <c:set var="mfaEnabled" value="${mfaEnabled}"/>
+            <c:if test="${idpEnabled eq false }">
+            <div class="form-group ">
               <input type="text" class="form-control" id="emailId"
                      name="userEmail" value="${userBO.userEmail}"
-                     oldVal="${userBO.userEmail}"
+                     oldVal="${userBO.userEmail}" 
                      pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,24}$"
                      data-pattern-error="Email address is invalid" data-error="Please fill out this field" maxlength="100"
                      required
-                     <c:if
-                         test="${actionPage eq 'VIEW_PAGE' || (empty userBO.userPassword && not empty userBO)}">disabled</c:if> />
+                      <c:if
+                         test="${actionPage eq 'VIEW_PAGE' || (empty userBO.userPassword && not empty userBO) || userBO.idpUser eq true}">disabled</c:if> />
+
               <div class="help-block with-errors red-txt"></div>
             </div>
+            </c:if>
+            <c:if test="${idpEnabled eq true }">
+		     <div class="form-group myarrow">
+		         <input type="text" class="form-control" id="emailId" list="mine"
+                     name="userEmail" value="${userBO.userEmail}"
+                     oldVal="${userBO.userEmail}" 
+                     pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,24}$"
+                     data-pattern-error="Email address is invalid" data-error="Please fill out this field" maxlength="100"
+                     required
+                     <c:if test="${actionPage eq 'VIEW_PAGE' || (empty userBO.userPassword && not empty userBO) || userBO.idpUser eq true}">disabled</c:if>/>
+                         <datalist id="mine">
+					   <c:forEach items="${adminList}" var="adminList">
+                        <option value="${adminList}">${adminList}</option>
+                      </c:forEach>
+							</datalist>
+                      <div class="help-block with-errors red-txt"></div>
+		       </div>
+		      </c:if>
           </div>
+          
+          
           <!-- form- input-->
           <div class="col-md-6 pr-none">
             <div class="gray-xs-f mb-xs">
-              Phone (XXX - XXX - XXXX)
+               Phone (+X XXX XXX XXXX) 
+              <c:if test="${mfaEnabled  eq true}"><span class="requiredStar"> *</span></c:if>
             </div>
             <div class="form-group">
-              <input type="text" class="form-control phoneMask"
-                     name="phoneNumber" value="${userBO.phoneNumber}"
-                     data-minlength="12" maxlength="12" 
-                     <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if> />
+              <input type="text" class="form-control" id="phoneNumber"
+                     name="phoneNumber" value="${userBO.phoneNumber}" data-pattern-error="Phone number is invalid" data-error="Please fill out this field"
+                     data-minlength="12" maxlength="16" pattern="[+][0-9\s]{11,15}"
+                     <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if> 
+                     <c:if test="${mfaEnabled eq true}">required</c:if> />
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
@@ -271,7 +323,7 @@ overflow-y: hidden !important;
             <div class="blue-md-f mt-lg mb-md">
               Role
               <span class="requiredStar"> *</span>
-              <span data-toggle="tooltip" data-placement="top" title="" class="filled-tooltip" data-original-title="Superadmin users have application-wide permissions. They can manage admins of the Study Builder and in addition, can manage app-level notifications and studies as well. Non-superadmins or 'study admins' will have permissions-based access to specific sections and studies only." aria-describedby="tooltip739612"></span>
+              <span data-toggle="tooltip" data-placement="top" title="" class="filled-tooltip" data-original-title="Superadmin users have application-wide permissions. They can manage users of the Study Builder and in addition, can manage app-level notifications and studies as well. Non-superadmins or 'study admins' will have permissions-based access to specific sections and studies only." aria-describedby="tooltip739612"></span>
             </div>
             <div class="form-group">
               <select id="roleId"
@@ -295,13 +347,21 @@ overflow-y: hidden !important;
                 <c:if
                     test="${actionPage eq 'EDIT_PAGE' || actionPage eq 'VIEW_PAGE'}">
                   <span class="ml-xs">&nbsp; <label
-                      class="switch bg-transparent mt-xs"> <input
-                      type="checkbox" class="switch-input"
-                      value="${userBO.enabled}" id="change${userBO.userId}"
+                      class="switch bg-transparent mt-xs"
+                      data-toggle="tooltip"  data-placement="top" 
+                      <c:if test="${not empty idpDisableUser && idpDisableUser eq 'Y'}">title="This user may be deleted from the organization directory or user whitelist for the Study Builder. Please contact your IT admin to have them added back and try again."
+		              </c:if>> <input
+                      type="checkbox" class="switch-input"  
+                      value="${userBO.enabled}" id="change${userBO.userId}" 
+                      
+		            	
                       <c:if test="${userBO.enabled}">checked</c:if>
                       <c:if
-                          test="${empty userBO.userPassword || actionPage eq 'VIEW_PAGE' || userBO.emailChanged eq '1'}">disabled</c:if>
+
+                          test="${(userBO.idpUser eq false && empty userBO.userPassword) || actionPage eq 'VIEW_PAGE' || userBO.emailChanged  eq '1' || (not empty idpDisableUser && idpDisableUser eq 'Y')}">disabled</c:if>
                       onclick="activateOrDeactivateUser('${userBO.userId}');">
+                      
+
                     <span class="switch-label bg-transparent" data-on="On"
                           data-off="Off"></span>
                     <span class="switch-handle"></span>
@@ -351,8 +411,10 @@ overflow-y: hidden !important;
                 <select
                     class="selectpicker col-md-6 p-none changeView3 <c:if test="${actionPage eq 'VIEW_PAGE'}">linkDis</c:if>"
                     title="- Select and add apps -" multiple id="multipleApps" >
+
                      <c:if test="${empty apps}">
                      <option value="" selected id="">No app records found
+
                      </option>
                       </c:if>
                   <c:forEach items="${apps}" var="app">
@@ -413,7 +475,7 @@ overflow-y: hidden !important;
             </div>
           </div>
         </div>
-      
+
    <!--  Manage studies div  -->     
           <!-- Gray Widget-->
         <div class="edit-user-list-widget mt-xxlg">
@@ -497,6 +559,7 @@ overflow-y: hidden !important;
             </div>
           </div>
         </div>
+        
       </div>
       </div>
     </div>
@@ -519,11 +582,14 @@ overflow-y: hidden !important;
             <div class="dis-line form-group mb-none">
               <button type="button" class="btn btn-primary blue-btn addUpdate">Update</button>
             </div>
+
             </c:if>
+
           <c:if test="${actionPage eq 'EDIT_PAGE' &&  not userBO.enabled}">  
             <div class="dis-line">
               <button type="button" class="btn btn-primary red-btn deleteUser" id = "deleteUser" onclick="validateAdminStatus(this);">Delete admin</button>
             </div>
+
           </c:if>
         </div>
       </div>
@@ -534,6 +600,7 @@ overflow-y: hidden !important;
 <form:form action="/studybuilder/adminUsersView/getUserList.do"
            id="backOrCancelBtnForm" name="backOrCancelBtnForm" method="post">
 </form:form>
+
 <script>
 
 
@@ -594,7 +661,9 @@ overflow-y: hidden !important;
      $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
      	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
    }
+
     </c:if> 
+
 
     <c:if test="${actionPage eq 'EDIT_PAGE' || actionPage eq 'VIEW_PAGE'}">
     if($('#roleId').find('option:selected').text() == 'Superadmin' ){
@@ -604,17 +673,16 @@ overflow-y: hidden !important;
     }
     </c:if>
 
-   
-    
+
     $('#roleId').on('change', function () {
       var element = $(this).find('option:selected').text();
- 	 if(element != 'Superadmin' ){
-    	 $('#enforcePasswordId').hide(); 
-    	 }else $('#enforcePasswordId').show(); 
+    	 if(element != 'Superadmin' ){
+        	 $('#enforcePasswordId').hide(); 
+        	 }else $('#enforcePasswordId').show(); 
       setStudySettingByRole(element);
     });
 
-   
+
     var countCall = 0;
     $(window).on('load', function () {
       countCall = 1;
@@ -841,10 +909,12 @@ overflow-y: hidden !important;
     $('#inlineCheckbox6').on('click', function () {
         if ($(this).prop("checked") == true) {
           $(this).val(1);
+
            } else if ($(this).prop("checked") == false) {
           $(this).val('');
         }
           
+
       });
     
     // Adding selected study items
@@ -858,7 +928,9 @@ overflow-y: hidden !important;
           $(this).remove();
         }
       });
+
 	    if ($('#inlineCheckbox4').prop("checked") == true) {
+
       $('#multiple :selected').each(function (i, sel) {
         var selVal = $(sel).val();
         var selTxt = DOMPurify.sanitize($(sel).text());
@@ -920,12 +992,14 @@ overflow-y: hidden !important;
           $(this).remove();
         }
       });
+
 	 if ($('#inlineCheckboxApp').prop("checked") == true) {
 		
       $('#multipleApps :selected').each(function (i, sel) {
         var selVal = $(sel).val();
         var selTxt = DOMPurify.sanitize($(sel).text());
         var existingAppDiv = "<div class='selApp app-selected-item' id='app" + selVal + "'>"
+
             + "<input type='hidden' class='appCls' id='" + selVal + "' name='' value='" + selVal +"'"
             + "appTxt='"+selTxt+"'>"
             + "<span class='mr-md cls cur-pointer'><img src='/studybuilder/images/icons/close.png' onclick='delApp(\""
@@ -946,10 +1020,12 @@ overflow-y: hidden !important;
 
         $('.app-selected').append(existingAppDiv);
       });
+
            } else if ($('#inlineCheckboxApp').prop("checked") == false) {
       			$(this).val('');
       		}
       
+
       
      
       $(".selectpicker").selectpicker('deselectAll');
@@ -989,15 +1065,37 @@ overflow-y: hidden !important;
     $('.addUpdate').on('click', function () {
     	var enforce=0;
       var email = $('#emailId').val();
+      var roleId = $('#roleId').val();
+      var lastName = $('#lastName').val();
+      var firstName = $('#firstName').val();
+      var phoneNumber = $('#phoneNumber').val();
+      
       var oldEmail = $('#emailId').attr('oldVal');
       var isEmail;
       var regEX = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/;
       isEmail = regEX.test(email);
+      var isphone;
+      var regexPh=/[+][0-9\s]{11,15}/;
+      isphone=regexPh.test(phoneNumber);
+      
       if (isEmail && ('' === oldEmail || ('' !== oldEmail && oldEmail !== email))) {
         var csrfDetcsrfParamName = $('#csrfDet').attr('csrfParamName');
         var csrfToken = $('#csrfDet').attr('csrfToken');
         $('#emailId').parent().find(".help-block").append($("<ul <li></li></ul>").attr("class","list-unstyled"));
-        if (email !== '') {
+        if ('' !== email && '' !== roleId  && null !== roleId && '' !== lastName  && 
+        		'' !== firstName ) {
+        const adminList = '${adminList}' 
+        var element = $("#roleId option:selected").text();
+        if(!adminList.includes(email) && adminList != null && ${idpEnabled}){
+        if(element == "Superadmin")
+          var msg = "You are inviting a person who is not listed in the organizational directory, to be a Study Builder superadmin. Are you sure you wish to proceed?";
+        else
+    	  var msg = "You are inviting a person who is not listed in the organizational directory to be a Study Builder admin. Are you sure you wish to proceed?";
+     	bootbox.confirm({
+		closeButton: false,
+		message: msg,
+		callback: function (result) {
+        if (result) {
           $("body").addClass("loading");
           $.ajax({
             url: "/studybuilder/isEmailValid.do?" + csrfDetcsrfParamName + "=" + csrfToken,
@@ -1023,9 +1121,42 @@ overflow-y: hidden !important;
                 $('#emailId').parent().find(".help-block").empty();
                 $('#emailId').parent().find(".help-block").append(
                 	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(email + " already exists"));
-              }
-            }
-          });
+	              }
+	            }
+	          });
+	        }
+            } 
+     	});
+   		}else {
+           	$("body").addClass("loading");
+               $.ajax({
+                 url: "/studybuilder/isEmailValid.do?" + csrfDetcsrfParamName + "=" + csrfToken,
+                 type: "POST",
+                 datatype: "json",
+                 global: false,
+                 data: {
+                   email: email,
+                 },
+                 success: function getResponse(data) {
+                   var message = data.message;
+                   if ('SUCCESS' !== message) {
+                     $('#emailId').validator('validate');
+                     $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
+                     $('#emailId').parent().find(".help-block").empty();
+                     saveUser();
+                     enforce=enforce+1;
+                   } else {
+                     $("body").removeClass("loading");
+                     isFromValid($('.addUpdate').parents('form'));
+                     $('#emailId').val('');
+                     $('#emailId').parent().addClass("has-danger").addClass("has-error");
+                     $('#emailId').parent().find(".help-block").empty();
+                     $('#emailId').parent().find(".help-block").append(
+                     	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(email + " already exists"));
+                   }
+                 }
+               });
+           }
         }
       } else {
         $('#emailId').validator('validate');
@@ -1034,9 +1165,11 @@ overflow-y: hidden !important;
         saveUser();
         enforce=enforce+1;
       }
-      if(enforce==3){
-     	 $('#enforcePasswordId').show();
-     }
+
+     if(enforce==3){
+    	 $('#enforcePasswordId').show();
+    }
+
     });
 
     
@@ -1198,8 +1331,10 @@ overflow-y: hidden !important;
         }
   }else{
 	  addUser();
+
   }
   }
+
 
   function setStudySettingByRole(element) {
     if (element == 'Org-level Admin') {
@@ -1220,6 +1355,7 @@ overflow-y: hidden !important;
     } else {
       $('#inlineCheckbox1').attr('disabled', false);
       if($('#inlineCheck6').prop('checked', false)){
+
       	   $('.dis-checkbox-app').removeClass('disabled', 'disabled');
       	  }
        	  else {
@@ -1231,6 +1367,7 @@ overflow-y: hidden !important;
        		else {
        		$('.dis-checkbox-st').addClass('disabled', 'disabled');
       		 }
+
     }
 
   }
@@ -1270,6 +1407,7 @@ overflow-y: hidden !important;
           	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
         }
        
+
         if(  selected_app == tot_app){
         	  $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
               $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
@@ -1288,7 +1426,7 @@ overflow-y: hidden !important;
 	    $('#alertMsg').show('10000');
 	    setTimeout(hideDisplayMessage, 10000);
 	  }
-  
+
   //funtion for validateAdminStatus for deleting
   function validateAdminStatus(obj) {
 	    var buttonText = obj.id;
@@ -1314,7 +1452,9 @@ overflow-y: hidden !important;
 	                 }
 	               });}}}
   
+
 function deleteUserAdmin(){
+
 	     var form = document.createElement('form');
 	      form.method = 'post';
 	      var input = document.createElement('input');
@@ -1322,6 +1462,7 @@ function deleteUserAdmin(){
 	      input.name = 'userId';
 	      input.value = '${userBO.userId}';
 	      form.appendChild(input);
+
 	      input = document.createElement('input');
 	      input.type = 'hidden';
 	      input.name = '${_csrf.parameterName}';
@@ -1331,6 +1472,9 @@ function deleteUserAdmin(){
 	     document.body.appendChild(form);
 	     form.submit();
 	  }
+
+	      //--------------
+
   function addUser(){
 	  var selectedStudies = "";
 	    var permissionValues = "";
@@ -1380,5 +1524,60 @@ function deleteUserAdmin(){
 	        $("body").removeClass("loading");
 	    }
   }
+
+	      
+	      
+	      
+ 
+</script>
+
+<script>
+function dlRestoreValue(i) {
+debugger
+    let t = $('#' + i);
+    if (t.val() === '') {
+
+        if (t.attr('org-placeholder') !== t.attr('placeholder')) {
+            t.val(t.attr('placeholder'));
+        }
+
+        t.attr('placeholder', '');
+        if (t.val() === '') {
+            t.attr('placeholder', t.attr('org-placeholder'));
+        }
+      
+    }
+
+}
+
+function dlShowAllOnArrowClick(i) {
+
+    $('#' + i)
+        .on('click', function(e) {
+
+            let t = $(this);
+            if ((t.width() - (e.clientX - t.offset().left)) < 14) {
+                if (t.val() !== "") {
+                    t.attr('placeholder', t.val());
+                    t.val('');
+                }
+            } else {
+                dlRestoreValue(i)
+            }
+        })
+
+    .on('mouseleave', function() {
+        dlRestoreValue(this.id);
+    })
+
+
+    .on('mouseenter', function() {
+        if (!$(this).is("[org-placeholder]")) $(this).attr('org-placeholder', $(this).attr('placeholder'));
+    })
+
+}
+
+
+dlShowAllOnArrowClick('favcolors');
 </script>
 

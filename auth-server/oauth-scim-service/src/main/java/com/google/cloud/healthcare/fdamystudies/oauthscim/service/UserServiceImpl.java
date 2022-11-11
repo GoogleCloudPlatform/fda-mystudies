@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -15,6 +15,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjec
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ACCOUNT_LOCKED_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ACCOUNT_LOCK_EMAIL_TIMESTAMP;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APPLICATION_JSON;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.EXPIRE_TIMESTAMP;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.HASH;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_ATTEMPTS;
@@ -47,6 +48,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.AuthUserUpdate;
 import com.google.cloud.healthcare.fdamystudies.beans.AuthenticationResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordResponse;
@@ -73,6 +75,13 @@ import com.google.cloud.healthcare.fdamystudies.oauthscim.mapper.UserMapper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.repository.UserRepository;
 import com.google.cloud.healthcare.fdamystudies.service.EmailService;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.UserRecord;
+import com.google.firebase.auth.UserRecord.UpdateRequest;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -80,7 +89,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,6 +122,11 @@ public class UserServiceImpl implements UserService {
 
   @Autowired private TextEncryptor encryptor;
 
+  static {
+    // Initializing the Firebase SDK using default credentials
+    FirebaseApp.initializeApp();
+  }
+
   @Override
   @Transactional
   public UserResponse createUser(UserRequest userRequest) {
@@ -127,8 +144,35 @@ public class UserServiceImpl implements UserService {
     UserEntity userEntity = UserMapper.fromUserRequest(userRequest);
     ObjectNode userInfo = getObjectNode();
 
-    setPasswordAndPasswordHistoryFields(
-        userRequest.getPassword(), userInfo, UserAccountStatus.PENDING_CONFIRMATION.getStatus());
+    if (userRequest.getIdpUser() && appConfig.isIdpEnabled()) {
+      UserRecord userRecord;
+      try {
+        userRecord = FirebaseAuth.getInstance().getUserByEmail(userRequest.getEmail());
+
+        // See the UserRecord reference doc for the contents of userRecord.
+        logger.info("Successfully fetched IDP user data: ", userRecord.getEmail());
+        // IDP user password update
+        UpdateRequest updateRequest =
+            new UpdateRequest(userRecord.getUid())
+                .setEmailVerified(true)
+                .setPassword(userRequest.getPassword());
+
+        UserRecord userRecordUpdated = FirebaseAuth.getInstance().updateUser(updateRequest);
+        logger.info("Successfully updated IDP user data: ", userRecordUpdated.getEmail());
+
+        userEntity.setIdpUser(true);
+        userEntity.setPhoneNumber(
+            StringUtils.isNotEmpty(userRequest.getPhoneNumber())
+                ? userRequest.getPhoneNumber().toString()
+                : "");
+      } catch (FirebaseAuthException e) {
+        logger.error("UserServiceImpl.createUser firebase error: ", e);
+      }
+    } else {
+      setPasswordAndPasswordHistoryFields(
+          userRequest.getPassword(), userInfo, UserAccountStatus.PENDING_CONFIRMATION.getStatus());
+      userEntity.setIdpUser(false);
+    }
 
     userEntity.setUserInfo(userInfo);
     userEntity = repository.saveAndFlush(userEntity);
@@ -226,6 +270,10 @@ public class UserServiceImpl implements UserService {
       }
     }
 
+    if (userEntity.getIdpUser() && appConfig.isIdpEnabled()) {
+      throw new ErrorCodeException(ErrorCode.IDP_USER_ERROR);
+    }
+
     String tempPassword = PasswordGenerator.generate(TEMP_PASSWORD_LENGTH);
     EmailResponse emailResponse =
         sendPasswordResetEmail(
@@ -288,6 +336,11 @@ public class UserServiceImpl implements UserService {
         PlatformComponent.MOBILE_APPS.equals(platformComponent)
             ? fromMobileEmail
             : appConfig.getFromEmail();
+
+    logger.warn(String.format("'%s' fromEmail value for password reset email", fromEmail));
+    logger.warn(String.format("'%s' contactEmail value for password reset email", contactEmail));
+    logger.warn(
+        String.format("'%s' platformComponent value for password reset email", platformComponent));
 
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("appName", appName);
@@ -396,6 +449,46 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  public Boolean isIDPUser(HttpServletResponse response, String email)
+      throws IOException, JSONException {
+    logger.entry("begin isIDPUser(response,email)");
+    JSONObject jsonobject = new JSONObject();
+    PrintWriter out = null;
+    Boolean idpUser = false;
+
+    Optional<UserEntity> optUserEntity =
+        repository.findByAppIdAndEmail("Participant Manager", email);
+
+    if (optUserEntity.isPresent()) {
+      UserEntity userEntity = optUserEntity.get();
+
+      jsonobject.put(
+          "isIdpUser",
+          StringUtils.isNotEmpty(userEntity.getIdpUser().toString())
+              ? userEntity.getIdpUser().toString()
+              : "false");
+      jsonobject.put(
+          "phoneNumber",
+          StringUtils.isNotEmpty(userEntity.getPhoneNumber())
+              ? userEntity.getPhoneNumber().toString()
+              : "");
+      idpUser = userEntity.getIdpUser();
+
+    } else {
+
+      jsonobject.put("isIdpUser", "false");
+      jsonobject.put("phoneNumber", "");
+    }
+
+    response.setContentType(APPLICATION_JSON);
+    out = response.getWriter();
+    out.print(jsonobject);
+
+    logger.exit("exit isIDPUser(response,email)");
+    return idpUser;
+  }
+
+  @Override
   @Transactional(noRollbackFor = ErrorCodeException.class)
   public AuthenticationResponse authenticate(UserRequest user, AuditLogEventRequest auditRequest)
       throws JsonProcessingException {
@@ -447,6 +540,34 @@ public class UserServiceImpl implements UserService {
     return updateInvalidLoginAttempts(userEntity, userInfo, auditRequest, user);
   }
 
+  @Override
+  @Transactional(noRollbackFor = ErrorCodeException.class)
+  public AuthenticationResponse authenticateIDPUser(
+      UserRequest user, AuditLogEventRequest auditRequest) throws JsonProcessingException {
+    logger.entry("begin authenticate(user)");
+    Optional<UserEntity> optUserEntity =
+        repository.findByAppIdAndEmail(user.getAppId(), user.getEmail());
+
+    if (!optUserEntity.isPresent()) {
+      auditHelper.logEvent(SIGNIN_FAILED_UNREGISTERED_USER, auditRequest);
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
+    }
+
+    UserEntity userEntity = optUserEntity.get();
+
+    UserAccountStatus accountStatus = UserAccountStatus.valueOf(userEntity.getStatus());
+    if (accountStatus.equals(UserAccountStatus.DEACTIVATED)) {
+      throw new ErrorCodeException(ErrorCode.ACCOUNT_DEACTIVATED);
+    }
+
+    AuthenticationResponse authenticationResponse = new AuthenticationResponse();
+    authenticationResponse.setUserId(userEntity.getUserId());
+    authenticationResponse.setAccountStatus(userEntity.getStatus());
+    authenticationResponse.setHttpStatusCode(HttpStatus.OK.value());
+
+    return authenticationResponse;
+  }
+
   private EmailResponse sendAccountLockedEmail(
       UserEntity user,
       String tempPassword,
@@ -470,7 +591,7 @@ public class UserServiceImpl implements UserService {
             ? appConfig.getMailAccountLockedBodyForMobileApp()
             : appConfig.getMailAccountLockedBody();
 
-    String supportEmail =
+    String supportEMail =
         PlatformComponent.MOBILE_APPS.equals(platformComponent)
             ? userRequest.getSupportEmail()
             : appConfig.getContactEmail();
@@ -481,7 +602,9 @@ public class UserServiceImpl implements UserService {
 
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("appName", userRequest.getAppName());
-    templateArgs.put("contactEmail", supportEmail);
+
+    templateArgs.put("contactEmail", supportEMail);
+
     templateArgs.put("tempPassword", tempPassword);
     EmailRequest emailRequest =
         new EmailRequest(
@@ -770,5 +893,18 @@ public class UserServiceImpl implements UserService {
   @Transactional(readOnly = true)
   public Optional<UserEntity> findByUserId(String userId) {
     return repository.findByUserId(userId);
+  }
+
+  @Override
+  public void updateUserAdmin(AuthUserUpdate authUserUpdate) {
+    UserEntity userEntity = null;
+    Optional<UserEntity> optUserEntity = repository.findByUserId(authUserUpdate.getUserId());
+
+    if (!optUserEntity.isPresent()) {
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
+    }
+    userEntity = optUserEntity.get();
+    userEntity.setPhoneNumber(authUserUpdate.getPhoneNumber());
+    repository.saveAndFlush(userEntity);
   }
 }

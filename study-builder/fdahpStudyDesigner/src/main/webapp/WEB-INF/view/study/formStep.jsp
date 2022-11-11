@@ -211,7 +211,9 @@
             <div class="form-group mb-none col-md-4 p-none">
               <input type="text" class="form-control"
                      placeholder="Eg: I have more medications to add"
-                     name="repeatableText" id="repeatableText"
+
+                   name="repeatableText" id="repeatableText" data-error="Please fill out this field" 
+
                      value="${fn:escapeXml(questionnairesStepsBo.repeatableText)}"
                      <c:if test="${questionnairesStepsBo.repeatable ne 'Yes'}">disabled</c:if>
                      maxlength="30"
