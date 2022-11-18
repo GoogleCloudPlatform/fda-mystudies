@@ -32,7 +32,7 @@
     top: 50% !important;
     left: 50% !important;
 
-    transform: translate(-40%, -40%); 
+    transform: translate(-48%, -20%); 
 
 }
 
