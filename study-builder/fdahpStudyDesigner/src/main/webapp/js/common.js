@@ -168,13 +168,13 @@ $(document)
                     if (charCode == 16)
                       isShift = false;
                     if (!isShift && $(this).val()) {
-                      var regularExpression = /^[ A-Za-z0-9!\$&\*\(\)_+|:"?,.\;'\[\]=\-@]*$/;
+                      var regularExpression = /^[ A-Za-z0-9!\$%&\*\(\)_+|:"?,.\/;'\[\]=\-><@]*$/;
                       if (!regularExpression.test($(this)
                           .val())) {
                         var newVal = $(this)
                             .val()
                             .replace(
-                                /[^ A-Za-z0-9!\$&\*\(\)_+|:"?,.\;'\[\]=\-@]/g,
+                                /[^ A-Za-z0-9!\$%&\*\(\)_+|:"?,.\/;'\[\]=\-><@]/g,
                                 '');
                         e.preventDefault();
                         $(this).val(newVal);
