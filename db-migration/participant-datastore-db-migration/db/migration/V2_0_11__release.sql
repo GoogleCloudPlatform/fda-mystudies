@@ -6,7 +6,7 @@ ALTER TABLE `mystudies_participant_datastore`.`ur_admin_user` ADD `idp_user` CHA
 
 UPDATE `mystudies_participant_datastore`.`ur_admin_user` set `idp_user`='N' where `idp_user` IS NULL;
 
-ALTER TABLE `mystudies_participant_datastore`.`ur_admin_user` ADD `phone_number` VARCHAR(16);
+
 
 /* ISSUE #616 Use FCM instead of APNS for iOS push notifications */
 
