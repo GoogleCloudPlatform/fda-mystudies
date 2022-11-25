@@ -282,9 +282,9 @@ The deployment process takes the following approach:
     gcloud config set project $PREFIX-$ENV-apps && \
       gcloud services enable identitytoolkit.googleapis.com
     ```
-1. Configure an email/password and Phone Number Identity Providers by following the steps provided in this [link](https://cloud.google.com/identity-platform/docs/sign-in-user-email#add-provider)
-1.Create Users by following by following the steps provided in this [link](https://cloud.google.com/identity-platform/docs/sign-in-user-email#add-user)
-1. The MFA (multi factor authentication) should be enabled by using the steps in the [link](https://cloud.google.com/identity-platform/docs/web/mfa#enabling_multi-factor_authentication)
+1. Configure an email/password and Phone Number Identity Providers by following the steps provided in this [link](https://cloud.google.com/identity-platform/docs/sign-in-user-email#add-provider).
+2. 1.Create Users by following the steps provided in this [link](https://cloud.google.com/identity-platform/docs/sign-in-user-email#add-user).
+3. The MFA (multi factor authentication) should be enabled by using the steps in the [link](https://cloud.google.com/identity-platform/docs/web/mfa#enabling_multi-factor_authentication).
 
 ### Configure and deploy your applications
 
