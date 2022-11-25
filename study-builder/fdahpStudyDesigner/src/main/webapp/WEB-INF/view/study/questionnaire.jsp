@@ -2928,7 +2928,10 @@
 
       var res = localStorage.getItem("IsAnchorDateSelected");
       var scheduletype = $('input[name="scheduleType"]:checked').val();
-      
+      if (scheduletype == 'AnchorDate') {
+      }else{
+    	  res=false;
+      }
 		$('.manually-anchor-option').each(function(customAnchorCount) {
 			if ($('#xdays' + customAnchorCount).val() == '' && scheduletype == 'AnchorDate') {
 		  	  $('#xdays' + customAnchorCount).parent().addClass("has-danger").addClass("has-error");
