@@ -8,7 +8,7 @@
 > Subscribe to [mystudies-announce@googlegroups.com](https://groups.google.com/g/mystudies-announce/) to receive release notifications and announcements
 # Release 2.0.11 (Identity Platform)
 * Integrated Identity Platform
-* 
+
 # Release 2.0.11
 * New HealthCare API functionality has been introduced namely Consent API,FHIR,DID
 * Introduced BigQuery data warehouse functionality for analytics of data
