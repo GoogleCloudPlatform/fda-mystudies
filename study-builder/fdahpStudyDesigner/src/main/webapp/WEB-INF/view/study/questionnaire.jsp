@@ -534,7 +534,7 @@
                     0)?'disabled' : ''}> <label for="isLaunchStudy"> Launch
                   with study</label>
               </span>
-              <div class="onetimeanchorClass mt-sm" style="display: none">
+              <div class="onetimeanchorClass" style="display: none">
                 <!-- Anchordate start -->
                 <div class="opacity06">OR</div>
                 <!-- Anchordate start-->
@@ -676,7 +676,7 @@
                   <span class='help-block with-errors red-txt'></span>
                 </span>
               </div>
-              <div class="onetimeanchorClass mt-sm" style="display: none">
+              <div class="onetimeanchorClass" style="display: none">
                 <div class="opacity06">OR</div>
                 <!-- Anchordate start-->
                 <div class="mt-none resetDate">
