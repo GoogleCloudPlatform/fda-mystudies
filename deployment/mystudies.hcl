@@ -7,7 +7,7 @@
 # This is the solution template for MyStudies. Deployment specific
 # values are to be filled in ./deployment.hcl.
 
-# {{$recipes := "git://github.com/GoogleCloudPlatform/healthcare-data-protection-suite//templates/tfengine/recipes"}}
+# {{$recipes := "github.com/GoogleCloudPlatform/healthcare-data-protection-suite//templates/tfengine/recipes"}}
 # {{$ref := "ref=templates-v0.4.0"}}
 
 data = {

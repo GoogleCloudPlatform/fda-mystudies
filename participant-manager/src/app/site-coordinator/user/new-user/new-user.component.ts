@@ -73,11 +73,9 @@ export class AddNewUserComponent
       // console.log(data);
       // alert(this.userEmail + '<br>');
       // alert(this.userEmail.length + '<br>');
-    
     });
   }
 
-  
   idpUserStatus(): void {
     {
       this.user.idpUser = true;
@@ -257,34 +255,32 @@ export class AddNewUserComponent
   //   // }
   // }
 
-
   openModal(template: TemplateRef<any>): void {
     // let idpUser = false;
     if (this.idpEnabledForPM === true) {
       // alert('work for idp user ');
-    let idpUser = false;
-    // alert('work1');
-    let userEmail = this.userEmail;
-    userEmail.forEach((element: any) => {
-      // alert(element);
-      if (this.user.email === element) {
-        idpUser = true;
-
-        this.idpUserStatus();
+      let idpUser = false;
+      // alert('work1');
+      let userEmail = this.userEmail;
+      userEmail.forEach((element: any) => {
         // alert(element);
-        // alert(this.user.email);
-        // alert('work');
-        this.add();
-      }
-    });
+        if (this.user.email === element) {
+          idpUser = true;
 
-    if (!idpUser) {
-      this.modalRef = this.modalService.show(template);
+          this.idpUserStatus();
+          // alert(element);
+          // alert(this.user.email);
+          // alert('work');
+          this.add();
+        }
+      });
+
+      if (!idpUser) {
+        this.modalRef = this.modalService.show(template);
+      }
+    } else {
+      // alert('work for non idp user');
+      this.add();
     }
   }
-  else {
-    // alert('work for non idp user');
-    this.add();
-  }
-}
 }
