@@ -566,11 +566,13 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
       fhirJson = processToFhirResponse(questionnaireActivityResponseBean, locale);
 
     } else {
-      responsesDao.saveActivityResponseData(
-          studyId,
-          studyCollectionName,
-          AppConstants.ACTIVITIES_COLLECTION_NAME,
-          dataToStoreActivityResults);
+      if (appConfig.getEnableFhirApi().contains("false")) {
+        responsesDao.saveActivityResponseData(
+            studyId,
+            studyCollectionName,
+            AppConstants.ACTIVITIES_COLLECTION_NAME,
+            dataToStoreActivityResults);
+      }
     }
 
     if (appConfig.getEnableFhirApi().contains("did")) {
