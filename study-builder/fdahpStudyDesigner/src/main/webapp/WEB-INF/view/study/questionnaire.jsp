@@ -4328,7 +4328,7 @@
         if (isFromValid("#monthlyFormId")) {
           valForm = true;
         }
-        if (scheduletype == 'AnchorDate' && anchorForm) {
+        if (isFromValid("#monthlyFormId") && scheduletype == 'AnchorDate' && anchorForm) {
             valForm = true;
         }
       }
