@@ -1087,6 +1087,7 @@ overflow-y: hidden !important;
         const adminList = '${adminList}' 
         var element = $("#roleId option:selected").text();
         if(!adminList.includes(email) && adminList != null && ${idpEnabled}){
+        	if('' !== phoneNumber  && isphone ){
         if(element == "Superadmin")
           var msg = "You are inviting a person who is not listed in the organizational directory, to be a Study Builder superadmin. Are you sure you wish to proceed?";
         else
@@ -1127,7 +1128,16 @@ overflow-y: hidden !important;
 	        }
             } 
      	});
-   		}else {
+        }else {
+        	$("body").removeClass("loading");
+       	 $('#phoneNumber').parent().addClass("has-danger").addClass("has-error");
+       	 if('' !== phoneNumber && !isphone){
+       	     }else{
+       	    	 $('#phoneNumber').parent().find(".help-block").append(
+                        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(phoneNumber + "Please fill out this field"));
+       	     }
+       	 }
+        }else {
            	$("body").addClass("loading");
                $.ajax({
                  url: "/studybuilder/isEmailValid.do?" + csrfDetcsrfParamName + "=" + csrfToken,
