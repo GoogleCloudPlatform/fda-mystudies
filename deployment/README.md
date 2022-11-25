@@ -275,6 +275,16 @@ The deployment process takes the following approach:
     gcloud config set project $PREFIX-$ENV-apps && \
       gcloud services enable sqladmin.googleapis.com
     ```
+### Configure your Identity Platform
+
+1. [Enable](https://console.cloud.google.com/marketplace/details/google-cloud-platform/customer-identity) the Identity Platform service for your `{PREFIX}-{ENV}-apps` project, for example:
+    ```bash
+    gcloud config set project $PREFIX-$ENV-apps && \
+      gcloud services enable identitytoolkit.googleapis.com
+    ```
+1. Configure an email/password and Phone Number Identity Providers by following the steps provided in this [link](https://cloud.google.com/identity-platform/docs/sign-in-user-email#add-provider)
+1.Create Users by following by following the steps provided in this [link](https://cloud.google.com/identity-platform/docs/sign-in-user-email#add-user)
+1. The MFA (multi factor authentication) should be enabled by using the steps in the [link](https://cloud.google.com/identity-platform/docs/web/mfa#enabling_multi-factor_authentication)
 
 ### Configure and deploy your applications
 
