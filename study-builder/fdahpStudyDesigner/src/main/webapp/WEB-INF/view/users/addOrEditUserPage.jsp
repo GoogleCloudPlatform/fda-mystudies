@@ -69,8 +69,12 @@ input::-webkit-calendar-picker-indicator {
 
 .dropdown-menu>.inner { 
 overflow-y: hidden !important;
+ min-height: 0px !important;
 }
 
+.changeView div.dropdown-menu {
+    min-height: 0px !important;
+}
 .changeView3 div.dropdown-menu ul.dropdown-menu {
     max-height: 400px !important;
     overflow-y: auto !important;
@@ -1130,13 +1134,14 @@ overflow-y: hidden !important;
      	});
         }else {
         	$("body").removeClass("loading");
-       	 $('#phoneNumber').parent().addClass("has-danger").addClass("has-error");
-       	 if('' !== phoneNumber && !isphone){
-       	     }else{
-       	    	 $('#phoneNumber').parent().find(".help-block").append(
-                        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(phoneNumber + "Please fill out this field"));
-       	     }
-       	 }
+        	 $('#phoneNumber').parent().addClass("has-danger").addClass("has-error");
+        	 if('' !== phoneNumber && !isphone){
+        	     }else{
+        	    	 $('#phoneNumber').parent().find(".help-block").append(
+                         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(phoneNumber + "Please fill out this field"));
+             	
+        	     }
+        	 }
         }else {
            	$("body").addClass("loading");
                $.ajax({
@@ -1404,10 +1409,13 @@ overflow-y: hidden !important;
 		     $('#inlineCheckboxApp').val(1);
 		     $('.changeView3').prop('disabled', false);
 	         $('.changeView3').selectpicker('refresh');
+	         $('.changeView').prop('disabled', false);
+	         $('.changeView').selectpicker('refresh');
 	     }
       	        
       	var tot_study = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
-        var selected_study = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style]").length;
+        //var selected_study = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style]").length;
+        var selected_study = $(".study-selected-item").length;
         var tot_app = $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
         var selected_app = $(".app-selected-item").length;
         
@@ -1590,4 +1598,3 @@ function dlShowAllOnArrowClick(i) {
 
 dlShowAllOnArrowClick('favcolors');
 </script>
-
