@@ -159,18 +159,20 @@ export class SetUpAccountComponent
   //     this.setupAccountForm.controls['phoneNum'].clearValidators();
   //   }
   // }
-  changeValidation(IsMfa: any): void{
-    if(IsMfa) {
-    console.log(1);
-    console.log('true');
-      this.setupAccountForm.controls['phoneNum'].setValidators([Validators.required ,Validators.pattern('.*\\S.*[a-zA-z0-9 ]{11,15}')]);
-          this.setupAccountForm.controls['phoneNum'].updateValueAndValidity();
+  changeValidation(IsMfa: any): void {
+    if (IsMfa) {
+      console.log(1);
+      console.log('true');
+      this.setupAccountForm.controls['phoneNum'].setValidators([
+        Validators.required,
+        Validators.pattern('.*\\S.*[a-zA-z0-9 ]{11,15}'),
+      ]);
+      this.setupAccountForm.controls['phoneNum'].updateValueAndValidity();
     } else {
-     console.log(2);
-     console.log('false',this.setupAccountForm);
-     this.setupAccountForm.controls['phoneNum'].clearValidators();
-     this.setupAccountForm.controls['phoneNum'].updateValueAndValidity();
-
+      console.log(2);
+      console.log('false', this.setupAccountForm);
+      this.setupAccountForm.controls['phoneNum'].clearValidators();
+      this.setupAccountForm.controls['phoneNum'].updateValueAndValidity();
     }
   }
 
