@@ -55,10 +55,13 @@ public class UserController {
 
   @Autowired private ManageUserService manageUserService;
 
-
+  @Autowired private static AppPropertyConfig appPropertyConfig;
+    
   static {
-    // Initializing the Firebase SDK using default credentials
-    FirebaseApp.initializeApp();
+    if (appPropertyConfig.isIdpEnabled()) {
+      // Initializing the Firebase SDK using default credentials
+      FirebaseApp.initializeApp();
+    }
   }
 
 
