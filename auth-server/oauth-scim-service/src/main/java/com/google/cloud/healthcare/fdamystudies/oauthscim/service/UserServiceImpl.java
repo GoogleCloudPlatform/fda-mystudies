@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService {
 
   @Autowired private UserRepository repository;
 
-  @Autowired private AppPropertyConfig appConfig;
+  @Autowired private static AppPropertyConfig appConfig;
 
   @Autowired private EmailService emailService;
 
@@ -123,8 +123,10 @@ public class UserServiceImpl implements UserService {
   @Autowired private TextEncryptor encryptor;
 
   static {
-    // Initializing the Firebase SDK using default credentials
-    FirebaseApp.initializeApp();
+    if (appConfig.isIdpEnabled()) {
+      // Initializing the Firebase SDK using default credentials
+      FirebaseApp.initializeApp();
+    }
   }
 
   @Override
