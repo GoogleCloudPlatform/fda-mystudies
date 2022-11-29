@@ -50,6 +50,8 @@ public class UserController {
 
   private XLogger logger = XLoggerFactory.getXLogger(UserController.class.getName());
 
+  private static XLogger loggers = XLoggerFactory.getXLogger(UserController.class.getName());
+
   private static final String BEGIN_REQUEST_LOG = "%s request";
 
   private static final String EXIT_STATUS_LOG = "status=%d";
@@ -57,15 +59,15 @@ public class UserController {
   @Autowired private ManageUserService manageUserService;
 
   @Autowired private AppPropertyConfig appPropertyConfig;
-    
-  {
-    if (null != appPropertyConfig
-        && String.valueOf(appPropertyConfig.isIdpEnabled()).equals("true")) {
-      // Initializing the Firebase SDK using default credentials
+
+  static {
+    // Initializing the Firebase SDK using default credentials
+    try {
       FirebaseApp.initializeApp();
+    } catch (Exception e) {
+      loggers.debug("UserController.createUser firebase error:", e);
     }
   }
-
 
   @CrossOrigin
   @ApiOperation(value = "add new admin with permissions and invite through email")
@@ -135,7 +137,7 @@ public class UserController {
       @RequestParam(required = false) String searchTerm,
       HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
-    
+
     String searchValue = StringUtils.replace(searchTerm, " ", "+");
     String[] allowedSortByValues = {"firstName", "lastName", "email", "status"};
 
