@@ -64,7 +64,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 
   private XLogger logger = XLoggerFactory.getXLogger(UserProfileServiceImpl.class.getName());
 
-  private static XLogger loggers =
+  private static XLogger slogger =
       XLoggerFactory.getXLogger(UserProfileServiceImpl.class.getName());
 
   @Autowired private UserRegAdminRepository userRegAdminRepository;
@@ -84,7 +84,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     try {
       FirebaseApp.initializeApp();
     } catch (Exception e) {
-      loggers.debug("UserProfileServiceImpl.createUser firebase error:", e);
+      slogger.debug("UserServiceImpl.createUser firebase error: ", e);
     }
   }
 
