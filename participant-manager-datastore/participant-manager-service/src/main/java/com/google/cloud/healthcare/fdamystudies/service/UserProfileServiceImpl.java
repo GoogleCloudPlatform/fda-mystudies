@@ -40,7 +40,6 @@ import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.UserProfileMapper;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
-import com.google.firebase.FirebaseApp;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Collections;
@@ -78,15 +77,6 @@ public class UserProfileServiceImpl implements UserProfileService {
   @Autowired private ManageUserService manageUserService;
 
   @Autowired private ParticipantManagerAuditLogHelper participantManagerHelper;
-
-  static {
-    // Initializing the Firebase SDK using default credentials
-    try {
-      FirebaseApp.initializeApp();
-    } catch (Exception e) {
-      slogger.debug("UserServiceImpl.createUser firebase error: ", e);
-    }
-  }
 
   @Override
   @Transactional(readOnly = true)

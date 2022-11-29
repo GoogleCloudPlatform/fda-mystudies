@@ -71,6 +71,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserAccountEmailSchedulerTaskRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 import com.google.cloud.healthcare.fdamystudies.util.ParticipantManagerUtil;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.ExportedUserRecord;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
@@ -1062,6 +1063,12 @@ public class ManageUserServiceImpl implements ManageUserService {
     }
 
     if (appPropertyConfig.isIdpEnabled()) {
+      // Initializing the Firebase SDK using default credentials
+      try {
+        FirebaseApp.initializeApp();
+      } catch (Exception e) {
+        logger.debug("UserServiceImpl.createUser firebase error: ", e);
+      }
       List<UserRegAdminEntity> users = userAdminRepository.findAll();
       List<String> usersEmail =
           users.stream().map(UserRegAdminEntity::getEmail).collect(Collectors.toList());
