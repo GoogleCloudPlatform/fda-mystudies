@@ -110,6 +110,8 @@ public class UserServiceImpl implements UserService {
 
   private XLogger logger = XLoggerFactory.getXLogger(UserServiceImpl.class.getName());
 
+  private static XLogger loggers = XLoggerFactory.getXLogger(UserServiceImpl.class.getName());
+
   @Autowired private UserRepository repository;
 
   @Autowired private AppPropertyConfig appConfig;
@@ -122,10 +124,12 @@ public class UserServiceImpl implements UserService {
 
   @Autowired private TextEncryptor encryptor;
 
-  {
-    if (null != appConfig && String.valueOf(appConfig.isIdpEnabled()).equals("true")) {
-      // Initializing the Firebase SDK using default credentials
+  static {
+    // Initializing the Firebase SDK using default credentials
+    try {
       FirebaseApp.initializeApp();
+    } catch (Exception e) {
+      loggers.debug("UserServiceImpl.createUser firebase error: ", e);
     }
   }
 
