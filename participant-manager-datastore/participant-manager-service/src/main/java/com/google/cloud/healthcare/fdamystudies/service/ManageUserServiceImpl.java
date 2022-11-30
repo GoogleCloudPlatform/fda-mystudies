@@ -1142,21 +1142,23 @@ public class ManageUserServiceImpl implements ManageUserService {
 
   private void getIdpUser(List<String> idpDisbledUsers, List<String> idpUsers) {
     ListUsersPage page;
-    try {
-      page = FirebaseAuth.getInstance().listUsers(null);
-      while (page != null) {
-        for (ExportedUserRecord exportedUserRecord : page.iterateAll()) {
-          if (exportedUserRecord.isDisabled()
-              & StringUtils.isNotBlank(exportedUserRecord.getEmail())) {
-            idpDisbledUsers.add(exportedUserRecord.getEmail());
+    if (appConfig.isIdpEnabled()) {
+      try {
+        page = FirebaseAuth.getInstance().listUsers(null);
+        while (page != null) {
+          for (ExportedUserRecord exportedUserRecord : page.iterateAll()) {
+            if (exportedUserRecord.isDisabled()
+                & StringUtils.isNotBlank(exportedUserRecord.getEmail())) {
+              idpDisbledUsers.add(exportedUserRecord.getEmail());
+            }
+            idpUsers.add(exportedUserRecord.getEmail());
           }
-          idpUsers.add(exportedUserRecord.getEmail());
+          page = page.getNextPage();
         }
-        page = page.getNextPage();
+      } catch (FirebaseAuthException e1) {
+        logger.error("Failed with Firebase Exception");
+        e1.printStackTrace();
       }
-    } catch (FirebaseAuthException e1) {
-      logger.error("Failed with Firebase Exception");
-      e1.printStackTrace();
     }
   }
 

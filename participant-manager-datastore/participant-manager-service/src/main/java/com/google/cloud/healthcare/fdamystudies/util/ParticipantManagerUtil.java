@@ -12,7 +12,6 @@ import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
-
 import com.google.firebase.auth.ExportedUserRecord;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
@@ -21,10 +20,6 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-
-import java.io.ByteArrayOutputStream;
-import java.util.Base64;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -49,7 +44,6 @@ public class ParticipantManagerUtil {
   @Autowired private AppPropertyConfig appConfig;
 
   public String getImageResources(String fileUrl, String customStudyId) {
-
 
     try {
       if (StringUtils.isEmpty(fileUrl)) {
@@ -88,20 +82,22 @@ public class ParticipantManagerUtil {
   public List<String> getIDPUsers() {
     List<String> idpEmail = new ArrayList<>();
     ListUsersPage page;
-    try {
-      page = FirebaseAuth.getInstance().listUsers(null);
-      while (page != null) {
-        for (ExportedUserRecord exportedUserRecord : page.iterateAll()) {
-          if (!exportedUserRecord.isDisabled()
-              & StringUtils.isNotBlank(exportedUserRecord.getEmail())) {
-            idpEmail.add(exportedUserRecord.getEmail());
+    if (appConfig.isIdpEnabled()) {
+      try {
+        page = FirebaseAuth.getInstance().listUsers(null);
+        while (page != null) {
+          for (ExportedUserRecord exportedUserRecord : page.iterateAll()) {
+            if (!exportedUserRecord.isDisabled()
+                & StringUtils.isNotBlank(exportedUserRecord.getEmail())) {
+              idpEmail.add(exportedUserRecord.getEmail());
+            }
           }
+          page = page.getNextPage();
         }
-        page = page.getNextPage();
+      } catch (FirebaseAuthException e) {
+        logger.error("Failed with Firebase exception");
+        e.printStackTrace();
       }
-    } catch (FirebaseAuthException e) {
-      logger.error("Failed with Firebase exception");
-      e.printStackTrace();
     }
     return idpEmail;
   }
