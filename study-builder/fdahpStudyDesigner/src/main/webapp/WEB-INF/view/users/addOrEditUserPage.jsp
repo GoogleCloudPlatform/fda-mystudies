@@ -95,6 +95,10 @@ overflow-y: hidden !important;
   border-color: #999 transparent transparent transparent;
 }
 
+.bootstrap-select .dropdown-menu {
+   min-height: 100% !important;
+}
+
 </style>
 
 
@@ -651,6 +655,8 @@ overflow-y: hidden !important;
     
    <c:if test="${actionPage eq 'EDIT_PAGE'}">
    $(".selectpicker").selectpicker('deselectAll');
+   $('.changeView3').selectpicker('refresh');
+	 $('.changeView').selectpicker('refresh');
    var tot_items = $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
    var count = $(".app-selected-item").length;
    var tot_study = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
@@ -660,7 +666,7 @@ overflow-y: hidden !important;
      $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
      	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
    } 
-   if (selected_study == tot_study) {
+   if (selected_study == tot_study || selected_study > tot_study) {
  	  $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
      $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
      	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
@@ -687,70 +693,86 @@ overflow-y: hidden !important;
     });
 
 
-    var countCall = 0;
-    $(window).on('load', function () {
-      countCall = 1;
-      $('.selStd').each(function () {
-        var stdTxt = $(this).find('.stdCls').attr('stdTxt');
-        $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:first-child").each(
-            function () {
-              var ltxt = $(this).text();
-              var a = $.trim(ltxt);
-              var b = $.trim(stdTxt);
-              if (a == b) {
-                $(this).parent().parent().hide();
-              }
-            });
-      });
-    });
+    // var countCall = 0;
+    // $(window).on('load', function () {
+    //   countCall = 1;
+    //   $("div.selStd").each(function () {
+    //     var stdTxt = $(this).find('.stdCls').attr('stdTxt');
+    //     $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:last-child").each(
+    //         function () {
+    //           var ltxt = $(this).text();
+    //           var a = $.trim(ltxt);
+    //           var b = $.trim(stdTxt);
+    //           if (a == b) {
+    //             $(this).parent().parent().hide();
+    //           }
+    //         });
+    //   });
+    // });
     
-    var countCall2 = 0;
-    $(window).on('load', function () {
-    	countCall2 = 1;
-      $('.selApp').each(function () {
-        var appTxt = $(this).find('.appCls').attr('appTxt');
-        $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:first-child").each(
-            function () {
-              var ltxt = $(this).text();
-              var a = $.trim(ltxt);
-              var b = $.trim(appTxt);
-              if (a == b) {
-                $(this).parent().parent().hide();
-              }
-            });
-      });
-    });
+    // var countCall2 = 0;
+    // $(window).on('load', function () {
+    // 	countCall2 = 1;
+    //   $("div.selApp").each(function () {
+    //     var appTxt = $(this).find('.appCls').attr('appTxt');
+    //     $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:last-child").each(
+    //         function () {
+    //           var ltxt = $(this).text();
+    //           var a = $.trim(ltxt);
+    //           var b = $.trim(appTxt);
+    //           if (a == b) {
+    //             $(this).parent().parent().hide();
+    //           }
+    //         });
+    //   });
+    // });
 
 
-    if (countCall == 0) {
-      $('.selStd').each(function () {
-        var stdTxt = $(this).find('.stdCls').attr('stdTxt');
-        $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:first-child").each(
-            function () {
-              var ltxt = $(this).text();
-              var a = $.trim(ltxt);
-              var b = $.trim(stdTxt);
-              if (a == b) {
-                $(this).parent().parent().hide();
-              }
-            });
-      });
-    }
+    // if (countCall == 0) {
+    //   $('div.selStd').each(function () {
+    //     var stdTxt = $(this).find('.stdCls').attr('stdTxt');
+    //     $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:last-child").each(
+    //         function () {
+    //           var ltxt = $(this).text();
+    //           var a = $.trim(ltxt);
+    //           var b = $.trim(stdTxt);
+    //           if (a == b) {
+    //             $(this).parent().parent().hide();
+    //           }
+    //         });
+    //   });
+    // }
     
-    if (countCall2 == 0) {
-        $('.selApp').each(function () {
-          var appTxt = $(this).find('.appCls').attr('appTxt');
-          $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:first-child").each(
-              function () {
-                var ltxt = $(this).text();
-                var a = $.trim(ltxt);
-                var b = $.trim(appTxt);
-                if (a == b) {
-                  $(this).parent().parent().hide();
-                }
-              });
-        });
-      }
+    // if (countCall2 == 0) {
+    //     $('.selApp').each(function () {
+    //       var appTxt = $(this).find('.appCls').attr('appTxt');
+    //       $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:last-child").each(
+    //           function () {
+    //             var ltxt = $(this).text();
+    //             var a = $.trim(ltxt);
+    //             var b = $.trim(appTxt);
+    //             if (a == b) {
+    //               $(this).parent().parent().hide();
+    //             }
+    //           });
+    //     });
+
+    //     $('.app-list .bootstrap-select .dropdown-toggle').on('click', function () {
+    //       alert('work');
+    //       var appTxt = $(this).find('.appCls').attr('appTxt');
+    //       var appTxt = $(this).find('.appCls').attr('appTxt');
+    //     $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:last-child").each(
+    //         function () {
+    //           var ltxt = $(this).text();
+    //           var a = $.trim(ltxt);
+    //           var b = $.trim(appTxt);
+    //           if (a == b) {
+    //             $(this).parent().parent().hide();
+    //           }
+    //         });
+    //     });
+
+    //   }
     
     $("#emailId").blur(function () {
       var email = $('#emailId').val().toLowerCase();
@@ -844,7 +866,7 @@ overflow-y: hidden !important;
         
         $('.selStd').each(function () {
             var stdTxt = $(this).find('.stdCls').attr('stdTxt');
-            $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:first-child").each(
+            $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:last-child").each(
                 function () {
                   var ltxt = $(this).text();
                   var a = $.trim(ltxt);
@@ -881,7 +903,7 @@ overflow-y: hidden !important;
           
           $('.selApp').each(function () {
   	          var appTxt = $(this).find('.appCls').attr('appTxt');
-  	          $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:first-child").each(
+  	          $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:last-child").each(
   	              function () {
   	                var ltxt = $(this).text();
   	                var a = $.trim(ltxt);
@@ -1258,7 +1280,7 @@ overflow-y: hidden !important;
   function del(id) {
     var atxt = $('#std' + id).children().text();
 
-    $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:first-child").each(
+    $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:last-child").each(
         function () {
           var ltxt = $(this).text();
           var a = $.trim(ltxt);
@@ -1283,7 +1305,7 @@ overflow-y: hidden !important;
 	    var atxt = $('#app' + id).children().text();
 	    var selApps = $(".app-selected-item").length;
 
-	    $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:first-child").each(
+	    $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:last-child").each(
 	        function () {
 	          var ltxt = $(this).text();
 	          var a = $.trim(ltxt);
@@ -1414,12 +1436,18 @@ overflow-y: hidden !important;
 	     }
       	        
       	var tot_study = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
-        //var selected_study = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style]").length;
+        // var selected_study = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style]").length;
         var selected_study = $(".study-selected-item").length;
         var tot_app = $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
         var selected_app = $(".app-selected-item").length;
-        
-        if (selected_study == tot_study) {
+
+        // alert(tot_study + ' tot_study');
+        // alert(selected_study +'selected_study');
+        // alert(tot_app + 'tot_app');
+        // alert(selected_app +'selected_app');
+
+
+        if (selected_study == tot_study || selected_study > tot_study) {
       	  $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
           $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
           	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
@@ -1597,4 +1625,149 @@ function dlShowAllOnArrowClick(i) {
 
 
 dlShowAllOnArrowClick('favcolors');
+</script>
+
+<script>
+
+$(document).ready(function () { 
+
+  
+  var countCall = 0;
+    $(window).on('load', function () {
+      countCall = 1;
+      $('.study-list .bootstrap-select .dropdown-toggle').on('click', function () {  
+      $("div.selStd").each(function () {
+        var stdTxt = $(this).find('.stdCls').attr('stdTxt');
+        $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:last-child").each(
+            function () {
+              var ltxt = $(this).text();
+              var a = $.trim(ltxt);
+              var b = $.trim(stdTxt);
+              if (a == b) {
+                $(this).parent().parent().hide();
+              }
+            });
+      });
+   
+    $(".selectpicker").selectpicker('deselectAll');
+      var tot_items = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
+      var count = $(".study-selected-item").length;
+    //   alert(count + 'count');
+    // alert(tot_items + 'tot_items apps');
+      if (count == tot_items) {
+    	  $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
+        $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
+        	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
+      }
+    });
+  });
+    
+    var countCall2 = 0;
+    $(window).on('load', function () {
+    	countCall2 = 1;
+      $('.app-list .bootstrap-select .dropdown-toggle').on('click', function () {  
+      $("div.selApp").each(function () {
+        var appTxt = $(this).find('.appCls').attr('appTxt');
+        $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:last-child").each(
+            function () {
+              var ltxt = $(this).text();
+              var a = $.trim(ltxt);
+              var b = $.trim(appTxt);
+              if (a == b) {
+                $(this).parent().parent().hide();
+              }
+            });
+      });
+   
+    $(".selectpicker").selectpicker('deselectAll');
+      var tot_items = $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
+      var count = $(".app-selected-item").length;
+    //   alert(count + 'count');
+    // alert(tot_items + 'tot_items apps');
+      if (count == tot_items) {
+    	  $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
+        $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
+        	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
+      }
+    });
+  });
+
+
+    if (countCall == 0) {
+      $('.study-list .bootstrap-select .dropdown-toggle').on('click', function () {  
+      $('div.selStd').each(function () {
+        var stdTxt = $(this).find('.stdCls').attr('stdTxt');
+        $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:last-child").each(
+            function () {
+              var ltxt = $(this).text();
+              var a = $.trim(ltxt);
+              var b = $.trim(stdTxt);
+              if (a == b) {
+                $(this).parent().parent().hide();
+              }
+            });
+      });
+   
+    $(".selectpicker").selectpicker('deselectAll');
+      var tot_items = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
+      var count = $(".study-selected-item").length;
+    //   alert(count + 'count');
+    // alert(tot_items + 'tot_items apps');
+      if (count == tot_items) {
+    	  $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
+        $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
+        	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
+      }
+    });
+    }
+    
+    if (countCall2 == 0) {
+      $('.app-list .bootstrap-select .dropdown-toggle').on('click', function () {  
+        $('.selApp').each(function () {
+          var appTxt = $(this).find('.appCls').attr('appTxt');
+          $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:last-child").each(
+              function () {
+                var ltxt = $(this).text();
+                var a = $.trim(ltxt);
+                var b = $.trim(appTxt);
+                if (a == b) {
+                  $(this).parent().parent().hide();
+                }
+              });
+        });
+      
+      $(".selectpicker").selectpicker('deselectAll');
+      var tot_items = $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
+      var count = $(".app-selected-item").length;
+    //   alert(count + 'count');
+    // alert(tot_items + 'tot_items apps');
+    
+      if (count == tot_items) {
+    	  $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
+        $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
+        	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
+      }
+    });
+    }
+
+    
+        // $('.app-list .bootstrap-select .dropdown-toggle').on('click', function () {        
+        //   $('.selApp').each(function () {
+        //   var appTxt = $(this).find('.appCls').attr('appTxt');
+        //   $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:last-child").each(
+        //       function () {
+        //         var ltxt = $(this).text();
+        //         var a = $.trim(ltxt);
+        //         var b = $.trim(appTxt);
+        //         if (a == b) {
+        //           $(this).parent().parent().hide();
+        //         }
+        //       });
+        // });
+       
+        // });
+        // }
+      
+
+});
 </script>
