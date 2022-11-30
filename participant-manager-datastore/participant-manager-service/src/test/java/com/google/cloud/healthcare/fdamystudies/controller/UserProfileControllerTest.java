@@ -37,6 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
+import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.PatchUserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountRequest;
@@ -49,11 +50,16 @@ import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent;
 import com.google.cloud.healthcare.fdamystudies.common.PlatformComponent;
+import com.google.cloud.healthcare.fdamystudies.common.TestConstants;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 import com.google.cloud.healthcare.fdamystudies.service.UserProfileService;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -90,6 +96,20 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   @BeforeEach
   public void setUp() {
+    // firebase initialization
+    try {
+      FileInputStream serviceAccount =
+          new FileInputStream(TestConstants.GOOGLE_DUMY_CREDENTIAL_JSON_FILE);
+
+      FirebaseOptions options =
+          FirebaseOptions.builder()
+              .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+              .build();
+
+      FirebaseApp.initializeApp(options);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
     userRegAdminEntity = testDataHelper.createUserRegAdmin();
     WireMock.resetAllRequests();
   }

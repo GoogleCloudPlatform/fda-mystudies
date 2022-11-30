@@ -52,6 +52,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.InviteParticipantRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
@@ -88,8 +89,11 @@ import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepos
 import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyConsentRepository;
 import com.google.cloud.healthcare.fdamystudies.service.SiteService;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.jayway.jsonpath.JsonPath;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.Timestamp;
@@ -147,6 +151,20 @@ public class SiteControllerTest extends BaseMockIT {
 
   @BeforeEach
   public void setUp() {
+    // firebase initialization
+    try {
+      FileInputStream serviceAccount =
+          new FileInputStream(TestConstants.GOOGLE_DUMY_CREDENTIAL_JSON_FILE);
+
+      FirebaseOptions options =
+          FirebaseOptions.builder()
+              .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+              .build();
+
+      FirebaseApp.initializeApp(options);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
     locationEntity = testDataHelper.createSiteLocation();
     userRegAdminEntity = testDataHelper.createUserRegAdminEntity();
     appEntity = testDataHelper.createAppEntityForSiteControllerTest(userRegAdminEntity);

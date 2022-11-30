@@ -15,15 +15,21 @@ import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 
+import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.EmailTemplate;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
+import com.google.cloud.healthcare.fdamystudies.common.TestConstants;
 import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
 import com.google.cloud.healthcare.fdamystudies.model.UserAccountEmailSchedulerTaskEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.UserAccountEmailSchedulerTaskRepository;
 import com.google.cloud.healthcare.fdamystudies.service.ManageUserService;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import javax.mail.internet.MimeMessage;
@@ -42,7 +48,22 @@ public class AdminUsersAccountScheduledTaskTest extends BaseMockIT {
   @Autowired private UserAccountEmailSchedulerTaskRepository addNewAdminEmailServiceRepository;
 
   @BeforeEach
-  public void setUp() {}
+  public void setUp() {
+    // firebase initialization
+    try {
+      FileInputStream serviceAccount =
+          new FileInputStream(TestConstants.GOOGLE_DUMY_CREDENTIAL_JSON_FILE);
+
+      FirebaseOptions options =
+          FirebaseOptions.builder()
+              .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+              .build();
+
+      FirebaseApp.initializeApp(options);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 
   @Test
   public void shouldSendEmailInvitationForNewAdmin() throws Exception {

@@ -20,12 +20,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.common.TestConstants;
 import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
@@ -41,7 +43,11 @@ import com.google.cloud.healthcare.fdamystudies.service.ConsentService;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.Storage;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.jayway.jsonpath.JsonPath;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Base64;
 import java.util.Map;
 import org.apache.commons.collections4.map.HashedMap;
@@ -87,6 +93,20 @@ public class ConsentControllerTest extends BaseMockIT {
 
   @BeforeEach
   public void setUp() {
+    // firebase initialization
+    try {
+      FileInputStream serviceAccount =
+          new FileInputStream(TestConstants.GOOGLE_DUMY_CREDENTIAL_JSON_FILE);
+
+      FirebaseOptions options =
+          FirebaseOptions.builder()
+              .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+              .build();
+
+      FirebaseApp.initializeApp(options);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
     userRegAdminEntity = testDataHelper.createUserRegAdminEntity();
     studyEntity = testDataHelper.createStudyEntity(userRegAdminEntity, appEntity);
     siteEntity = testDataHelper.createSiteEntity(studyEntity, userRegAdminEntity, appEntity);

@@ -35,6 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
@@ -60,8 +61,11 @@ import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionReposit
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 import com.google.cloud.healthcare.fdamystudies.util.ParticipantManagerUtil;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -111,6 +115,20 @@ public class UserControllerTest extends BaseMockIT {
 
   @BeforeEach
   public void setUp() throws JsonParseException, JsonMappingException, IOException {
+    // firebase initialization
+    try {
+      FileInputStream serviceAccount =
+          new FileInputStream(TestConstants.GOOGLE_DUMY_CREDENTIAL_JSON_FILE);
+
+      FirebaseOptions options =
+          FirebaseOptions.builder()
+              .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+              .build();
+
+      FirebaseApp.initializeApp(options);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
     userRegAdminEntity = testDataHelper.createUserRegAdmin();
     appEntity = testDataHelper.createAppEntity(userRegAdminEntity);
     studyEntity = testDataHelper.createStudyEntity(userRegAdminEntity, appEntity);
