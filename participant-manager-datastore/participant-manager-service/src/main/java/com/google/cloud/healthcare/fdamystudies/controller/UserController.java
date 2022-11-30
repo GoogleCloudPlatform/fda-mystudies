@@ -19,6 +19,7 @@ import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.ManageUserService;
+import com.google.firebase.FirebaseApp;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import javax.servlet.http.HttpServletRequest;
@@ -58,6 +59,15 @@ public class UserController {
   @Autowired private ManageUserService manageUserService;
 
   @Autowired private AppPropertyConfig appPropertyConfig;
+
+  static {
+    // Initializing the Firebase SDK using default credentials
+    try {
+      FirebaseApp.initializeApp();
+    } catch (Exception e) {
+      loggers.debug("UserController.createUser firebase error:", e);
+    }
+  }
 
   @CrossOrigin
   @ApiOperation(value = "add new admin with permissions and invite through email")
