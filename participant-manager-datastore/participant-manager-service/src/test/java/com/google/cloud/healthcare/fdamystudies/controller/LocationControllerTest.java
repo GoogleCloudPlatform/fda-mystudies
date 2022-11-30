@@ -44,7 +44,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.LocationRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateLocationRequest;
@@ -55,7 +54,6 @@ import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
-import com.google.cloud.healthcare.fdamystudies.common.TestConstants;
 import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
@@ -65,11 +63,7 @@ import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.LocationRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 import com.google.cloud.healthcare.fdamystudies.service.LocationService;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
 import com.jayway.jsonpath.JsonPath;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.collections4.map.HashedMap;
@@ -111,20 +105,7 @@ public class LocationControllerTest extends BaseMockIT {
 
   @BeforeEach
   public void setUp() {
-    // firebase initialization
-    try {
-      FileInputStream serviceAccount =
-          new FileInputStream(TestConstants.GOOGLE_DUMY_CREDENTIAL_JSON_FILE);
 
-      FirebaseOptions options =
-          FirebaseOptions.builder()
-              .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-              .build();
-
-      FirebaseApp.initializeApp(options);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
     userRegAdminEntity = testDataHelper.createUserRegAdmin();
     locationEntity = testDataHelper.createLocation();
     appEntity = testDataHelper.createAppEntity(userRegAdminEntity);
