@@ -141,6 +141,16 @@ public class ManageUserServiceImpl implements ManageUserService {
 
   @Autowired private ParticipantManagerUtil participantManagerUtil;
 
+  {
+
+    // Initializing the Firebase SDK using default credentials
+    try {
+      FirebaseApp.initializeApp();
+    } catch (Exception e) {
+      logger.debug("UserServiceImpl.createUser firebase error: ", e);
+    }
+  }
+
   @Override
   @Transactional
   public AdminUserResponse createUser(UserRequest user, AuditLogEventRequest auditRequest) {
@@ -1064,11 +1074,8 @@ public class ManageUserServiceImpl implements ManageUserService {
 
     if (appPropertyConfig.isIdpEnabled()) {
       // Initializing the Firebase SDK using default credentials
-      try {
-        FirebaseApp.initializeApp();
-      } catch (Exception e) {
-        logger.debug("UserServiceImpl.createUser firebase error: ", e);
-      }
+      ManageUserServiceImpl manageUserServiceImpl = new ManageUserServiceImpl();
+      //
       List<UserRegAdminEntity> users = userAdminRepository.findAll();
       List<String> usersEmail =
           users.stream().map(UserRegAdminEntity::getEmail).collect(Collectors.toList());
