@@ -71,6 +71,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserAccountEmailSchedulerTaskRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 import com.google.cloud.healthcare.fdamystudies.util.ParticipantManagerUtil;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.ExportedUserRecord;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
@@ -109,6 +110,8 @@ public class ManageUserServiceImpl implements ManageUserService {
 
   private XLogger logger = XLoggerFactory.getXLogger(ManageUserServiceImpl.class.getName());
 
+  private static XLogger loggers = XLoggerFactory.getXLogger(ManageUserServiceImpl.class.getName());
+
   @Autowired private UserRegAdminRepository userAdminRepository;
 
   @Autowired private AppRepository appRepository;
@@ -139,6 +142,15 @@ public class ManageUserServiceImpl implements ManageUserService {
   @Autowired private AppPropertyConfig appPropertyConfig;
 
   @Autowired private ParticipantManagerUtil participantManagerUtil;
+
+  static {
+    // Initializing the Firebase SDK using default credentials
+    try {
+      FirebaseApp.initializeApp();
+    } catch (Exception e) {
+      loggers.debug("ManageUserServiceImpl.createUser firebase error: ", e);
+    }
+  }
 
   @Override
   @Transactional
