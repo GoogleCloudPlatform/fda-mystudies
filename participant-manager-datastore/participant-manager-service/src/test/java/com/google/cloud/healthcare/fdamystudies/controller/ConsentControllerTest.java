@@ -43,7 +43,6 @@ import com.google.cloud.healthcare.fdamystudies.service.ConsentService;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.Storage;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.jayway.jsonpath.JsonPath;
 import java.io.FileInputStream;
@@ -103,7 +102,7 @@ public class ConsentControllerTest extends BaseMockIT {
               .setCredentials(GoogleCredentials.fromStream(serviceAccount))
               .build();
 
-      FirebaseApp.initializeApp(options);
+      // FirebaseApp.initializeApp(options);
     } catch (IOException e) {
       e.printStackTrace();
     }

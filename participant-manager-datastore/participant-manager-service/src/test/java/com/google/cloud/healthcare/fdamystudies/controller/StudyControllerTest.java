@@ -54,7 +54,6 @@ import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.service.StudyService;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.jayway.jsonpath.JsonPath;
 import java.io.FileInputStream;
@@ -107,7 +106,7 @@ public class StudyControllerTest extends BaseMockIT {
               .setCredentials(GoogleCredentials.fromStream(serviceAccount))
               .build();
 
-      FirebaseApp.initializeApp(options);
+      // FirebaseApp.initializeApp(options);
     } catch (IOException e) {
       e.printStackTrace();
     }

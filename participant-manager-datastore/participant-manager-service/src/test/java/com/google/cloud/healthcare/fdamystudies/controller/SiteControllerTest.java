@@ -89,7 +89,6 @@ import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepos
 import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyConsentRepository;
 import com.google.cloud.healthcare.fdamystudies.service.SiteService;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.jayway.jsonpath.JsonPath;
 import java.io.File;
@@ -161,7 +160,7 @@ public class SiteControllerTest extends BaseMockIT {
               .setCredentials(GoogleCredentials.fromStream(serviceAccount))
               .build();
 
-      FirebaseApp.initializeApp(options);
+      // FirebaseApp.initializeApp(options);
     } catch (IOException e) {
       e.printStackTrace();
     }

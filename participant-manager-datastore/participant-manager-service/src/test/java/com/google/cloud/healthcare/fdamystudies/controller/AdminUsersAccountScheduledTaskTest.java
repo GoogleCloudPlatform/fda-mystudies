@@ -26,7 +26,6 @@ import com.google.cloud.healthcare.fdamystudies.model.UserAccountEmailSchedulerT
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.UserAccountEmailSchedulerTaskRepository;
 import com.google.cloud.healthcare.fdamystudies.service.ManageUserService;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -59,7 +58,7 @@ public class AdminUsersAccountScheduledTaskTest extends BaseMockIT {
               .setCredentials(GoogleCredentials.fromStream(serviceAccount))
               .build();
 
-      FirebaseApp.initializeApp(options);
+      // FirebaseApp.initializeApp(options);
     } catch (IOException e) {
       e.printStackTrace();
     }

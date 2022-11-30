@@ -65,7 +65,6 @@ import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.LocationRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 import com.google.cloud.healthcare.fdamystudies.service.LocationService;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.jayway.jsonpath.JsonPath;
 import java.io.FileInputStream;
@@ -121,7 +120,7 @@ public class LocationControllerTest extends BaseMockIT {
               .setCredentials(GoogleCredentials.fromStream(serviceAccount))
               .build();
 
-      FirebaseApp.initializeApp(options);
+      //  FirebaseApp.initializeApp(options);
     } catch (IOException e) {
       e.printStackTrace();
     }
