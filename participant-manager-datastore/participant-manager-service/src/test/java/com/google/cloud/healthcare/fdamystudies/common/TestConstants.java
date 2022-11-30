@@ -32,6 +32,9 @@ public final class TestConstants {
 
   public static final String UPDATE_USER_REQUEST_JSON_FILE = "/update_admin_user_request.json";
 
+  public static final String GOOGLE_DUMY_CREDENTIAL_JSON_FILE =
+      "/example-888c1713e45e_12Feb2022.json";
+
   public static final String FIRST_NAME = "mockit_user_firstname";
 
   public static final String LAST_NAME = "mockit_user_lastname";
