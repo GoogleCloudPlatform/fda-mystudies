@@ -1265,6 +1265,8 @@ overflow-y: hidden !important;
 		     $('#inlineCheckboxApp').val(1);
 		     $('.changeView3').prop('disabled', false);
 	         $('.changeView3').selectpicker('refresh');
+	         $('.changeView').prop('disabled', false);
+	         $('.changeView').selectpicker('refresh');
 	     }
       	        
       	var tot_study = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
