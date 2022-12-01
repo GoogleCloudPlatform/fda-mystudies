@@ -80,6 +80,8 @@ overflow-y: hidden !important;
 .bootstrap-select .dropdown-menu {
    min-height: 100% !important;
 }
+
+.dropdown-menu>.inner { overflow-y: hidden !important; max-height: 100% !important; min-height: 100% !important; }
 </style>
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mt-md mb-md">
