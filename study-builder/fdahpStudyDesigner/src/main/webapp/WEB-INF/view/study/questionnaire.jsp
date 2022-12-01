@@ -97,6 +97,7 @@
   
     .help-block ul {
    margin: 5px 0px 0px 0px;
+   width: max-content !important;
   }
   
  /* error box css end here  */

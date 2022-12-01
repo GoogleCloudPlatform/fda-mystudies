@@ -29,14 +29,15 @@
     position: fixed;
     top: 50% !important;
     left: 50% !important;
-    transform: translate(-48%, -25%); 
+    transform: translate(-48%, -20%); 
 }
 
-  .select-sup_text { font-size: 14px;
+  .select-sup_text { 
+    font-size: 14px;
     line-height: 16px;
     color: #7c868d;
     font-weight: 500;
-    padding-left:6px;
+   /* padding-left:6px; */
   }
   
   .select-sub_text { padding-left:23px;}
