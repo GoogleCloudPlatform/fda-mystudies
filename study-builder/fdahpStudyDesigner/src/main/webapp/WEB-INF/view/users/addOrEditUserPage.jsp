@@ -99,6 +99,7 @@ overflow-y: hidden !important;
    min-height: 100% !important;
 }
 
+.dropdown-menu>.inner { overflow-y: hidden !important; max-height: 100% !important; min-height: 100% !important; }
 </style>
 
 
