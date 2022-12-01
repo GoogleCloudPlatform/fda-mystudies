@@ -667,7 +667,7 @@ overflow-y: hidden !important;
      $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
      	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
    } 
-   if (selected_study == tot_study || selected_study > tot_study) {
+   if (selected_study == tot_study ) {
  	  $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
      $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
      	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
@@ -1695,7 +1695,8 @@ $(document).ready(function () {
 
 
     if (countCall == 0) {
-      $('.study-list .bootstrap-select .dropdown-toggle').on('click', function () {  
+      $('.study-list .bootstrap-select .dropdown-toggle').on('click', function () { 
+    	  var totalHiddenStudy =0;
       $('div.selStd').each(function () {
         var stdTxt = $(this).find('.stdCls').attr('stdTxt');
         $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:last-child").each(
@@ -1704,7 +1705,11 @@ $(document).ready(function () {
               var a = $.trim(ltxt);
               var b = $.trim(stdTxt);
               if (a == b) {
+            	  if($(this).parent().parent().css("display") == "none"){
+            	  }else{
                 $(this).parent().parent().hide();
+                totalHiddenStudy =totalHiddenStudy + 1;
+            	  }
               }
             });
       });
@@ -1714,7 +1719,7 @@ $(document).ready(function () {
       var count = $(".study-selected-item").length;
     //   alert(count + 'count');
     // alert(tot_items + 'tot_items apps');
-      if (count == tot_items) {
+      if (count == tot_items || totalHiddenStudy == tot_items ) {
     	  $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
         $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
         	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
