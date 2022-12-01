@@ -41,7 +41,7 @@ private func > <T: Comparable>(lhs: T?, rhs: T?) -> Bool {
 // MARK: - WebRequestMethods
 
 enum NetworkConnectionConstants {
-  static let ConnectionTimeoutInterval = 30.0
+  static let ConnectionTimeoutInterval = 180.0
   static let NoOfRequestRetry = 3
   static let EnableRequestRetry = false
 }
