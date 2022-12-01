@@ -505,6 +505,7 @@ div.mce-edit-area {
   font-size: 11px !important;
   line-height: 12px;
   margin:0px;
+  width: auto;
 }
 
 .help-block ul li:first-child {
