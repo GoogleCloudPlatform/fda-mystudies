@@ -626,12 +626,15 @@ class ActivitiesViewController: UIViewController {
     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
       guard let strongSelf = self else { return }
       // Update participationStatus to server
-      ResponseServices().updateUserActivityParticipatedStatus(
-        studyId: activity.studyId!,
-        participantId: Study.currentStudy?.userParticipateState.participantId ?? "",
-        activityStatus: activityStatus,
-        delegate: strongSelf
-      )
+      let participantId = Study.currentStudy?.userParticipateState.participantId ?? ""
+      if activityStatus.status != .yetToJoin{
+        ResponseServices().updateUserActivityParticipatedStatus(
+          studyId: activity.studyId!,
+          participantId: participantId,
+          activityStatus: activityStatus,
+          delegate: strongSelf
+        )
+      }
     }
 
     /// Update participationStatus to DB
@@ -915,19 +918,23 @@ class ActivitiesViewController: UIViewController {
     activityStatus.incompletedRuns = activity.incompletedRuns
     activityStatus.totalRuns = activity.totalRuns
     activityStatus.activityVersion = activity.version
+    
+    let participantId = Study.currentStudy?.userParticipateState.participantId ?? ""
 
     // Update User Participation Status to server
-    ResponseServices().updateUserActivityParticipatedStatus(
-      studyId: activity.studyId!,
-      participantId: Study.currentStudy?.userParticipateState.participantId ?? "",
-      activityStatus: activityStatus,
-      delegate: self
-    )
+    if activityStatus.status != .yetToJoin{
+      ResponseServices().updateUserActivityParticipatedStatus(
+        studyId: activity.studyId!,
+        participantId: participantId,
+        activityStatus: activityStatus,
+        delegate: self
+      )
+    }
 
     // Update User Participation Status to DB
     DBHandler.updateParticipationStatus(for: activity)
 
-    self.updateCompletionAdherence()
+//    self.updateCompletionAdherence()
     self.tableView?.reloadData()
 
   }
