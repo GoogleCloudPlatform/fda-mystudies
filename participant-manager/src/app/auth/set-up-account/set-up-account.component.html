@@ -111,12 +111,60 @@
               </div>
             </div>
           </div>
+          <div class="row">
+            <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6">
+              <div class="form-group">
+                <label for="phoneNum" class="txt_style_unset">
+                  Phone number (+X XXX XXX XXXX)
+                </label>
+                <input
+                  type="text"
+                  maxlength="16"
+                  minlength="12"
+                  class="form-control"
+                  id="phoneNum"
+                  placeholder="Enter phone number"
+                  formControlName="phoneNum"
+                  pattern=".*\\S.*[a-zA-z0-9 ]{11,15}"
+                />
+
+                <div
+                  *ngIf="
+                    f.phoneNum.invalid &&
+                    (f.phoneNum.dirty || f.phoneNum.touched)
+                  "
+                >
+                  <span
+                    class="help-block with-errors error__msg"
+                    *ngIf="f.phoneNum.errors?.required"
+                  >
+                    Enter phone number
+                  </span>
+                  <span
+                    class="help-block with-errors error__msg"
+                    *ngIf="f.phoneNum.errors?.pattern"
+                  >
+                    Phone number is invalid
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
+
+      <div>
+        <!-- <div
+        class="col-xs-6 col-md-6 p-1 p-lg-0 cursor__pointer passCriteria"
+        data-toggle="tooltip"
+        title="{{ passCriteria }}"
+    
+
       <!-- <div
         class="col-xs-6 col-md-6 p-1 p-lg-0 cursor__pointer passCriteria"
         data-toggle="tooltip"
         title="{{ passCriteria }}"
+
       >
         <a class="subheader__title float-right">
           <span>
@@ -131,37 +179,40 @@
         </a>
       </div> -->
 
-      <div
-        class="col-xs-6 col-md-6 p-1 p-lg-0 float-right cursor__pointer passCriteria"
-      >
-        <div class="form-group">
-          <div class="custom__labels">
-            <label class="mt-xs float-right pr-1" for="role">
-              <span
-                class="tool"
-                data-tip="Your password must be at least 8 characters long    
+        <div
+          class="col-xs-6 col-md-6 p-1 p-lg-0 float-right cursor__pointer passCriteria"
+        >
+          <div class="form-group">
+            <div class="custom__labels">
+              <label class="mt-xs float-right pr-1" for="role">
+                <span
+                  class="tool"
+                  data-tip="Your password must be at least 8 characters long    
                 and contain lower case, upper case, numeric and
                 special characters."
-                tabindex="1"
-              >
-                <a class="subheader__title float-right">
-                  <span>
-                    <img
-                      class="mr-xs helpout_svg cursor__pointer"
-                      src="assets/svgs/help_outline.svg"
-                      alt="Go back"
-                    />
-                  </span>
+                  tabindex="1"
+                >
+                  <a class="subheader__title float-right">
+                    <span>
+                      <img
+                        class="mr-xs helpout_svg cursor__pointer"
+                        src="assets/svgs/help_outline.svg"
+                        alt="Go back"
+                      />
+                    </span>
 
-                  <span class="subheader__title font12">Password criteria</span>
-                </a>
-              </span>
-            </label>
+                    <span class="subheader__title font12">
+                      Password criteria
+                    </span>
+                  </a>
+                </span>
+              </label>
+            </div>
           </div>
         </div>
-      </div>
 
-      <h2 class="subheader__title mb-sm">Create password</h2>
+        <h2 class="subheader__title mb-sm">Create password</h2>
+      </div>
       <section class="bg__white card__inside__pad box__shadow-cmn m-none">
         <div class="row">
           <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6">

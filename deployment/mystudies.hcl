@@ -7,7 +7,7 @@
 # This is the solution template for MyStudies. Deployment specific
 # values are to be filled in ./deployment.hcl.
 
-# {{$recipes := "git://github.com/GoogleCloudPlatform/healthcare-data-protection-suite//templates/tfengine/recipes"}}
+# {{$recipes := "github.com/GoogleCloudPlatform/healthcare-data-protection-suite//templates/tfengine/recipes"}}
 # {{$ref := "ref=templates-v0.4.0"}}
 
 data = {
@@ -182,7 +182,26 @@ template "project_secrets" {
         },
         {
           secret_id = "manual-ingest-data-to-bigquery"
+        },
+        # GOOGLE IDENTITY PLATFORM		
+        {
+          secret_id = "manual-idp-auth-domain"
+        },
+        {
+          secret_id = "manual-idp-api-key"
+        },
+        {
+          secret_id = "manual-idp-enabled-pm"
+        },
+        {
+          secret_id = "manual-idp-enabled-sb"
+        },
+        {
+          secret_id = "manual-mfa-enabled-pm"
         },		
+        {
+          secret_id = "manual-mfa-enabled-sb"
+        },
         {
           secret_id   = "auto-mystudies-sql-default-user-password"
           secret_data = "$${random_password.passwords[\"mystudies_sql_default_user_password\"].result}"
@@ -612,10 +631,16 @@ template "project_apps" {
           "serviceAccount:$${google_service_account.participant_manager_gke_sa.account_id}@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:$${google_service_account.triggers_pubsub_handler_gke_sa.account_id}@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
         ]
-      # BigQuery Permissions
+       # BIGQUERY PERMISSIONS
         "roles/bigquery.admin" = [
           "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",		  
         ]
+        # GOOGLE IDENTITY PLATFORM		
+        "roles/identitytoolkit.admin" = [
+          "serviceAccount:$${google_service_account.auth_server_gke_sa.account_id}@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:$${google_service_account.study_builder_gke_sa.account_id}@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:$${google_service_account.participant_manager_gke_sa.account_id}@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+        ]		
       }
       # Binary Authorization resources.
       # Simple configuration for now. Future
@@ -1001,7 +1026,13 @@ data "google_secret_manager_secret_version" "secrets" {
       "manual-consent-enabled",
       "manual-fhir-enabled",
       "manual-discard-fhir",
-      "manual-ingest-data-to-bigquery",	  
+      "manual-ingest-data-to-bigquery",
+      "manual-idp-auth-domain",
+      "manual-idp-api-key",
+      "manual-idp-enabled-pm",
+      "manual-idp-enabled-sb",
+      "manual-mfa-enabled-pm",
+      "manual-mfa-enabled-sb",	  
       "auto-auth-server-encryptor-password",
       "auto-hydra-db-password",
       "auto-hydra-db-user",
@@ -1044,7 +1075,13 @@ resource "kubernetes_secret" "shared_secrets" {
     consent_enabled                   = data.google_secret_manager_secret_version.secrets["manual-consent-enabled"].secret_data
     fhir_enabled                      = data.google_secret_manager_secret_version.secrets["manual-fhir-enabled"].secret_data
     discard_fhir                      = data.google_secret_manager_secret_version.secrets["manual-discard-fhir"].secret_data
-    ingest_data_to_bigquery           = data.google_secret_manager_secret_version.secrets["manual-ingest-data-to-bigquery"].secret_data	
+    ingest_data_to_bigquery           = data.google_secret_manager_secret_version.secrets["manual-ingest-data-to-bigquery"].secret_data
+    idp_auth_domain                   = data.google_secret_manager_secret_version.secrets["manual-idp-auth-domain"].secret_data
+    idp_api_key                       = data.google_secret_manager_secret_version.secrets["manual-idp-api-key"].secret_data
+    idp_enabled_pm                    = data.google_secret_manager_secret_version.secrets["manual-idp-enabled-pm"].secret_data
+    idp_enabled_sb                    = data.google_secret_manager_secret_version.secrets["manual-idp-enabled-sb"].secret_data
+    mfa_enabled_pm                    = data.google_secret_manager_secret_version.secrets["manual-mfa-enabled-pm"].secret_data
+    mfa_enabled_sb                    = data.google_secret_manager_secret_version.secrets["manual-mfa-enabled-sb"].secret_data	
   }
 }
 

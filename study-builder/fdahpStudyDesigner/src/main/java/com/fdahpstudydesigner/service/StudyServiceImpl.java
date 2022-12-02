@@ -2,22 +2,24 @@
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction,
- * including without limitation the rights to use, copy, modify, merge, publish, distribute,
- * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or
- * substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
  *
- * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as
- * Contract no. HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
- * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package com.fdahpstudydesigner.service;
@@ -56,7 +58,9 @@ import com.fdahpstudydesigner.dao.NotificationDAO;
 import com.fdahpstudydesigner.dao.StudyActiveTasksDAO;
 import com.fdahpstudydesigner.dao.StudyDAO;
 import com.fdahpstudydesigner.dao.StudyQuestionnaireDAO;
+
 import com.fdahpstudydesigner.util.ConsentManagementAPIs;
+
 import com.fdahpstudydesigner.util.CustomMultipartFile;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
@@ -99,10 +103,12 @@ public class StudyServiceImpl implements StudyService {
 
   @Autowired private AppDAO appDAO;
 
+
   @Autowired private ConsentManagementAPIs consentApis;
 
   Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
   String fhirEnabled = configMap.get("enableFhirAPI");
+
 
   @Override
   public String checkActiveTaskTypeValidation(String studyId) {
@@ -1692,10 +1698,16 @@ public class StudyServiceImpl implements StudyService {
     }
 
     if (CollectionUtils.isNotEmpty(questionnairesList)) {
-      Integer count = 0;
+
+      Integer sequenceNumber = 0;
       for (QuestionnaireBo questionnaireBo : questionnairesList) {
         studyQuestionnaireDAO.cloneStudyQuestionnaire(
-            questionnaireBo.getId(), studyBo.getId(), sessionObject, anchorDateMap, count++);
+            questionnaireBo.getId(),
+            studyBo.getId(),
+            sessionObject,
+            anchorDateMap,
+            sequenceNumber++);
+
       }
     }
 
@@ -1710,7 +1722,8 @@ public class StudyServiceImpl implements StudyService {
     }
 
     if (CollectionUtils.isNotEmpty(notificationBOs)) {
-      Integer sequence = 0;
+
+      Integer sequenceNumber = 0;
 
       for (NotificationBO notificationBO : notificationBOs) {
 
@@ -1728,7 +1741,8 @@ public class StudyServiceImpl implements StudyService {
           notificationBO.setStudyId(studyBo.getId());
           notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
           notificationBO.setPlatform(studyBo.getPlatform());
-          notificationBO.setSequenceNumber(sequence++);
+          notificationBO.setSequenceNumber(sequenceNumber++);
+
           notificationBO.setNotificationSent(false);
           if (!notificationBO.isNotificationStatus()) {
             notificationBO.setNotificationDone(false);
@@ -1769,9 +1783,11 @@ public class StudyServiceImpl implements StudyService {
         String oldActiveTaskId = activeTask.getId();
         activeTask.setId(null);
         activeTask.setStudyId(studyBo.getId());
-        activeTask.setAnchorDateId(anchorDateMap.get(activeTask.getAnchorDateId()));
+
         activeTask.setLive(0);
         activeTask.setVersion(0f);
+        activeTask.setAnchorDateId(anchorDateMap.get(activeTask.getAnchorDateId()));
+
         studyDAO.saveStudyActiveTask(activeTask);
 
         for (ActiveTaskAtrributeValuesBo active : activeTaskAtrributeValuesBos) {
@@ -1799,6 +1815,9 @@ public class StudyServiceImpl implements StudyService {
       }
     }
   }
+
+
+
 
   public String deleteById(String studyId, AuditLogEventRequest auditRequest) {
     logger.entry("begin studydeleteById()");

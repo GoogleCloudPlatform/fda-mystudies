@@ -275,6 +275,16 @@ The deployment process takes the following approach:
     gcloud config set project $PREFIX-$ENV-apps && \
       gcloud services enable sqladmin.googleapis.com
     ```
+### Configure your Identity Platform
+
+1. [Enable](https://console.cloud.google.com/marketplace/details/google-cloud-platform/customer-identity) the Identity Platform service for your `{PREFIX}-{ENV}-apps` project, for example:
+    ```bash
+    gcloud config set project $PREFIX-$ENV-apps && \
+      gcloud services enable identitytoolkit.googleapis.com
+    ```
+1. Configure an email/password and Phone Number Identity Providers by following the steps provided in this [link](https://cloud.google.com/identity-platform/docs/sign-in-user-email#add-provider)
+2. Create users by following the steps provided in this [link](https://cloud.google.com/identity-platform/docs/sign-in-user-email#add-user)
+3. The MFA (multi factor authentication) should be enabled by using the steps in the [link](https://cloud.google.com/identity-platform/docs/web/mfa#enabling_multi-factor_authentication)
 
 ### Configure and deploy your applications
 
@@ -353,7 +363,13 @@ The deployment process takes the following approach:
     `manual-consent-enabled` | To enable Google healthcare consent managment API (for example, `true` or `false`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-consent-enabled" --data-file=-`
     `manual-fhir-enabled` | To enable FHIR and/or FHIR de-identification in Google healthcare API (for example, `false` or `fhir` or `fhir&did`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-fhir-enabled" --data-file=-`
 	`manual-discard-fhir` | To discard FHIR responses in Google healthcare API (for example, `true or false`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-discard-fhir-response-enabled" --data-file=-`    
-	`manual-ingest-data-to-bigquery` | To ingest healthcare API response to BigQuery (for example, `true` or `false`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ingest-data-to-bigquery" --data-file=-`     
+	`manual-ingest-data-to-bigquery` | To ingest healthcare API response to BigQuery (for example, `true` or `false`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ingest-data-to-bigquery" --data-file=-` 
+	`manual-idp-auth-domain` | To add Identity Platform to the application, collect the authDomain value by clicking on the APPLICATION SETUP DETAILS button in the  [Identity platform providers page](https://console.cloud.google.com/customer-identity/providers) under $PREFIX-$ENV-apps project and set the value here| Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-idp-auth-domain" --data-file=-`	
+	`manual-idp-api-key` | To add Identity Platform to the application, collect the apiKey value by clicking on the APPLICATION SETUP DETAILS button in the  [Identity platform providers page](https://console.cloud.google.com/customer-identity/providers) under $PREFIX-$ENV-apps project and set the value here| Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-idp-api-key" --data-file=-`
+	`manual-mfa-enabled-pm` | To enable MFA for Participant-Manager application (for example, `true` or `false`)| Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mfa-enabled-pm" --data-file=-`
+	`manual-mfa-enabled-sb` | To enable MFA for Study-Builder application (for example, `true` or `false`)| Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mfa-enabled-sb" --data-file=-`
+	`manual-idp-enabled-pm` | To enable Identity platform service for Participant-Manager application (for example, `true` or `false`)| Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-idp-enabled-pm" --data-file=-`
+	`manual-idp-enabled-sb` | To enable Identity platform service for Study-Builder application (for example, `true` or `false`)| Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-idp-enabled-sb" --data-file=-`
 	 > Note: When updating secrets after this initial deployment, you must refresh your Kubernetes cluster and restart the relevant pods to ensure the updated secrets are propagated to your applications (you do not need to do this now - only when making updates later), for example you can update your Kubernetes state with:
      ```bash
      cd $GIT_ROOT/deployment/terraform/kubernetes

@@ -97,6 +97,7 @@
   
     .help-block ul {
    margin: 5px 0px 0px 0px;
+   width: max-content !important;
   }
   
  /* error box css end here  */
@@ -533,7 +534,7 @@
                     0)?'disabled' : ''}> <label for="isLaunchStudy"> Launch
                   with study</label>
               </span>
-              <div class="onetimeanchorClass mt-sm" style="display: none">
+              <div class="onetimeanchorClass" style="display: none">
                 <!-- Anchordate start -->
                 <div class="opacity06">OR</div>
                 <!-- Anchordate start-->
@@ -675,7 +676,7 @@
                   <span class='help-block with-errors red-txt'></span>
                 </span>
               </div>
-              <div class="onetimeanchorClass mt-sm" style="display: none">
+              <div class="onetimeanchorClass" style="display: none">
                 <div class="opacity06">OR</div>
                 <!-- Anchordate start-->
                 <div class="mt-none resetDate">
@@ -2927,7 +2928,10 @@
 
       var res = localStorage.getItem("IsAnchorDateSelected");
       var scheduletype = $('input[name="scheduleType"]:checked').val();
-      
+      if (scheduletype == 'AnchorDate') {
+      }else{
+    	  res=false;
+      }
 		$('.manually-anchor-option').each(function(customAnchorCount) {
 			if ($('#xdays' + customAnchorCount).val() == '' && scheduletype == 'AnchorDate') {
 		  	  $('#xdays' + customAnchorCount).parent().addClass("has-danger").addClass("has-error");
@@ -4324,7 +4328,7 @@
         if (isFromValid("#monthlyFormId")) {
           valForm = true;
         }
-        if (scheduletype == 'AnchorDate' && anchorForm) {
+        if (isFromValid("#monthlyFormId") && scheduletype == 'AnchorDate' && anchorForm) {
             valForm = true;
         }
       }

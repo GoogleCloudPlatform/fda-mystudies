@@ -14,9 +14,11 @@
 .mr-lg {
     margin-right: 15px !important;
 }
+
 /* .modal-footer { */
 /*     border-top: none !important; */
 /* } */
+
 .modal-header {
     border-bottom: none !important; 
 }
@@ -29,25 +31,30 @@
     position: fixed;
     top: 50% !important;
     left: 50% !important;
-    transform: translate(-48%, -25%); 
+
+    transform: translate(-48%, -20%); 
+
 }
 
-  .select-sup_text { font-size: 14px;
+  .select-sup_text { 
+    font-size: 14px;
     line-height: 16px;
     color: #7c868d;
     font-weight: 500;
-    padding-left:6px;
+   /* padding-left:3%; */
   }
   
-  .select-sub_text { padding-left:23px;}
+  
   .select_drop_parent {
   	position: absolute;
     display: contents;
     }
-      .custom_checkbox_dropdown { 
+
+     .custom_checkbox_dropdown { 
    background: #fff!important;
     min-width: 200px !important;
-    width: 268px !important;
+     width: 268px !important;
+
     max-height: 300px;
     overflow-y: scroll;
       }
@@ -58,6 +65,7 @@
 }
 .pl-7 {
 padding-left: 7px;
+
 }
  #studies_list_wrapper {
     width: 100%;
@@ -73,6 +81,7 @@ left: 0% !important;
 </style>
 
 <div class="display_contents">
+
  
   <table id="studies_list" class="table wid100 tbl">
     <thead>
@@ -130,7 +139,9 @@ left: 0% !important;
                 title="${(not empty study.liveStudyId)?((study.flag)?'Edit draft version':'Edit'):'Edit draft version'}"
                 studyId="${study.id}"></span>
            
+
             <span data-toggle="tooltip" data-placement="top" title="${(not empty study.customStudyId)?'Copy-into-new':'Please complete the Study Information section to enable this action'}">
+
              <span class="sprites_icon copy copyStudy mr-lg
               <c:choose>
 						<c:when test="${not study.viewPermission}">
@@ -142,6 +153,8 @@ left: 0% !important;
 						<c:when test="${not fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_STUDIES')}"> 
 						      cursor-none
 						</c:when>
+
+
 						
 						<c:when test="${empty study.customStudyId}"> cursor-none
 						</c:when>
@@ -151,6 +164,7 @@ left: 0% !important;
                   onclick='copyStudy("${study.id}" , "${study.liveStudyId}" ,
                    ${(not empty study.liveStudyId)?((study.flag)? true : false): false});'>
                     </span> </span>
+
            <c:if test="${not empty study.liveStudyId}">
               <span class="eye-inc viewStudyClass mr-lg published" isLive="Yes"
                     studyId="${study.liveStudyId}"
@@ -158,8 +172,10 @@ left: 0% !important;
                     title="View last published version"></span>
                     
             </c:if>
+
             
             <c:if test="${empty study.liveStudyId}">
+
              <span class="sprites_icon delete  
              <c:choose>
 						<c:when test="${not study.viewPermission}">
@@ -172,14 +188,13 @@ left: 0% !important;
                     title="Delete" onclick='validateStudy("${study.id}");'></span>  
                  
              </c:if>
-            
+
           </td>
         </tr>
       </c:forEach>
     </tbody>
   </table>
 </div>
-
 
 <div class="modal fade copyVersionModel" id="copyVersionModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -335,32 +350,27 @@ left: 0% !important;
     document.body.appendChild(form);
     form.submit();
   });
-
-  //delete prelaunch study
-   function validateStudy(studyId) {
-    //var studyId = $("#studyId").val();
-  //  debugger;
-   // var delstudyID=studyId;
-    bootbox.confirm({
-      message: "Are you sure you wish to delete this study?",
-      buttons: {
-        confirm: {
-          label: 'Yes',
-        },
-        cancel: {
-          label: 'No',
-        }
-      },
-      callback: function (result) {
-    	  if (result) {
-    		  //var studyId= $("#studyId").val();
-    		  deleteStudy(studyId);
-          }
-        }
-      });}
   
-   function deleteStudy(studyId){
-	   debugger;
+  //delete prelaunch study
+  function validateStudy(studyId) {
+   bootbox.confirm({
+     message: "Are you sure you wish to delete this study?",
+     buttons: {
+       confirm: {
+         label: 'Yes',
+       },
+       cancel: {
+         label: 'No',
+       }
+     },
+     callback: function (result) {
+   	  if (result) {
+   		  deleteStudy(studyId);
+         }
+       }
+     });}
+ 
+  function deleteStudy(studyId){
 	      var studyId = studyId;
 	     var form = document.createElement('form');
 	      form.method = 'post';
@@ -369,7 +379,6 @@ left: 0% !important;
 	      input.name = 'studyId';
 	      input.value = studyId;
 	      form.appendChild(input);
-
 	      input = document.createElement('input');
 	      input.type = 'hidden';
 	      input.name = '${_csrf.parameterName}';
@@ -379,7 +388,7 @@ left: 0% !important;
 	     document.body.appendChild(form);
 	     form.submit();
 	  }
-      
+
   //datatable icon toggle
   $(".table thead tr th").click(function () {
     $(this).children().removeAttr('class')
@@ -462,6 +471,7 @@ left: 0% !important;
 	     input.value = copyVersion;
 	     form.appendChild(input);
 
+
 	     form.action = '/studybuilder/adminStudies/replicate.do';
 	     document.body.appendChild(form);
 	     form.submit(); 
@@ -498,24 +508,26 @@ left: 0% !important;
 			        $(".select-text").html(' Select');
 			    }
 			  var total = $('input[name="options[]"]:checked').length;
-			    
-			 
+
 			  if(total == 0){
 				  $(".dropdown-text").html('Filter by apps');
 			  }else if(a.length == a.filter(":checked").length){
 				  $(".dropdown-text").html('All apps');
-				   }
+
+			   }
+
 			  else{
 				  $(".dropdown-text").html(total + ' app(s)');
 			  }
 			  
 			});
 		  
-			 
-		    <c:if test="${not empty appId}">
+
+			  <c:if test="${not empty appId}">
 		    	$(".dropdown-text").html(1 + ' app(s)');
 		    </c:if>
-		 
+		    
+
 		});
   
 </script>

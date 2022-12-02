@@ -33,6 +33,7 @@ describe('AddNewUserComponent', () => {
   let firstNameInput: DebugElement;
   let lastNameInput: DebugElement;
   let emailInput: DebugElement;
+  let phoneInput: DebugElement;
   let superAdminInput: DebugElement;
 
   beforeEach(async(async () => {
@@ -100,6 +101,7 @@ describe('AddNewUserComponent', () => {
       firstNameInput = fixture.debugElement.query(By.css('[name="firstName"]'));
       lastNameInput = fixture.debugElement.query(By.css('[name="lastName"]'));
       emailInput = fixture.debugElement.query(By.css('[name="emailText"]'));
+      phoneInput = fixture.debugElement.query(By.css('[name="PhoneNum"]'));
       superAdminInput = fixture.debugElement.query(
         By.css('[name="superAdminCheckBox"]'),
       );
@@ -110,9 +112,11 @@ describe('AddNewUserComponent', () => {
       const firstNameInputs = firstNameInput.nativeElement as HTMLInputElement;
       const lastNameInputs = lastNameInput.nativeElement as HTMLInputElement;
       const emailInputs = emailInput.nativeElement as HTMLInputElement;
+      const phoneInputs = phoneInput.nativeElement as HTMLInputElement;
       firstNameInputs.value = 'super';
       lastNameInputs.value = 'admin';
       emailInputs.value = 'super@grr.la';
+      phoneInputs.value = '000 0000 0000';
       fixture.detectChanges();
       const errorMsg = fixture.debugElement.query(By.css('.validation-error'));
       const errorHelpBlock = fixture.debugElement.query(
@@ -146,12 +150,14 @@ describe('AddNewUserComponent', () => {
       const firstNameInputs = firstNameInput.nativeElement as HTMLInputElement;
       const lastNameInputs = lastNameInput.nativeElement as HTMLInputElement;
       const emailInputs = emailInput.nativeElement as HTMLInputElement;
+      const phoneInputs = phoneInput.nativeElement as HTMLInputElement;
       const superAdminInputs = superAdminInput.nativeElement as HTMLInputElement;
       await fixture.whenStable();
 
       firstNameInputs.value = addUserRequest.firstName as string;
       lastNameInputs.value = addUserRequest.lastName as string;
       emailInputs.value = addUserRequest.email as string;
+      phoneInputs.value = addUserRequest.phoneNum as string;
       superAdminInputs.checked;
       dispatchEvent(new Event('input'));
       submitButton.click();
@@ -159,6 +165,7 @@ describe('AddNewUserComponent', () => {
       expect(component.user.firstName).toEqual(addUserRequest.firstName);
       expect(component.user.lastName).toEqual(addUserRequest.lastName);
       expect(component.user.email).toEqual(addUserRequest.email);
+      expect(component.user.phoneNum).toEqual(addUserRequest.phoneNum);
       expect(component.user.superAdmin).toEqual(addUserRequest.superAdmin);
     }));
 

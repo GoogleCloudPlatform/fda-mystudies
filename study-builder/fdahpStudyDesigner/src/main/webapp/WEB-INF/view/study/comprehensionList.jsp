@@ -165,7 +165,9 @@
 	        class="requiredStar">*
 	      </span>
         </div>
+
         <div class="form-group col-md-3 p-none scoreClass">
+
           <input type="text" id="comprehensionTestMinimumScore" class="form-control"
                  name="comprehensionTestMinimumScore" data-error="Please fill out this field"
                  value="${consentBo.comprehensionTestMinimumScore}"
@@ -195,6 +197,7 @@
 <script type="text/javascript">
 var markAsComplete = "${markAsComplete}"
   $(document).ready(function () {
+
 	var mainContainerDivision = document.getElementById("comprehensionTestNo").checked;
    if(mainContainerDivision==true){
 	    $('#comprehensionTestMinimumScore').attr('required', false);
@@ -202,6 +205,7 @@ var markAsComplete = "${markAsComplete}"
 	} else {
 		$('#comprehensionTestMinimumScore').attr('required', true);
 	}
+
 	$('.studyClass').addClass("active");
     $(".menuNav li").removeClass('active');
     $(".fifthComre").addClass('active');
@@ -215,6 +219,7 @@ var markAsComplete = "${markAsComplete}"
       var val = $(this).val();
       $("#addQuestionId").attr("disabled", true);
       if (val == "Yes") {
+
     	$("#saveId").html("Next");
         $("#comprehensionTestMinimumScore, #minScoreText").hide();
         $('#comprehensionTestMinimumScore').attr('required', true);
@@ -224,6 +229,7 @@ var markAsComplete = "${markAsComplete}"
                 && $('#comprehension_list tbody tr td').length == 1) {
        $("#markAsCompleteBtnId").attr("disabled", true);
        $('#helpNote').attr('data-original-title','Please add 1 or more questions to the test');
+
         }
      
         if (markAsComplete == "false") {
@@ -239,6 +245,7 @@ var markAsComplete = "${markAsComplete}"
       } else {
     	$('#comprehensionTestMinimumScore').attr('required', false);
     	$("#saveId").html("Save");
+    	$('#comprehensionTestMinimumScore').attr('required', false);
         $("#comprehensionTestMinimumScore").val('');
         $("#mainContainer").hide();
         $("#addHelpNote").hide();
@@ -480,6 +487,7 @@ var markAsComplete = "${markAsComplete}"
         } else {
           datarow.push("<div class='dis-ellipsis'>" + DOMPurify.sanitize(obj.questionText) + "</div>");
         }
+
         var actions='';
         var objStatus=(typeof obj.status ? 'edit-inc' : 'edit-inc-draft mr-md');
         if( obj.status===true){
@@ -501,6 +509,7 @@ var markAsComplete = "${markAsComplete}"
                    + "</span>";
         	    markAsComplete="false";
             }
+
         datarow.push(actions);
         $('#comprehension_list').DataTable().row.add(datarow);
       });

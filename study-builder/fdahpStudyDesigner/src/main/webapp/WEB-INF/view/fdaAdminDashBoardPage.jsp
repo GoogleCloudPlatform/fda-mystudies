@@ -2,6 +2,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@page import="com.fdahpstudydesigner.util.SessionObject" %>
+
 <!DOCTYPE html>
 <html class="overflow-hidden" lang="">
   <head>
@@ -48,10 +49,13 @@
 
     <!-- Head Libs -->
     <script src="/studybuilder/vendor/modernizr/modernizr.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.0/firebase.js"></script>
      <style>
    
 .arrow {
+
   display: none !important;
+
   width: 0px !important;
   height: 0px !important;
   display: inline-block;
@@ -79,6 +83,7 @@
   top: -3px;
   left: 3px;
 }
+
    </style>
   </head>
   <body class="loading background__img" onload="noBack();" onpageshow="if (event.persisted) noBack();"
@@ -99,7 +104,7 @@
           <div  class="dropdown ml-lg userLi">
               <a class="dropdown-toggle blue-link text-uppercase" data-toggle="dropdown" style="color:#fff;" aria-expanded="true"
                  href="javascript:void(0)"> <span class="pr-xs">${sessionObject.firstName}  ${sessionObject.lastName}</span>
-                <span class="arrow"></span>
+                <span class="arrow"  ></span>
               </a>
               <ul class="dropdown-menu pb-none pt-none profileBox">
                 <li class="linkProf">
@@ -108,7 +113,7 @@
                   </a>
                   <hr align="left" width="100%">
                   <a href="/studybuilder/sessionOut.do"
-                     class="blue-link text-weight-normal text-uppercase">
+                     class="blue-link text-weight-normal text-uppercase" id="signOut">
                     <span>sign Out</span>
                     <span
                         class="ml-xs"><img src="/studybuilder/images/icons/logout.png"/></span>
@@ -235,7 +240,6 @@
     <script src="/studybuilder/vendor/magnific-popup/jquery.magnific-popup.min.js"></script>
     <script src="/studybuilder/vendor/slimscroll/jquery.slimscroll.min.js"></script>
     <script src="/studybuilder/js/jquery.mask.min.js"></script>
-
     <script type="text/javascript" src="/studybuilder/js/loader.js"></script>
 
     <!-- Theme Custom JS-->
@@ -297,6 +301,24 @@
           document.studyListForm.action = "/studybuilder/adminDashboard/viewUserDetails.do";
           document.studyListForm.submit();
         });
+        var idpEnabled = ${idpEnabled};
+      	 if(idpEnabled == true){
+        var config = {
+	   	  apiKey: "${idpApiKey}",
+	   	  authDomain: "${idpAuthDomain}",
+	   	};
+	   	firebase.initializeApp(config);
+      	}
+        	  
+        $('#signOut').on('click', function () {
+            firebase.auth().signOut()
+        	   .then(function() {
+        	      console.log('Signout Success')
+        	   }, function(error) {
+        		  console.log('Signout Failed' + error)
+        	   });
+         });
+        
         if ('${sessionScope.sessionObject}' != '') {
           setTimeout(function () {
             window.location.href = '/studybuilder/errorRedirect.do?error=timeOut';

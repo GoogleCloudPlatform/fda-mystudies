@@ -7,9 +7,9 @@ export interface AppDetails {
   participants: Participant[];
   status: number;
   message: string;
-  appStatus?: Status;
   code: string;
   totalParticipantCount: number;
+  appStatus?: Status;
 }
 
 export interface Participant {

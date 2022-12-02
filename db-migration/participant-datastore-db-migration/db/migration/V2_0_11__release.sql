@@ -1,3 +1,13 @@
+
+
+/* Column added for integrating Google Identity Platform with MyStudies */
+
+ALTER TABLE `mystudies_participant_datastore`.`ur_admin_user` ADD `idp_user` CHAR(1)  DEFAULT 'N';
+
+UPDATE `mystudies_participant_datastore`.`ur_admin_user` set `idp_user`='N' where `idp_user` IS NULL;
+
+
+
 /* ISSUE #616 Use FCM instead of APNS for iOS push notifications */
 
 ALTER TABLE `mystudies_participant_datastore`.`user_details` ADD COLUMN `device_type` VARCHAR(255) DEFAULT NULL;

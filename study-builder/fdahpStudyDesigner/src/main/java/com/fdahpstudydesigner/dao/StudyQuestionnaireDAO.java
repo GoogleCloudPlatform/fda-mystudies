@@ -206,16 +206,19 @@ public interface StudyQuestionnaireDAO {
       String studyId,
       SessionObject sessionObject,
       Map<String, String> anchorDateMap,
-      Integer count);
+      Integer sequenceNumber);
+
 
   public List<String> getQuestionsByFormIds(List<String> formIds);
 
   public List<QuestionnaireCustomScheduleBo> getQuestionnaireCustomSchedules(
       String questionnaireId);
 
+
   public List<QuestionResponseSubTypeBo> getQuestionResponseSubTypes(String questionId);
 
   public List<QuestionnairesFrequenciesBo> getQuestionnairesFrequencies(String questionId);
 
 public QuestionnairesStepsBo getenabledValues(QuestionsBo questionBo);
+
 }

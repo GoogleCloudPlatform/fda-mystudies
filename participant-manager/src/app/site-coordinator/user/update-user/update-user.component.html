@@ -20,6 +20,7 @@
         <button
           (click)="changeStatus(user.status)"
           class="btn banner__default__btn pad__5__13 bt__font12__pad113 ml-sm"
+          [disabled]="user.idpUser && user.deletedOrDisabledInIdp"
         >
           {{
             user.status === userStatus.Deactivated
@@ -29,6 +30,15 @@
               : "Deactivate admin"
           }}
         </button>
+        <span
+          style="line-height: 15px"
+          *ngIf="user.idpUser && user.deletedOrDisabledInIdp"
+          class="tool"
+          data-tip="This user may be deleted from the organization directory or user whitelist for the Participant Manager. Please contact your IT admin to have them added back and try again."
+          tabindex="1"
+        >
+          <i class="fa fa-info-circle ml-xs info_i" aria-hidden="true"></i>
+        </span>
         <button
           *ngIf="user.status === userStatus.Invited"
           (click)="resendInvitation()"
@@ -127,7 +137,7 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <div class="row border-bottom__c4d1e6">
         <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6">
           <div class="form-group">
             <label for="emailId">Email</label>
@@ -179,6 +189,45 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                   ></i>
                 </span>
               </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6">
+          <div class="form-group">
+            <label for="phoneNum" class="txt_style_unset">
+              Phone number (+X XXX XXX XXXX)
+            </label>
+            <input
+              type="text"
+              maxlength="16"
+              minlength="12"
+              [(ngModel)]="user.phoneNum"
+              name="phoneNum"
+              #phoneNum="ngModel"
+              [attr.required]="user.mfaEnabledForPM"
+              pattern="[+][0-9\s]{11,15}"
+              class="form-control"
+              id="phoneNum"
+              placeholder="Enter phone number"
+            />
+
+            <div
+              *ngIf="phoneNum.invalid && (phoneNum.dirty || phoneNum.touched)"
+            >
+              <span
+                class="help-block with-errors error__msg"
+                *ngIf="phoneNum.errors?.required"
+              >
+                Enter phone number
+              </span>
+              <span
+                class="help-block with-errors error__msg"
+                *ngIf="phoneNum.errors?.pattern"
+              >
+                Phone number is invalid
+              </span>
             </div>
           </div>
         </div>

@@ -92,14 +92,14 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <div class="row border-bottom__c4d1e6">
         <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6">
-          <div class="form-group">
+          <div class="form-group" [ngClass]="{myarrow: userEmail.length > 0}">
             <label for="emailId">Email</label>
             <input
               type="email"
-              class="form-control"
-              id="emailId"
+              list="emailId"
+              class="form-control email_dropdown_arrow"
               placeholder="Enter email"
               [(ngModel)]="user.email"
               pattern="[a-zA-Z0-9\+\.\_\%\-\+]{1,256}\@[a-zA-Z0-9][a-zA-Z0-9\-]{0,64}(\.[a-zA-Z0-9][a-zA-Z0-9\-]{0,25})+"
@@ -107,6 +107,12 @@
               #emailText="ngModel"
               required
             />
+            <datalist id="emailId">
+              <option *ngFor="let useremail of userEmail">
+                {{ useremail }}
+              </option>
+            </datalist>
+
             <div
               *ngIf="
                 emailText.invalid && (emailText.dirty || emailText.touched)
@@ -153,6 +159,45 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                   ></i>
                 </span>
               </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6">
+          <div class="form-group">
+            <label for="phoneNum" class="txt_style_unset">
+              Phone number (+X XXX XXX XXXX)
+            </label>
+            <input
+              type="text"
+              maxlength="16"
+              minlength="12"
+              [(ngModel)]="user.phoneNum"
+              name="phoneNum"
+              #phoneNum="ngModel"
+              pattern="[+][0-9\s]{11,15}"
+              class="form-control"
+              id="phoneNum"
+              placeholder="Enter phone number"
+              [required]="mfaEnabledForPM"
+            />
+
+            <div
+              *ngIf="phoneNum.invalid && (phoneNum.dirty || phoneNum.touched)"
+            >
+              <span
+                class="help-block with-errors error__msg"
+                *ngIf="phoneNum.errors?.required"
+              >
+                Enter phone number
+              </span>
+              <span
+                class="help-block with-errors error__msg"
+                *ngIf="phoneNum.errors?.pattern"
+              >
+                Phone number is invalid
+              </span>
             </div>
           </div>
         </div>
@@ -512,9 +557,10 @@ Superadmins can manage users of the Participant Manager and in addition, can man
     <section class="btn__container">
       <button
         [disabled]="!addUserForm.form.valid || disableButton"
-        type="submit"
+        type="button"
         name="add"
         class="btn bt__add bt__add__auto mr-sm mb-2 mt-2"
+        (click)="openModal(template)"
       >
         Add admin user and invite
       </button>
@@ -528,3 +574,32 @@ Superadmins can manage users of the Participant Manager and in addition, can man
     </section>
   </form>
 </section>
+<ng-template #template>
+  <div class="modal-body p-4 text-center" *ngIf="!user.superAdmin == true">
+    You are inviting a person who is not listed in the organizational directory
+    to be a Participant Manager admin. Are you sure you wish to proceed?
+  </div>
+  <div class="modal-body p-4 text-center" *ngIf="user.superAdmin == true">
+    You are inviting a person who is not listed in the organizational directory,
+    to be a Participant Manager superadmin. Are you sure you wish to proceed?
+  </div>
+  <div class="modal-footer flex__justify__space-between">
+    <div class="float-left text-left">
+      <button
+        type="submit"
+        name="add"
+        class="btn bt__add mr-sm"
+        (click)="add()"
+      >
+        Confirm
+      </button>
+      <button
+        type="button"
+        class="btn bt__cancel mobile_mt-8"
+        (click)="modalRef.hide()"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+</ng-template>

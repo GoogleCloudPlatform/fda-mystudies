@@ -196,8 +196,11 @@ public class StudyBo implements Serializable {
   @Column(name = "destination_custom_study_id")
   private String destinationCustomStudyId;
 
-  @Column(name = "export_signed_url")
+  @Column(name = "export_signed_url", length = 1012)
   private String exportSignedUrl;
+
+  @Column(name = "is_cloud_storage_moved", columnDefinition = "int default 0")
+  private Integer isCloudStorageMoved;
 
   @Transient private byte[] exportSqlByte;
 
@@ -219,9 +222,6 @@ public class StudyBo implements Serializable {
   public void setDestinationCustomStudyId(String destinationCustomStudyId) {
     this.destinationCustomStudyId = destinationCustomStudyId;
   }
-
-  @Column(name = "is_cloud_storage_moved", columnDefinition = "int default 0")
-  private Integer isCloudStorageMoved;
 
   public String getButtonText() {
     return buttonText;

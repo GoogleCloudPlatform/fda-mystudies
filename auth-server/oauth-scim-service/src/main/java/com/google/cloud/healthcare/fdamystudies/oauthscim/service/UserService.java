@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -10,6 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.oauthscim.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.AuthUserUpdate;
 import com.google.cloud.healthcare.fdamystudies.beans.AuthenticationResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordResponse;
@@ -22,6 +23,8 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import java.io.IOException;
 import java.util.Optional;
+import javax.servlet.http.HttpServletResponse;
+import org.json.JSONException;
 
 public interface UserService {
 
@@ -44,8 +47,14 @@ public interface UserService {
   public UpdateEmailStatusResponse updateEmailStatusAndTempRegId(
       UpdateEmailStatusRequest userRequest) throws JsonProcessingException;
 
+  public Boolean isIDPUser(HttpServletResponse response, String email)
+      throws IOException, JSONException;
+
   public AuthenticationResponse authenticate(UserRequest user, AuditLogEventRequest auditRequest)
       throws JsonProcessingException;
+
+  public AuthenticationResponse authenticateIDPUser(
+      UserRequest user, AuditLogEventRequest auditRequest) throws JsonProcessingException;
 
   public void resetTempRegId(String userId);
 
@@ -61,4 +70,6 @@ public interface UserService {
   public void deleteUserAccount(String userId);
 
   public Optional<UserEntity> findByUserId(String userId);
+
+  public void updateUserAdmin(AuthUserUpdate userRequest);
 }

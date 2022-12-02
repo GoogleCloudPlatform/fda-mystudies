@@ -58,6 +58,8 @@ public final class UserMapper {
     Integer manageLocation =
         userRequest.isSuperAdmin() ? Permission.EDIT.value() : userRequest.getManageLocations();
     admin.setLocationPermission(manageLocation);
+    admin.setIdpUser(userRequest.isIdpUser());
+    admin.setPhoneNumber(userRequest.getPhoneNum());
     return admin;
   }
 
@@ -65,6 +67,7 @@ public final class UserMapper {
       UserRequest userRequest, UserRegAdminEntity adminDetails) {
     adminDetails.setFirstName(userRequest.getFirstName());
     adminDetails.setLastName(userRequest.getLastName());
+    adminDetails.setPhoneNumber(userRequest.getPhoneNum());
     adminDetails.setSuperAdmin(userRequest.isSuperAdmin());
     Integer manageLocation =
         userRequest.isSuperAdmin() ? Permission.EDIT.value() : userRequest.getManageLocations();
@@ -217,6 +220,7 @@ public final class UserMapper {
     user.setManageLocations(admin.getLocationPermission());
     UserStatus userStatus = UserStatus.fromValue(admin.getStatus());
     user.setStatus(userStatus.getDescription());
+    user.setPhoneNum(admin.getPhoneNumber());
     return user;
   }
 

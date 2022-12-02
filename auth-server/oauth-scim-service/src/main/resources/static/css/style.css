@@ -423,7 +423,7 @@ body#body-container {
   flex-direction: column;
   min-width: 0;
   word-wrap: break-word;
-  background-color: #fff;
+  background-color: transparent !important;
   background-clip: border-box;
   border: 0px solid rgba(0, 0, 0, 0.125) !important;
   border-radius: 0.25rem;
@@ -526,6 +526,11 @@ body#body-container {
   text-align: center;
 }
 
+.bootbox-font  {
+ color: #2d2926;
+ font-family: 'Roboto', sans-serif;
+ font-size: 14px;
+}
 @-webkit-keyframes loading-spinner {
   0%   { -webkit-transform: rotate(0deg);   transform: rotate(0deg); }
   100% { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
@@ -559,13 +564,31 @@ body#body-container {
 @media only screen and (max-width: 1920px) and (min-width: 1440px) {
   .loading_text {
   margin-top: 90%;
+  }
 }
+
 @media only screen and (max-width: 1439px) and (min-width: 1024px) {
   .loading_text {
   margin-top: 60%;
+  }
 }
 
 @media only screen and (max-width: 500px) and (min-width: 300px) {
 .mob_mt { margin-top:10px; }
 }
 
+@media (min-width: 375px) {
+@supports (-webkit-hyphens:none){
+  .centered__div__mobile {
+    width: 300px;
+    max-width: 100%;
+    max-width: auto;
+   }
+  }
+}
+
+@media screen and (max-width: 500px) {
+  input, select, textarea {
+    font-size: 13px;
+  }
+}

@@ -154,7 +154,7 @@ $(document)
                             .append($("<ul><li> </li></ul>")
                             .attr("class","list-unstyled")
                             .attr("style","white-space:nowrap")
-                            .text("Please use allowed characters only: lowercase letters (a-z), digits (0-9), _ (underscore) and -(minus)"));
+                            .text("Please use allowed characters only: lowercase alphabets (a-z), digits (0-9), _ (underscore) and -(minus)"));
                       }
                     }
                   });       
@@ -186,7 +186,7 @@ $(document)
                             .empty()
                             .append($("<ul><li> </li></ul>")
                             .attr("class","list-unstyled")
-                            .text("Special characters such as #^}{ are not allowed"));
+                            .text("Special characters such as #^><}{ are not allowed"));
                       }
                     }
                   });
@@ -387,7 +387,7 @@ $(document)
           document.onkeypress = function (event) {
             event = (event || window.event);
             if (event.keyCode == 123) {
-              alert("This action is disabled")
+              alert("This action is disabled.")
               return false;
             }
           }
@@ -395,33 +395,33 @@ $(document)
           document.onmousedown = function (event) {
             event = (event || window.event);
             if (event.keyCode == 123) {
-              alert("This action is disabled")
+              alert("This action is disabled.")
               return false;
             }
           }
 
           document.onkeydown = function (e) {
             if (e.keyCode == 123) {
-              alert("This action is disabled");
+              alert("This action is disabled.");
               return false;
             }
             if (e.ctrlKey && e.shiftKey
                 && e.keyCode == 'I'.charCodeAt(0)) {
-              alert("This action is disabled");
+              alert("This action is disabled.");
               return false;
             }
             if (e.ctrlKey && e.shiftKey
                 && e.keyCode == 'J'.charCodeAt(0)) {
-              alert("This action is disabled");
+              alert("This action is disabled.");
               return false;
             }
             if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
-              alert("This action is disabled");
+              alert("This action is disabled.");
               return false;
             }
             if (e.ctrlKey && e.shiftKey
                 && e.keyCode == 'C'.charCodeAt(0)) {
-              alert("This action is disabled");
+              alert("This action is disabled.");
               return false;
             }
           }
@@ -745,6 +745,286 @@ $(document)
                     }
                   });
 
+			function multiFactorAuth(fdaLink, email, password, passwordLength, userPhoneNumber) {
+			debugger
+			 //var userPhoneNumber = $.trim(userPhoneNumber);
+			 var userPhoneNumber =userPhoneNumber.replaceAll(' ','');
+			 userPhoneNumber = $.trim(userPhoneNumber);
+			 this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
+			 debugger
+			  document.getElementById("recaptcha-container").style.display = "inline-block";
+			  debugger
+			 setTimeout(function() {
+			 debugger
+	           	var provider = new firebase.auth.PhoneAuthProvider();
+	           	debugger
+				return provider.verifyPhoneNumber(userPhoneNumber, recaptchaVerifier)
+				    .then(function(verificationId) {
+				    debugger
+				     $('#recaptcha-container').hide();
+				     // Ask user for the verification code.
+				     debugger
+				     var form = $('<form><div class="bootbox-font">Please enter the verification code that was sent to your mobile device.</div><div class="text-center mb-xs mt-md"><input name="verificationCode" class="popup_input" autocomplete="off"/></div></form>');
+debugger
+				    bootbox.confirm({
+				      closeButton: false,
+				      message: form,
+				      buttons: {
+				        'confirm': {
+				          label: 'OK',
+				        },
+				        'cancel': {
+				          label: 'Cancel',
+				        },
+				      },
+				      callback: function (result) {
+				        if (result) {
+				        
+         			 	  var verificationCode = form.find('input[name=verificationCode]').val();
+				      	  //verificationCode
+						  var cred = firebase.auth.PhoneAuthProvider.credential(verificationId,
+				          verificationCode);
+				          // sign in the user with the credential
+				          return firebase.auth().signInWithCredential(cred)
+						  .then((cred) => {
+						    $("body").addClass("loading");
+						    $('#recaptcha-container').hide();
+						     viewDashBoard(fdaLink, email, password, passwordLength);
+						  })
+ 						  .catch(function(error) {
+ 						  
+ 						   if (error.code == 'auth/invalid-verification-code') {
+			           
+					            $('#password')
+					                .val('');
+					            $(
+					                ".askSignInCls")
+					                .addClass(
+					                    'hide');
+					            $("#errMsg")
+					                .text(
+					                    "The SMS verification code used to create the phone auth credential is invalid. "
+										+ "Please login again and use the correct verification code sent to your registered phone number.");
+					            $("#errMsg")
+					                .show(
+					                    "fast");
+					            setTimeout(
+					                hideDisplayMessage,
+					                5000);
+					            $('#password')
+					                .attr(
+					                    "type",
+					                    "password");
+					            $('#email')
+					                .val(
+					                    email);
+					            $("body")
+					                .removeClass(
+					                    "loading");
+					                    $('#loginBtnId').prop('disabled', false);
+					                    setTimeout(function(){
+                              window.location.reload();
+                                             }, 6000);
+					            return false;
+				           } else { 
+				   	            $('#password')
+		                            .val('');
+		                        $(
+		                            ".askSignInCls")
+		                            .addClass(
+		                                'hide');
+		                        $("#errMsg")
+		                            .text(
+		                                error.message);
+		                        $("#errMsg")
+		                            .show(
+		                                "fast");
+		                        setTimeout(
+		                            hideDisplayMessage,
+		                            5000);
+		                        $('#password')
+		                            .attr(
+		                                "type",
+		                                "password");
+		                        $('#email')
+		                            .val(
+		                                email);
+		                        $("body")
+		                            .removeClass(
+		                                "loading");
+		                                $('#loginBtnId').prop('disabled', false);
+		                        return false;
+	                        }
+                      	 });
+					
+				          }else{
+				          location.reload();
+				          $('#password').val(password);
+                          $('#email').val(email); 
+				          }
+				        }
+				      })			
+						
+			          }).catch(function (error) {
+			          
+			           $('#recaptcha-container').hide();
+			          
+			          if(error.code == 'auth/argument-error') {
+			              $('#password')
+				                .val('');
+				            $(
+				                ".askSignInCls")
+				                .addClass(
+				                    'hide');
+				            $("#errMsg")
+				                .text(
+				                    "");
+				            $("#errMsg")
+				                .show(
+				                    "fast");
+				            setTimeout(
+				                hideDisplayMessage,
+				                1000);
+				            $('#password')
+				                .attr(
+				                    "type",
+				                    "password");
+				            $('#email')
+				                .val(
+				                    email);
+				            $("body")
+				                .removeClass(
+				                    "loading");
+				                    $('#loginBtnId').prop('disabled', false);
+				            return false;
+			           }if (error.code == 'auth/invalid-phone-number') {
+			           debugger
+					            $('#password')
+					                .val('');
+					            $(
+					                ".askSignInCls")
+					                .addClass(
+					                    'hide');
+					            $("#errMsg")
+					                .text(
+					                    "The format of the phone number provided is incorrect. "
+										+ "Kindly enter phone number  in the format [+][country code][subscriber number including area code].");
+					            $("#errMsg")
+					                .show(
+					                    "fast");
+					            setTimeout(
+					                hideDisplayMessage,
+					                5000);
+					            $('#password')
+					                .attr(
+					                    "type",
+					                    "password");
+					            $('#email')
+					                .val(
+					                    email);
+					            $("body")
+					                .removeClass(
+					                    "loading");
+					                    $('#loginBtnId').prop('disabled', false);
+					            return false;
+				           }
+			            else {
+			   	           $('#password')
+				                .val('');
+				            $(
+				                ".askSignInCls")
+				                .addClass(
+				                    'hide');
+				            $("#errMsg")
+				                .text(
+				                    error.message);
+				            $("#errMsg")
+				                .show(
+				                    "fast");
+				            setTimeout(
+				                hideDisplayMessage,
+				                5000);
+				            $('#password')
+				                .attr(
+				                    "type",
+				                    "password");
+				            $('#email')
+				                .val(
+				                    email);
+				            $("body")
+				                .removeClass(
+				                    "loading");
+				                     $('#loginBtnId').prop('disabled', false);
+				            return false;
+			            
+			            }
+		
+		            });
+
+			  }, 1000);
+  
+			  
+			}
+  
+			function viewDashBoard(fdaLink, email, password, passwordLength) {
+
+		         $.ajax({
+                    url: fdaLink,
+                    type: "POST",
+                    datatype: "json",
+                    data: {
+                      username: email,
+                      password: password,
+                    },
+                    success: function (data) {
+                      var jsonobject = data;
+                      var message = jsonobject.message;
+                      if (message == "SUCCESS") {
+                        $('#email')
+                            .val(email);
+                        $('#password')
+                            .val(passwordLength);
+                        $('#landingId')
+                            .submit();
+                        var a = document
+                            .createElement('a');
+                        a.href = "/studybuilder/adminDashboard/viewDashBoard.do?action=landing";
+                        document.body
+                            .appendChild(
+                                a)
+                            .click();
+                      } else {
+                        $('#password')
+                            .val('');
+                        $(
+                            ".askSignInCls")
+                            .addClass(
+                                'hide');
+                        $("#errMsg")
+                            .text(
+                                message);
+                        $("#errMsg")
+                            .show(
+                                "fast");
+                        setTimeout(
+                            hideDisplayMessage,
+                            5000);
+                        $('#password')
+                            .attr(
+                                "type",
+                                "password");
+                        $('#email')
+                            .val(
+                                email);
+                        $("body")
+                            .removeClass(
+                                "loading");
+                      }
+                    },
+                    global: false
+                  })
+				}
+
           $('#loginBtnId')
               .click(
                   function () {
@@ -755,8 +1035,9 @@ $(document)
                       isValidLoginForm = true;
                     }
                     if (isValidLoginForm) {
-                      var username = $('#email').val();
-                      $('#email').val('');
+                    debugger
+                    $('#loginBtnId').prop('disabled', true);
+                      var email = $('#email').val();
                       var password = $('#password').val();
                       var passwordLength = "";
                       var i;
@@ -770,64 +1051,155 @@ $(document)
                           .css(
                               '-webkit-text-security',
                               'disc');
+                      var csrfDetcsrfParamName = $(
+                          '#csrfDet').attr(
+                          'csrfParamName');
+                      var csrfToken = $('#csrfDet').attr(
+                          'csrfToken');
+                          debugger
+                      var isIDPUser = false;
                       var fdaLink = $('#fdaLink').val();
-                      $("body").addClass("loading");
-                      $
-                          .ajax({
-                            url: fdaLink,
-                            type: "POST",
-                            datatype: "json",
-                            data: {
-                              username: username,
-                              password: password,
-                            },
-                            success: function (data) {
-                              var jsonobject = data;
-                              var message = jsonobject.message;
-                              if (message == "SUCCESS") {
-                                $('#email')
-                                    .val('');
-                                $('#password')
-                                    .val(passwordLength);
-                                $('#landingId')
-                                    .submit();
-                                var a = document
-                                    .createElement('a');
-                                a.href = "/studybuilder/adminDashboard/viewDashBoard.do?action=landing";
-                                document.body
-                                    .appendChild(
-                                        a)
-                                    .click();
-                              } else {
-                                $('#password')
-                                    .val('');
-                                $(
-                                    ".askSignInCls")
-                                    .addClass(
-                                        'hide');
-                                $("#errMsg")
-                                    .text(
-                                        message);
-                                $("#errMsg")
-                                    .show(
-                                        "fast");
-                                setTimeout(
-                                    hideDisplayMessage,
-                                    5000);
-                                $('#password')
-                                    .attr(
-                                        "type",
-                                        "password");
-                                $('#email')
-                                    .val(
-                                        username);
-                                $("body")
-                                    .removeClass(
-                                        "loading");
-                              }
-                            },
-                            global: false
-                          })
-                    }
-                  });
+                      var idpEnabled = $('#idp').val();
+                      var mfaEnabled = $('#mfa').val();
+                      if(idpEnabled == 'true'){
+                       		$.ajax({
+                              url: "/studybuilder/getIDPUserData.do?"
+                                  + csrfDetcsrfParamName
+                                  + "="
+                                  + csrfToken,
+                              type: "POST",
+                              datatype: "json",
+                              data: {
+                                email: email,
+                              },
+                              success: function getResponse(
+                                  data) {
+                                  debugger
+                                var isIDPUser = data.idpUser;
+                                var userPhoneNumber = data.userPhoneNumber;
+			                     if(isIDPUser) {
+				   	   			  firebase.auth().onAuthStateChanged(function(user) {
+							   	    if (user) {
+							   	//    alert("success  " + email);
+							   	    } else {
+							   	 //   alert("No user signed in " + email);
+							   	    }
+							   	  });
+						
+							   	  firebase.auth().signInWithEmailAndPassword(email, password)
+							   	  .then(function(firebaseUser) {
+							   	  debugger
+								   	  if(mfaEnabled == 'true' ){
+								   	   debugger
+								   	    $('#recaptcha-container').show();
+								   	   	multiFactorAuth(fdaLink, email, password, passwordLength, userPhoneNumber);
+								   	  } else {
+								   	    $("body").addClass("loading");
+								   	    $('#loginBtnId').prop('disabled', false);
+								   	    viewDashBoard(fdaLink, email, password, passwordLength); 
+								   	  }
+								   })
+								   .catch(function(error) {
+							   	   if(error.code == 'auth/argument-error') {
+						              $('#password')
+							                .val('');
+							            $(
+							                ".askSignInCls")
+							                .addClass(
+							                    'hide');
+							            $("#errMsg")
+							                .text(
+							                    "");
+							            $("#errMsg")
+							                .show(
+							                    "fast");
+							            setTimeout(
+							                hideDisplayMessage,
+							                1000);
+							            $('#password')
+							                .attr(
+							                    "type",
+							                    "password");
+							            $('#email')
+							                .val(
+							                    email);
+							            $("body")
+							                .removeClass(
+							                    "loading");
+							                    $('#loginBtnId').prop('disabled', false);
+							            return false;
+						           } else if (error.code == 'auth/too-many-requests') {
+						           		$('#password')
+							                .val('');
+							            $(
+							                ".askSignInCls")
+							                .addClass(
+							                    'hide');
+							            $("#errMsg")
+							                .text(
+							                    "Access to this account can be temporarily disabled if there is failed login attempts. Please use valid credentials.");
+							            $("#errMsg")
+							                .show(
+							                    "fast");
+							            setTimeout(
+							                hideDisplayMessage,
+							                8000);
+							            $('#password')
+							                .attr(
+							                    "type",
+							                    "password");
+							            $('#email')
+							                .val(
+							                    email);
+							            $("body")
+							                .removeClass(
+							                    "loading");
+							                    $('#loginBtnId').prop('disabled', false);
+							            return false;
+						           } else {
+						   	           $('#password')
+				                            .val('');
+				                        $(
+				                            ".askSignInCls")
+				                            .addClass(
+				                                'hide');
+				                        $("#errMsg")
+				                            .text(
+				                                error.message);
+				                        $("#errMsg")
+				                            .show(
+				                                "fast");
+				                        setTimeout(
+				                            hideDisplayMessage,
+				                            5000);
+				                        $('#password')
+				                            .attr(
+				                                "type",
+				                                "password");
+				                        $('#email')
+				                            .val(
+				                                email);
+				                        $("body")
+				                            .removeClass(
+				                                "loading");
+				                                $('#loginBtnId').prop('disabled', false);
+				                        return false;
+				                     }  
+			                       });
+				   	  		} else {
+				   	  		   $("body").addClass("loading");
+				   	  		   $('#loginBtnId').prop('disabled', false);
+				   	  	       viewDashBoard(fdaLink, email, password, passwordLength);
+				   	  		}
+				                 },
+				                  global: false
+                            });
+                            } else {
+                               $("body").addClass("loading");
+                               $('#loginBtnId').prop('disabled', false);
+				   	  	       viewDashBoard(fdaLink, email, password, passwordLength);
+				   	  		}
+				   	  		
+	                    }
+	                  }); 
         });

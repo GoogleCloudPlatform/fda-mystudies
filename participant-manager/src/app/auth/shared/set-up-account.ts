@@ -10,4 +10,5 @@ export interface SetUpPostRequest {
   password: string;
   firstName: string;
   lastName: string;
+  phoneNum: string;
 }

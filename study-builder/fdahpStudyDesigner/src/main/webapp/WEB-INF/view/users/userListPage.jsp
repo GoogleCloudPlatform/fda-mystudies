@@ -37,7 +37,7 @@
         </form>
       </div>
 
-      <div class="dis-line pull-right ml-md">
+      <div class="dis-line pull-right ml-md" >
         <div class="form-group mb-none mt-xs">
           <c:if
               test="${fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN')}">
@@ -55,7 +55,9 @@
           </c:if>
         </div>
       </div>
-      <div class="dis-line pull-right"
+      
+      
+      <div class="dis-line pull-right mr-md"
            style="margin-top: 10px; height: auto;">
         <div class="mb-none mt-xs">
           <select class="selectpicker btn-md" id="filterRole">
@@ -86,7 +88,7 @@
             <th id="">ROLE
               <span class="sort"></span>
             </th>
-            <th id="">Actions</th>
+            <th id="" >Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -116,19 +118,26 @@
                                              data-toggle="tooltip" id="label${user.userId}"
                                              data-placement="top"
                                              <c:if
-                                                 test="${empty user.userPassword}">title="Account status: Invitation sent, pending activation"</c:if>
+                                                 test="${user.disableIdpUser eq 'Y'}">title="This user may be deleted from the organization directory or from the admin user whitelist for the Study Builder. To activate this user as a Study Builder admin, please contact your IT admin to have the user added to the organization directory."
+                                                 </c:if>
+                                             <c:if
+
+                                                 test="${user.idpUser eq false && empty user.userPassword}">title="Account status: Invitation sent, pending activation"
+                                                 </c:if>
                                              <c:if
                                                  test="${user.emailChanged  eq '1'}">title="Account status: Pending verification"</c:if>
                                              <c:if
-                                                 test="${user.emailChanged eq '0' && not empty user.userPassword && user.enabled}">title="Account status: Active"</c:if>
+                                                 test="${user.emailChanged eq '0' && (user.idpUser eq true || not empty user.userPassword) && user.enabled}">title="Account status: Active"</c:if>
                                              <c:if
-                                                 test="${user.emailChanged eq '0' && not empty user.userPassword &&  not user.enabled}">title="Account status: Deactivated"</c:if>>
+                                                 test="${user.emailChanged eq '0' && (user.idpUser eq true || not empty user.userPassword) &&  not user.enabled}">title="Account status: Deactivated"</c:if>>
                     <input type="checkbox" class="switch-input"
                            value="${user.enabled ? 1 : 0}" id="${user.userId}"
                            <c:if test="${user.enabled}">checked</c:if>
-                             onchange="activateOrDeactivateUser('${user.userId}')"
+                           onchange="activateOrDeactivateUser('${user.userId}')"
                            <c:if
-                               test="${empty user.userPassword || user.emailChanged eq '1'}">disabled</c:if>>
+                               test="${user.idpUser eq false && (empty user.userPassword || user.emailChanged eq '1')}">disabled</c:if>
+                           <c:if test="${user.disableIdpUser eq 'Y'}">disabled</c:if>>
+
                     <span class="switch-label" data-on="On" data-off="Off"></span>
                     <span class="switch-handle"></span>
                   </label>
@@ -146,6 +155,7 @@
            id="addOrEditUserForm" name="addOrEditUserForm" method="post">
   <input type="hidden" id="userId" name="userId" value="">
   <input type="hidden" id="checkRefreshFlag" name="checkRefreshFlag">
+  <input type="hidden" id="emailId" name="emailId">
 </form:form>
 
 <form:form action="/studybuilder/adminUsersView/viewUserDetails.do"
@@ -160,7 +170,7 @@
     $('#rowId').parent().removeClass('#white-bg');
 
     $('#users').addClass('active');
-
+	
     $('[data-toggle="tooltip"]').tooltip();
 
     <c:if test="${ownUser eq '1'}">
@@ -188,9 +198,14 @@
     });
 
     $('#enforcePasswordId').on('click', function () {
+    	if(${idpEnabled}){
+      var msg = "Are you sure you wish to enforce password change for all admins? Note: This will not apply to your own account or to that of any organizational users. Password reset for organizational users can be managed via the GCP admin console.";
+    	}else{
+    		msg ="Are you sure you wish to enforce password change for all admins? Note: This will not apply to your own account."
+    	}
       bootbox.confirm({
         closeButton: false,
-        message: "Are you sure you wish to enforce password change for all admins? Note: This will not apply to your own account.",
+        message: msg,
         buttons: {
           'cancel': {
             label: 'No',
@@ -229,7 +244,6 @@
       })
 
     });
-    
     //User_List page Datatable
     table = $('#user_list').DataTable({
       "paging": true,

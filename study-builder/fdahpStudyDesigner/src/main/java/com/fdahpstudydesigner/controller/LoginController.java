@@ -70,6 +70,12 @@ public class LoginController {
 
   private LoginServiceImpl loginService;
 
+  Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
+  String idpEnabled = configMap.get("idpEnabledForSB");
+  String mfaEnabled = configMap.get("mfaEnabledForSB");
+  String idpAuthDomain = configMap.get("idpAuthDomain");
+  String idpApiKey = configMap.get("idpApiKey");
+
   @RequestMapping("/addPassword.do")
   public ModelAndView addPassword(HttpServletRequest request, UserBO userBO) {
     logger.entry("begin addPassword()");
@@ -177,6 +183,7 @@ public class LoginController {
               : "";
       message = loginService.changePassword(userId, newPassword, oldPassword, sesObj);
       if (FdahpStudyDesignerConstants.SUCCESS.equals(message)) {
+
         sesObj.setPasswordExpiryDateTime(FdahpStudyDesignerUtil.getCurrentDateTime());
         mv =
             new ModelAndView(
@@ -258,6 +265,7 @@ public class LoginController {
     String errMsg;
     ModelMap map = new ModelMap();
     MasterDataBO masterDataBO = null;
+
     if (null != request.getSession().getAttribute("sucMsg")) {
       sucMsg = (String) request.getSession().getAttribute("sucMsg");
       map.addAttribute("sucMsg", sucMsg);
@@ -269,6 +277,10 @@ public class LoginController {
       request.getSession().removeAttribute("errMsg");
     }
     masterDataBO = dashBoardAndProfileService.getMasterData("terms");
+    map.addAttribute("idpEnabled", idpEnabled);
+    map.addAttribute("mfaEnabled", mfaEnabled);
+    map.addAttribute("idpApiKey", idpApiKey);
+    map.addAttribute("idpAuthDomain", idpAuthDomain);
     map.addAttribute("masterDataBO", masterDataBO);
     return new ModelAndView("loginPage", map);
   }
@@ -427,6 +439,11 @@ public class LoginController {
       map.addAttribute("isInactiveUser", isInactiveUser);
       map.addAttribute("masterDataBO", masterDataBO);
       if ((userBO != null) && (StringUtils.isEmpty(userBO.getUserPassword()))) {
+        boolean idpUser = loginService.isIdpUser(userBO.getUserEmail());
+        if (idpUser) {
+          map.addAttribute("idpUser", "idpUser");
+        }
+        map.addAttribute("mfaEnabled", mfaEnabled);
         map.addAttribute("userBO", userBO);
         map.addAttribute("orgName", configMap.get("orgName"));
         mv = new ModelAndView("signUpPage", map);

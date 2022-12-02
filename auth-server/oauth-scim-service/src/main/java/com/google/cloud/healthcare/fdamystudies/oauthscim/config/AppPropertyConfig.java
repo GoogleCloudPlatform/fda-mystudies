@@ -69,6 +69,21 @@ public class AppPropertyConfig implements Serializable {
   @Value("${cookie.secure:true}")
   private boolean secureCookie;
 
+  @Value("${idpEnabledForPM:false}")
+  private boolean idpEnabled;
+
+  @Value("${mfaEnabledForPM:false}")
+  private boolean mfaEnabled;
+
+  @Value("${idpApiKey}")
+  private String idpApiKey;
+
+  @Value("${idpAuthDomain}")
+  private String idpAuthDomain;
+
+  @Value("${server.servlet.context-path}")
+  private String serverContextPath;
+
   @Value("${tempregid.expiry.minutes:30}")
   private int tempRegIdExpiryMinutes;
 }

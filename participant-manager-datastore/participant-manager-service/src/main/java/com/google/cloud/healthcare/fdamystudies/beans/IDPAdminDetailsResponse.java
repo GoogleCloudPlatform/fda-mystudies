@@ -21,8 +21,18 @@ public class IDPAdminDetailsResponse extends BaseResponse {
 
   private List<String> email;
 
-  public IDPAdminDetailsResponse(MessageCode messageCode, List<String> email) {
+  private Boolean mfaEnabledForPM;
+
+  private Boolean idpEnabledForPM;
+
+  public IDPAdminDetailsResponse(
+      MessageCode messageCode,
+      List<String> email,
+      Boolean mfaEnabledForPM,
+      Boolean idpEnabledForPM) {
     super(messageCode);
     this.email = email;
+    this.mfaEnabledForPM = mfaEnabledForPM;
+    this.idpEnabledForPM = idpEnabledForPM;
   }
 }

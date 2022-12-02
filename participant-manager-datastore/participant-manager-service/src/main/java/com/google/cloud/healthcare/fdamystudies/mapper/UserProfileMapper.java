@@ -11,6 +11,7 @@ package com.google.cloud.healthcare.fdamystudies.mapper;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileResponse;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
+import org.apache.commons.lang3.StringUtils;
 
 public final class UserProfileMapper {
 
@@ -25,6 +26,11 @@ public final class UserProfileMapper {
     profileResponse.setUserId(userRegAdminEntity.getId());
     profileResponse.setManageLocations(userRegAdminEntity.getLocationPermission());
     profileResponse.setSuperAdmin(userRegAdminEntity.isSuperAdmin());
+    profileResponse.setIdpUser(userRegAdminEntity.getIdpUser());
+    profileResponse.setPhoneNum(
+        StringUtils.isNotEmpty(userRegAdminEntity.getPhoneNumber())
+            ? userRegAdminEntity.getPhoneNumber()
+            : "");
     return profileResponse;
   }
 }

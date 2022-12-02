@@ -152,9 +152,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class StudyDAOImpl implements StudyDAO {
-  private static final String EXPORT = "/Export/";
 
   private static XLogger logger = XLoggerFactory.getXLogger(StudyDAOImpl.class.getName());
+
+  private static final String EXPORT = "/Export/";
 
   @Autowired private HttpServletRequest request;
 
@@ -691,6 +692,8 @@ public class StudyDAOImpl implements StudyDAO {
       resourceQuery = session.createQuery(deleteQuery).setString("resourceInfoId", resourceInfoId);
       resourceCount = resourceQuery.executeUpdate();
 
+      updateStudyToDraftStatus(studyId, sesOb, session);
+
       StudySequenceBo studySequence =
           (StudySequenceBo)
               session
@@ -699,6 +702,7 @@ public class StudyDAOImpl implements StudyDAO {
                   .uniqueResult();
       studySequence.setMiscellaneousResources(false);
       session.saveOrUpdate(studySequence);
+
       updateStudyToDraftStatus(studyId, sesOb, session);
 
       if (!resourceVisibility && (resourceCount > 0)) {
@@ -4300,6 +4304,9 @@ public class StudyDAOImpl implements StudyDAO {
     return resourceId;
   }
 
+  // protected static final Map<String, String> configMap =
+  // FdahpStudyDesignerUtil.getAppProperties();
+
   @SuppressWarnings("unchecked")
   @Override
   public String saveOrUpdateStudy(StudyBo studyBo, SessionObject sessionObject) {
@@ -4336,13 +4343,24 @@ public class StudyDAOImpl implements StudyDAO {
               FdahpStudyDesignerUtil.getStandardFileName(
                   "STUDY", studyBo.getName(), studyBo.getCustomStudyId());
         }
+
+        BufferedImage newBi = ImageIO.read(new ByteArrayInputStream(studyBo.getFile().getBytes()));
+        BufferedImage resizedImage = ImageUtility.resizeImage(newBi, 225, 225);
+        String extension = FilenameUtils.getExtension(studyBo.getFile().getOriginalFilename());
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(resizedImage, extension, baos);
+        baos.flush();
+
+        studyBo.setFile(
+            new CustomMultipartFile(
+                baos.toByteArray(), studyBo.getFile().getOriginalFilename(), extension));
         studyBo.setThumbnailImage(
             fileName + "." + FilenameUtils.getExtension(studyBo.getFile().getOriginalFilename()));
       }
-
       if (StringUtils.isEmpty(studyBo.getId())) {
         studyBo.setCreatedBy(studyBo.getUserId());
-        //        studyBo.setAppId(studyBo.getAppId());
+
         studyBo.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
         studyId = (String) session.save(studyBo);
 
@@ -4489,6 +4507,7 @@ public class StudyDAOImpl implements StudyDAO {
         }
       }
       if ((studyBo.getFile() != null) && !studyBo.getFile().isEmpty()) {
+
         BufferedImage newBi = ImageIO.read(new ByteArrayInputStream(studyBo.getFile().getBytes()));
         BufferedImage resizedImage = ImageUtility.resizeImage(newBi, 225, 225);
         String extension = FilenameUtils.getExtension(studyBo.getFile().getOriginalFilename());
@@ -4500,6 +4519,7 @@ public class StudyDAOImpl implements StudyDAO {
         studyBo.setFile(
             new CustomMultipartFile(
                 baos.toByteArray(), studyBo.getFile().getOriginalFilename(), extension));
+
         FdahpStudyDesignerUtil.saveImage(
             studyBo.getFile(),
             fileName,
@@ -5428,6 +5448,7 @@ public class StudyDAOImpl implements StudyDAO {
                       String desId = null;
                       if (sequenceSubTypeList.get(i) == null) {
                         desId = null;
+
                       } else if (sequenceSubTypeList.get(i).equals(-1)) {
                         desId = String.valueOf(0);
 
@@ -5717,6 +5738,7 @@ public class StudyDAOImpl implements StudyDAO {
               if (newstudyVersionBo.getConsentVersion() == 1) {
                 newConsentBo.setEnrollAgain(true);
               }
+
               session.save(newConsentBo);
               values.put("consent_document_version", String.valueOf(newConsentBo.getVersion()));
               auditLogEventHelper.logEvent(
@@ -7341,6 +7363,143 @@ public class StudyDAOImpl implements StudyDAO {
     return consentBoList;
   }
 
+  @SuppressWarnings("unchecked")
+  public void copyOrMoveStudyResources(
+      Session session,
+      StudyBo studyBo,
+      boolean delete,
+      boolean oldFilePath,
+      String newCustomStudyId) {
+    if (studyBo.getThumbnailImage() != null) {
+      FdahpStudyDesignerUtil.copyOrMoveImage(
+          studyBo.getThumbnailImage(),
+          FdahpStudyDesignerConstants.STUDTYLOGO,
+          studyBo.getCustomStudyId(),
+          delete,
+          oldFilePath,
+          newCustomStudyId);
+    }
+
+    List<QuestionnairesStepsBo> questionnaireStepsList =
+        session
+            .createQuery(
+                "From QuestionnairesStepsBo where questionnairesId IN (SELECT q.id from QuestionnaireBo q where studyId=:studyId)")
+            .setString("studyId", studyBo.getId())
+            .list();
+    List<String> questionIds = new ArrayList();
+    for (QuestionnairesStepsBo questionnaireSteps : questionnaireStepsList) {
+      if (questionnaireSteps.getStepType().equals("Form")) {
+        List<String> questionIdList =
+            session
+                .createQuery("SELECT questionId FROM FormMappingBo where formId =:formId")
+                .setString("formId", questionnaireSteps.getInstructionFormId())
+                .list();
+        questionIds.addAll(questionIdList);
+      } else if (questionnaireSteps.getStepType().equals("Question")) {
+        questionIds.add(questionnaireSteps.getInstructionFormId());
+      }
+    }
+    if (!CollectionUtils.isEmpty(questionIds)) {
+
+      List<QuestionResponseSubTypeBo> questionResponseSubTypeList =
+          session
+              .createQuery(
+                  "From QuestionResponseSubTypeBo WHERE responseTypeId IN (:responseTypeId)")
+              .setParameterList("responseTypeId", questionIds)
+              .list();
+
+      for (QuestionResponseSubTypeBo questionResponseSubType : questionResponseSubTypeList) {
+
+        if (questionResponseSubType.getSelectedImage() != null) {
+          FdahpStudyDesignerUtil.copyOrMoveImage(
+              questionResponseSubType.getSelectedImage(),
+              FdahpStudyDesignerConstants.QUESTIONNAIRE,
+              studyBo.getCustomStudyId(),
+              delete,
+              oldFilePath,
+              newCustomStudyId);
+        }
+
+        if (questionResponseSubType.getImage() != null) {
+          FdahpStudyDesignerUtil.copyOrMoveImage(
+              questionResponseSubType.getImage(),
+              FdahpStudyDesignerConstants.QUESTIONNAIRE,
+              studyBo.getCustomStudyId(),
+              delete,
+              oldFilePath,
+              newCustomStudyId);
+        }
+      }
+
+      List<QuestionReponseTypeBo> questionResponseTypeList =
+          session
+              .createQuery(
+                  "From QuestionReponseTypeBo WHERE questionsResponseTypeId IN (:responseTypeId)")
+              .setParameterList("responseTypeId", questionIds)
+              .list();
+
+      for (QuestionReponseTypeBo questionResponseType : questionResponseTypeList) {
+        if (questionResponseType.getMinImage() != null) {
+          FdahpStudyDesignerUtil.copyOrMoveImage(
+              questionResponseType.getMinImage(),
+              FdahpStudyDesignerConstants.QUESTIONNAIRE,
+              studyBo.getCustomStudyId(),
+              delete,
+              oldFilePath,
+              newCustomStudyId);
+        }
+
+        if (questionResponseType.getMaxImage() != null) {
+
+          FdahpStudyDesignerUtil.copyOrMoveImage(
+              questionResponseType.getMaxImage(),
+              FdahpStudyDesignerConstants.QUESTIONNAIRE,
+              studyBo.getCustomStudyId(),
+              delete,
+              oldFilePath,
+              newCustomStudyId);
+        }
+      }
+    }
+    List<StudyPageBo> studyPageBoList =
+        session
+            .createQuery("from StudyPageBo where studyId=:studyId")
+            .setString("studyId", studyBo.getId())
+            .list();
+
+    for (StudyPageBo studyPageBo : studyPageBoList) {
+
+      if (studyPageBo.getImagePath() != null) {
+        FdahpStudyDesignerUtil.copyOrMoveImage(
+            studyPageBo.getImagePath(),
+            FdahpStudyDesignerConstants.STUDTYPAGES,
+            studyBo.getCustomStudyId(),
+            delete,
+            oldFilePath,
+            newCustomStudyId);
+      }
+    }
+
+    List<ResourceBO> resourceBoList =
+        session
+            .createQuery("from ResourceBO where studyId=:studyId")
+            .setString("studyId", studyBo.getId())
+            .list();
+
+    for (ResourceBO resourceBo : resourceBoList) {
+
+      if (resourceBo.getPdfUrl() != null) {
+        FdahpStudyDesignerUtil.copyOrMoveImage(
+            resourceBo.getPdfUrl(),
+            FdahpStudyDesignerConstants.RESOURCEPDFFILES,
+            studyBo.getCustomStudyId(),
+            delete,
+            oldFilePath,
+            newCustomStudyId);
+      }
+    }
+  }
+
   @Override
   public StudySequenceBo getStudySequenceByStudyId(String studyId) {
 
@@ -7484,6 +7643,7 @@ public class StudyDAOImpl implements StudyDAO {
       session.save(studySequenceBo);
 
       List<StudyPageBo> studyPageList = getOverviewStudyPagesById(oldStudyId, studyBo.getUserId());
+
       if (CollectionUtils.isNotEmpty(studyPageList)) {
         for (StudyPageBo studyPageBo : studyPageList) {
           studyPageBo.setPageId(null);
@@ -7591,11 +7751,13 @@ public class StudyDAOImpl implements StudyDAO {
       transaction = session.beginTransaction();
 
       consentBo.setId(null);
+
       consentBo.setCustomStudyId(null);
       consentBo.setLive(0);
       consentBo.setStudyId(studyId);
       consentBo.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
       consentBo.setVersion(0f);
+
       session.save(consentBo);
 
       transaction.commit();
@@ -7776,6 +7938,7 @@ public class StudyDAOImpl implements StudyDAO {
       boolean oldFilePath,
       String newCustomStudyId) {
     if (studyBo.getThumbnailImage() != null) {
+
       FdahpStudyDesignerUtil.copyOrMoveImage(
           studyBo.getThumbnailImage(),
           FdahpStudyDesignerConstants.STUDTYLOGO,
@@ -7816,6 +7979,7 @@ public class StudyDAOImpl implements StudyDAO {
       for (QuestionResponseSubTypeBo questionResponseSubType : questionResponseSubTypeList) {
 
         if (questionResponseSubType.getSelectedImage() != null) {
+
           FdahpStudyDesignerUtil.copyOrMoveImage(
               questionResponseSubType.getSelectedImage(),
               FdahpStudyDesignerConstants.QUESTIONNAIRE,
@@ -7826,6 +7990,7 @@ public class StudyDAOImpl implements StudyDAO {
         }
 
         if (questionResponseSubType.getImage() != null) {
+
           FdahpStudyDesignerUtil.copyOrMoveImage(
               questionResponseSubType.getImage(),
               FdahpStudyDesignerConstants.QUESTIONNAIRE,
@@ -7845,6 +8010,7 @@ public class StudyDAOImpl implements StudyDAO {
 
       for (QuestionReponseTypeBo questionResponseType : questionResponseTypeList) {
         if (questionResponseType.getMinImage() != null) {
+
           FdahpStudyDesignerUtil.copyOrMoveImage(
               questionResponseType.getMinImage(),
               FdahpStudyDesignerConstants.QUESTIONNAIRE,
@@ -7875,6 +8041,7 @@ public class StudyDAOImpl implements StudyDAO {
     for (StudyPageBo studyPageBo : studyPageBoList) {
 
       if (studyPageBo.getImagePath() != null) {
+
         FdahpStudyDesignerUtil.copyOrMoveImage(
             studyPageBo.getImagePath(),
             FdahpStudyDesignerConstants.STUDTYPAGES,
@@ -7894,6 +8061,7 @@ public class StudyDAOImpl implements StudyDAO {
     for (ResourceBO resourceBo : resourceBoList) {
 
       if (resourceBo.getPdfUrl() != null) {
+
         FdahpStudyDesignerUtil.copyOrMoveImage(
             resourceBo.getPdfUrl(),
             FdahpStudyDesignerConstants.RESOURCEPDFFILES,
@@ -7914,6 +8082,7 @@ public class StudyDAOImpl implements StudyDAO {
       String newCustomStudyId,
       String oldCustomStudyId) {
     if (studyBo.getThumbnailImage() != null) {
+
       FdahpStudyDesignerUtil.copyOrMoveImage(
           studyBo.getThumbnailImage(),
           FdahpStudyDesignerConstants.STUDTYLOGO,
@@ -7954,6 +8123,7 @@ public class StudyDAOImpl implements StudyDAO {
       for (QuestionResponseSubTypeBo questionResponseSubType : questionResponseSubTypeList) {
 
         if (questionResponseSubType.getSelectedImage() != null) {
+
           FdahpStudyDesignerUtil.copyOrMoveImage(
               questionResponseSubType.getSelectedImage(),
               FdahpStudyDesignerConstants.QUESTIONNAIRE,
@@ -7964,6 +8134,7 @@ public class StudyDAOImpl implements StudyDAO {
         }
 
         if (questionResponseSubType.getImage() != null) {
+
           FdahpStudyDesignerUtil.copyOrMoveImage(
               questionResponseSubType.getImage(),
               FdahpStudyDesignerConstants.QUESTIONNAIRE,
@@ -7983,6 +8154,7 @@ public class StudyDAOImpl implements StudyDAO {
 
       for (QuestionReponseTypeBo questionResponseType : questionResponseTypeList) {
         if (questionResponseType.getMinImage() != null) {
+
           FdahpStudyDesignerUtil.copyOrMoveImage(
               questionResponseType.getMinImage(),
               FdahpStudyDesignerConstants.QUESTIONNAIRE,
@@ -8013,6 +8185,7 @@ public class StudyDAOImpl implements StudyDAO {
     for (StudyPageBo studyPageBo : studyPageBoList) {
 
       if (studyPageBo.getImagePath() != null) {
+
         FdahpStudyDesignerUtil.copyOrMoveImage(
             studyPageBo.getImagePath(),
             FdahpStudyDesignerConstants.STUDTYPAGES,
@@ -8032,6 +8205,7 @@ public class StudyDAOImpl implements StudyDAO {
     for (ResourceBO resourceBo : resourceBoList) {
 
       if (resourceBo.getPdfUrl() != null) {
+
         FdahpStudyDesignerUtil.copyOrMoveImage(
             resourceBo.getPdfUrl(),
             FdahpStudyDesignerConstants.RESOURCEPDFFILES,
@@ -8138,6 +8312,8 @@ public class StudyDAOImpl implements StudyDAO {
         }
       }
 
+      // Add created time and created by for new study
+
       StudyBo studyBo =
           (StudyBo)
               session
@@ -8160,6 +8336,7 @@ public class StudyDAOImpl implements StudyDAO {
     logger.exit("StudyDAOImpl - giveStudyPermission() - Ends");
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public List<ComprehensionTestResponseBo> getComprehensionTestResponses(
       String comprehensionTestQuestionId) {
@@ -10347,11 +10524,13 @@ public class StudyDAOImpl implements StudyDAO {
     try {
       fhirHealthcareAPIs.fhirStoreGet(datasetPath + FHIR_STORES + storePrefix + studyId);
     } catch (Exception e) {
-      if (e instanceof GoogleJsonResponseException
+      logger.debug("fhirStoreGetError", e);
+      /* if (e instanceof GoogleJsonResponseException
           && ((GoogleJsonResponseException) e).getStatusCode() == 404
           && ((GoogleJsonResponseException) e).getStatusMessage().equals("Not Found")) {
         fhirHealthcareAPIs.fhirStoreCreate(datasetPath, storePrefix + studyId);
-      }
+      }*/
+      fhirHealthcareAPIs.fhirStoreCreate(datasetPath, storePrefix + studyId);
     }
   }
 

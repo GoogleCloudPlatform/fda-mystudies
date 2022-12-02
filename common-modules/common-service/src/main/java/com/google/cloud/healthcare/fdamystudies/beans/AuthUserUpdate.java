@@ -17,17 +17,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthUserRequest {
+public class AuthUserUpdate {
 
-  private String appId;
-
-  private String email;
-
-  private String password;
-
-  private Integer status;
-
-  private Boolean idpUser;
+  private String userId;
 
   private String phoneNumber;
 }

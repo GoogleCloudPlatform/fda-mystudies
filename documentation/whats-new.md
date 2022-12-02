@@ -6,6 +6,10 @@
 -->
 
 > Subscribe to [mystudies-announce@googlegroups.com](https://groups.google.com/g/mystudies-announce/) to receive release notifications and announcements
+# Release 2.0.11 (Identity Platform)
+* Integrated Identity Platform
+* The full list of bugs and refinements addressed in this release can be viewed [here ](https://github.com/GoogleCloudPlatform/fda-mystudies/milestone/15).
+
 # Release 2.0.11
 * New HealthCare API functionality has been introduced namely Consent API,FHIR,DID
 * Introduced BigQuery data warehouse functionality for analytics of data

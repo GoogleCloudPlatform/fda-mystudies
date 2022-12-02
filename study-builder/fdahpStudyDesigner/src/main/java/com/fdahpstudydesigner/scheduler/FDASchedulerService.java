@@ -281,6 +281,7 @@ public class FDASchedulerService {
     if (session.isOpen()) {
       session.close();
     }
+
   }
 
   private void logSendNotificationFailedEvent(StudyBuilderAuditEvent eventEnum) {
@@ -307,5 +308,6 @@ public class FDASchedulerService {
     StringEntity requestEntity = new StringEntity(json.toString(), ContentType.APPLICATION_JSON);
     post.setEntity(requestEntity);
     return client.execute(post);
+
   }
 }

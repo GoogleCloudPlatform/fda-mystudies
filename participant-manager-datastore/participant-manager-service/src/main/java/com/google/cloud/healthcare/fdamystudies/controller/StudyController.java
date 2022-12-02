@@ -65,7 +65,7 @@ public class StudyController {
    * @param request
    * @return
    */
-  @ApiOperation(value = "Return a list study details")
+  @ApiOperation(value = "fetch a list of studies for which user have permissions")
   @GetMapping
   public ResponseEntity<StudyResponse> getStudies(
       @RequestHeader(name = USER_ID_HEADER) String userId,
@@ -79,7 +79,7 @@ public class StudyController {
     return ResponseEntity.status(studyResponse.getHttpStatusCode()).body(studyResponse);
   }
 
-  @ApiOperation(value = "Returns a response containing study participant details")
+  @ApiOperation(value = "fetch study participant details")
   @GetMapping(
       value = "{studyId}/participants",
       produces = MediaType.APPLICATION_JSON_VALUE,
@@ -125,7 +125,7 @@ public class StudyController {
         .body(participantRegistryResponse);
   }
 
-  @ApiOperation(value = "Updates target enrollment value for the study")
+  @ApiOperation(value = "update target enrollment for the study")
   @PatchMapping(
       value = "/{studyId}/targetEnrollment",
       produces = MediaType.APPLICATION_JSON_VALUE,

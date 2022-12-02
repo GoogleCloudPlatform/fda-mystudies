@@ -12,11 +12,14 @@ import com.google.cloud.healthcare.fdamystudies.beans.AdminUserResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.GetAdminDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.GetUsersResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.IDPAdminDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.ManageUserService;
+import com.google.firebase.FirebaseApp;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import javax.servlet.http.HttpServletRequest;
@@ -47,11 +50,24 @@ public class UserController {
 
   private XLogger logger = XLoggerFactory.getXLogger(UserController.class.getName());
 
+  private static XLogger loggers = XLoggerFactory.getXLogger(UserController.class.getName());
+
   private static final String BEGIN_REQUEST_LOG = "%s request";
 
   private static final String EXIT_STATUS_LOG = "status=%d";
 
   @Autowired private ManageUserService manageUserService;
+
+  @Autowired private AppPropertyConfig appPropertyConfig;
+
+  static {
+    // Initializing the Firebase SDK using default credentials
+    try {
+      FirebaseApp.initializeApp();
+    } catch (Exception e) {
+      loggers.debug("UserController.createUser firebase error:", e);
+    }
+  }
 
   @CrossOrigin
   @ApiOperation(value = "add new admin with permissions and invite through email")
@@ -121,7 +137,7 @@ public class UserController {
       @RequestParam(required = false) String searchTerm,
       HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
-    
+
     String searchValue = StringUtils.replace(searchTerm, " ", "+");
     String[] allowedSortByValues = {"firstName", "lastName", "email", "status"};
 
@@ -163,6 +179,16 @@ public class UserController {
 
     AdminUserResponse userResponse =
         manageUserService.sendInvitation(userId, signedInUserId, auditRequest);
+    logger.exit(String.format(EXIT_STATUS_LOG, userResponse.getHttpStatusCode()));
+    return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
+  }
+
+  @ApiOperation(value = "fetch cloud identity users")
+  @GetMapping(value = {"/users/idpAdmins"})
+  public ResponseEntity<IDPAdminDetailsResponse> getIDPAdminDetails(
+      @RequestHeader("userId") String signedInUserId, HttpServletRequest request) {
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+    IDPAdminDetailsResponse userResponse = manageUserService.getIDPAdminDetails(signedInUserId);
     logger.exit(String.format(EXIT_STATUS_LOG, userResponse.getHttpStatusCode()));
     return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
   }
