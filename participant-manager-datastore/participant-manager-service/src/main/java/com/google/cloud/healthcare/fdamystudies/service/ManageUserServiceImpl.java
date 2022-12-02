@@ -784,7 +784,7 @@ public class ManageUserServiceImpl implements ManageUserService {
 
   private boolean isIdpDeletedOrDisabled(boolean idpUser, String email) {
     boolean idpDisabledOrDeleted = false;
-    if (idpUser && appConfig.isIdpEnabled()) {
+    if (idpUser) {
       try {
         UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmail(email);
         if (userRecord.isDisabled()) {
