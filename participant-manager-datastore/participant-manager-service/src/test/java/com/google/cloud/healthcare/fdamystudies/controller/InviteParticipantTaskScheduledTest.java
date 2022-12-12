@@ -60,6 +60,7 @@ public class InviteParticipantTaskScheduledTest extends BaseMockIT {
 
   @BeforeEach
   public void setUp() {
+
     locationEntity = testDataHelper.createLocation();
     userRegAdminEntity = testDataHelper.createUserRegAdminEntity();
     appEntity = testDataHelper.createAppEntity(userRegAdminEntity);
