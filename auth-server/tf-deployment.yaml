@@ -19,6 +19,7 @@ spec:
       labels:
         app: auth-server
       annotations:
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "true"      
         sidecar.istio.io/inject: "true"
     spec:
       containers:
