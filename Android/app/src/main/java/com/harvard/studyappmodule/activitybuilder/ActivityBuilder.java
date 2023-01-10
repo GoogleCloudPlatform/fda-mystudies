@@ -339,6 +339,9 @@ public class ActivityBuilder extends OrderedTask {
   @Override
   public Step getStepBeforeStep(Step step, TaskResult taskResult) {
 
+    taskResult.getResults().remove(step.getIdentifier());
+    dbServiceSubscriber.deleteStepRecord(context, step.getIdentifier());
+
     if (branching) {
       String identifier = "";
       for (int i = 0; i < activityQuestionStep.size(); i++) {
