@@ -10347,11 +10347,13 @@ public class StudyDAOImpl implements StudyDAO {
     try {
       fhirHealthcareAPIs.fhirStoreGet(datasetPath + FHIR_STORES + storePrefix + studyId);
     } catch (Exception e) {
-      if (e instanceof GoogleJsonResponseException
+      logger.debug("fhirStoreGetError", e);
+      /* if (e instanceof GoogleJsonResponseException
           && ((GoogleJsonResponseException) e).getStatusCode() == 404
           && ((GoogleJsonResponseException) e).getStatusMessage().equals("Not Found")) {
         fhirHealthcareAPIs.fhirStoreCreate(datasetPath, storePrefix + studyId);
-      }
+      }*/
+      fhirHealthcareAPIs.fhirStoreCreate(datasetPath, storePrefix + studyId);
     }
   }
 

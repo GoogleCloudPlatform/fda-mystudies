@@ -562,15 +562,21 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
     logger.info("saveActivityResponseData() : \n Study Collection Name: " + studyCollectionName);
     String fhirJson = "";
     if (appConfig.getEnableFhirApi().contains("fhir")
-        && appConfig.getDiscardFhirAfterDid().equalsIgnoreCase("false")) {
+            && appConfig.getDiscardFhirAfterDid().equalsIgnoreCase("false")
+        || (appConfig.getEnableFhirApi().contains("fhir")
+            && !(appConfig.getEnableFhirApi().contains("did"))
+            && appConfig.getDiscardFhirAfterDid().equalsIgnoreCase("true"))) {
       fhirJson = processToFhirResponse(questionnaireActivityResponseBean, locale);
 
     } else {
-      responsesDao.saveActivityResponseData(
-          studyId,
-          studyCollectionName,
-          AppConstants.ACTIVITIES_COLLECTION_NAME,
-          dataToStoreActivityResults);
+      if (appConfig.getEnableFhirApi().contains("false")) {
+
+        responsesDao.saveActivityResponseData(
+            studyId,
+            studyCollectionName,
+            AppConstants.ACTIVITIES_COLLECTION_NAME,
+            dataToStoreActivityResults);
+      }
     }
 
     if (appConfig.getEnableFhirApi().contains("did")) {
