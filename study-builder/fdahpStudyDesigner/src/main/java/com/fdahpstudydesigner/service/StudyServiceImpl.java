@@ -1558,7 +1558,15 @@ public class StudyServiceImpl implements StudyService {
           studyDetails.setAppName(appBO.getName());
           studyDetails.setAppDescription("App Desc_" + appBO.getCustomAppId());
         }
-
+        if (studyBo.getType().contains(FdahpStudyDesignerConstants.STUDY_TYPE_SD)) {
+          studyDetails.setLogoImageUrl(
+              propMap.get("fda.imgDisplaydPath")
+                  + propMap.get("cloud.bucket.name")
+                  + "/"
+                  + FdahpStudyDesignerConstants.DEFAULT_IMAGES
+                  + "/"
+                  + propMap.get(FdahpStudyDesignerConstants.STUDY_BASICINFORMATION_DEFAULT_IMAGE));
+        }else {
         studyDetails.setLogoImageUrl(
             StringUtils.isEmpty(studyBo.getThumbnailImage())
                 ? propMap.get("fda.imgDisplaydPath")
@@ -1574,6 +1582,7 @@ public class StudyServiceImpl implements StudyService {
                     + "/"
                     + propMap.get(FdahpStudyDesignerConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
                     + studyBo.getThumbnailImage());
+        }
       }
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getStudyByLatestVersion - Error", e);
