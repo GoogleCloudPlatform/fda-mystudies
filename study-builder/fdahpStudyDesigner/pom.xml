@@ -12,7 +12,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <app.dir.name>fdahpStudyDesigner</app.dir.name>
-    <org.springframework.version>5.3.18</org.springframework.version>
+    <org.springframework.version>5.3.26</org.springframework.version>
     <spring.security.version>5.6.2</spring.security.version>
   </properties>
   <build>
