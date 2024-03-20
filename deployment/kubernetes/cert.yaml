@@ -3,7 +3,7 @@
 # Use of this source code is governed by an MIT-style
 # license that can be found in the LICENSE file or at
 # https://opensource.org/licenses/MIT.
-apiVersion: networking.gke.io/v1beta1
+apiVersion: networking.gke.io/v1
 kind: ManagedCertificate
 metadata:
   name: <PREFIX>-<ENV>-cert-participants
@@ -11,7 +11,7 @@ spec:
   domains:
     - participants.<PREFIX>-<ENV>.<DOMAIN>
 ---
-apiVersion: networking.gke.io/v1beta1
+apiVersion: networking.gke.io/v1
 kind: ManagedCertificate
 metadata:
   name: <PREFIX>-<ENV>-cert-studies

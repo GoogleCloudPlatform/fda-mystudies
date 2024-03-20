@@ -7,8 +7,8 @@
 # This is the solution template for MyStudies. Deployment specific
 # values are to be filled in ./deployment.hcl.
 
-# {{$recipes := "git://github.com/GoogleCloudPlatform/healthcare-data-protection-suite//templates/tfengine/recipes"}}
-# {{$ref := "ref=templates-v0.4.0"}}
+# {{$recipes := "github.com/GoogleCloudPlatform/healthcare-data-protection-suite//templates/tfengine/recipes"}}
+# {{$ref := "ref=templates-v0.9.4"}}
 
 data = {
   parent_type     = "folder"
@@ -25,6 +25,7 @@ data = {
   gke_region          = "{{.default_location}}"
   healthcare_location = "{{.default_location}}"
   storage_location    = "{{.default_location}}"
+  scheduler_region    = "{{.default_location}}"
   secret_locations    = ["{{.default_location}}"]
 }
 
@@ -37,13 +38,17 @@ template "devops" {
     # Run `terraform init` in the devops module to backup its state to GCS.
     enable_gcs_backend = false
 
-    admins_group = "{{.prefix}}-{{.env}}-folder-admins@{{.domain}}"
+    admins_group = {
+      id     = "{{.prefix}}-{{.env}}-team-admins@{{.domain}}"
+      exists = true
+    }
 
     project = {
       project_id = "{{.prefix}}-{{.env}}-devops"
-      owners = [
-        "group:{{.prefix}}-{{.env}}-devops-owners@{{.domain}}",
-      ]
+      owners_group = {
+        id     = "{{.prefix}}-{{.env}}-devops-owners@{{.domain}}"	      
+        exists = true
+      }
       apis = [
         "container.googleapis.com",
         "firebase.googleapis.com",
@@ -63,31 +68,45 @@ template "cicd" {
       owner = "{{.github_owner}}"
       name  = "{{.github_repo}}"
     }
-    branch_name    = "{{.github_branch}}"
+
+    # Required for scheduler.
+    scheduler_region = "{{.default_location}}"
+
+  # IAM members to give the roles/cloudbuild.builds.viewer permission so they can see build results.
+
+    build_viewers = ["group:{{.prefix}}-{{.env}}-cicd-viewers@{{.domain}}"]
+    build_editors = ["group:{{.prefix}}-{{.env}}-cicd-editors@{{.domain}}"]    
+
     terraform_root = "deployment/terraform"
-
-    # Prepare and enable default triggers.
-    triggers = {
-      validate = {}
-      plan     = {}
-      apply    = {}
+	  
+    service_account = {
+      id = "cloudbuild-sa"
     }
+    logs_bucket = "{{.prefix}}-{{.env}}-devops-cloudbuild-logs-bucket"
 
-    # IAM members to give the roles/cloudbuild.builds.viewer permission so they can see build results.
-    build_viewers = [
-      "group:{{.prefix}}-{{.env}}-cicd-viewers@{{.domain}}",
-    ]
+    envs = [
+     {
+      name = "{{.env}}"
+      branch_name    = "{{.github_branch}}"
+      # Prepare and enable default triggers.      
+      triggers = {
+        validate = {}
+        plan     = {}
+        apply    = {}
+      }
 
-    managed_dirs = [
-      "devops", // NOTE: CICD service account can only update APIs on the devops project.
-      "audit",
-      "{{.prefix}}-{{.env}}-secrets",
-      "{{.prefix}}-{{.env}}-networks",
-      "{{.prefix}}-{{.env}}-apps",
-      "{{.prefix}}-{{.env}}-firebase",
-      "{{.prefix}}-{{.env}}-data",
+      managed_dirs = [
+        "devops", // NOTE: CICD service account can only update APIs on the devops project.
+        "audit",
+        "{{.prefix}}-{{.env}}-secrets",
+        "{{.prefix}}-{{.env}}-networks",
+        "{{.prefix}}-{{.env}}-apps",
+        "{{.prefix}}-{{.env}}-data",
+        "{{.prefix}}-{{.env}}-firebase",
+        ]
+      } 
     ]
-  }
+  }    
 }
 
 template "audit" {
@@ -182,7 +201,7 @@ template "project_secrets" {
         },
         {
           secret_id = "manual-ingest-data-to-bigquery"
-        },		
+        },
         {
           secret_id   = "auto-mystudies-sql-default-user-password"
           secret_data = "$${random_password.passwords[\"mystudies_sql_default_user_password\"].result}"
@@ -566,6 +585,7 @@ template "project_apps" {
         "compute.googleapis.com",
         "container.googleapis.com",
         "dns.googleapis.com",
+        "networkconnectivity.googleapis.com",        
       ]
       shared_vpc_attachment = {
         host_project_id = "{{.prefix}}-{{.env}}-networks"
@@ -614,7 +634,7 @@ template "project_apps" {
         ]
       # BigQuery Permissions
         "roles/bigquery.admin" = [
-          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",		  
+          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
         ]
       }
       # Binary Authorization resources.
@@ -625,7 +645,7 @@ template "project_apps" {
           name_pattern = "gcr.io/cloudsql-docker/*"
           },
           {
-          name_pattern = "gcr.io/gke-release/istio/*" 
+          name_pattern = "gcr.io/gke-release/istio/*"
           },
           {
           name_pattern = "docker.io/prom/*"
@@ -717,6 +737,7 @@ template "project_firebase" {
       project_id = "{{.prefix}}-{{.env}}-firebase"
       apis = [
         "firebase.googleapis.com",
+        "firestore.googleapis.com",
       ]
     }
   }
@@ -734,7 +755,7 @@ template "project_data" {
         "compute.googleapis.com",
         "servicenetworking.googleapis.com",
         "sqladmin.googleapis.com",
-        "healthcare.googleapis.com",		
+        "healthcare.googleapis.com",
       ]
       shared_vpc_attachment = {
         host_project_id = "{{.prefix}}-{{.env}}-networks"
@@ -817,13 +838,13 @@ template "project_data" {
           "serviceAccount:user-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
         ]
         "roles/healthcare.consentArtifactReader" = [
-          "serviceAccount:participant-manager-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",  
+          "serviceAccount:participant-manager-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
         ]
         "roles/healthcare.consentReader" = [
-          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",  
+          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
         ]
         "roles/healthcare.consentStoreViewer" = [
-          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",  
+          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
         ]
         "roles/healthcare.datasetAdmin" = [
           "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
@@ -839,12 +860,12 @@ template "project_data" {
         "roles/healthcare.fhirResourceEditor" = [
           "serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
-        ]	
+        ]
 	    # BigQuery Permissions
         #6# "roles/bigquery.admin" = [
         #6#  "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
         #6#  "serviceAccount:user-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
-        #6#  "serviceAccount:service-$${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com",  
+        #6#  "serviceAccount:service-$${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com",
         #6# ]
         "roles/bigquery.dataEditor" = [
           "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
@@ -872,12 +893,12 @@ template "project_data" {
           #6# {
           #6# role   = "roles/storage.objectAdmin"
           #6# member = "serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
-          #6# },			
+          #6# },
 	      # HEALTHCARE API SA role bindling to consent bucket
           #6# {
           #6# role   = "roles/storage.objectViewer"
           #6# member = "serviceAccount:service-$${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com"
-          #6# },			
+          #6# },
           #6# ]
         },
         {
@@ -931,8 +952,6 @@ data "google_container_cluster" "gke_cluster" {
 }
 
 provider "kubernetes" {
-  version                = "1.13.3"
-  load_config_file       = false
   token                  = data.google_client_config.default.access_token
   host                   = data.google_container_cluster.gke_cluster.endpoint
   client_certificate     = base64decode(data.google_container_cluster.gke_cluster.master_auth.0.client_certificate)
@@ -1001,7 +1020,7 @@ data "google_secret_manager_secret_version" "secrets" {
       "manual-consent-enabled",
       "manual-fhir-enabled",
       "manual-discard-fhir",
-      "manual-ingest-data-to-bigquery",	  
+      "manual-ingest-data-to-bigquery",
       "auto-auth-server-encryptor-password",
       "auto-hydra-db-password",
       "auto-hydra-db-user",
@@ -1034,7 +1053,7 @@ resource "kubernetes_secret" "shared_secrets" {
     base_url                          = "https://participants.{{.prefix}}-{{.env}}.{{.domain}}"
     studies_base_url                  = "https://studies.{{.prefix}}-{{.env}}.{{.domain}}"
     data_project_id                   = "{{.prefix}}-{{.env}}-data"
-    firestore_project_id              = "{{.prefix}}-{{.env}}-firebase"	
+    firestore_project_id              = "{{.prefix}}-{{.env}}-firebase"
     log_path                          = data.google_secret_manager_secret_version.secrets["manual-log-path"].secret_data
     org_name                          = data.google_secret_manager_secret_version.secrets["manual-org-name"].secret_data
     terms_url                         = data.google_secret_manager_secret_version.secrets["manual-terms-url"].secret_data
@@ -1044,7 +1063,7 @@ resource "kubernetes_secret" "shared_secrets" {
     consent_enabled                   = data.google_secret_manager_secret_version.secrets["manual-consent-enabled"].secret_data
     fhir_enabled                      = data.google_secret_manager_secret_version.secrets["manual-fhir-enabled"].secret_data
     discard_fhir                      = data.google_secret_manager_secret_version.secrets["manual-discard-fhir"].secret_data
-    ingest_data_to_bigquery           = data.google_secret_manager_secret_version.secrets["manual-ingest-data-to-bigquery"].secret_data	
+    ingest_data_to_bigquery           = data.google_secret_manager_secret_version.secrets["manual-ingest-data-to-bigquery"].secret_data
   }
 }
 

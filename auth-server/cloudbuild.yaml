@@ -5,5 +5,5 @@
 # https://opensource.org/licenses/MIT.
 steps:
 - name: 'maven'
-  args: ['mvn', '-B', 'package', '-Pprod', 'com.google.cloud.tools:jib-maven-plugin:2.6.0:build', '-Dimage=gcr.io/$PROJECT_ID/auth-server', '-Dillegal-access=permit']
+  args: ['mvn', '-B', 'package', '-Pprod', 'com.google.cloud.tools:jib-maven-plugin:3.4.1:build', '-Dimage=gcr.io/$PROJECT_ID/auth-server', '-Dillegal-access=permit']
   dir: "auth-server"

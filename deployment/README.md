@@ -120,7 +120,7 @@ The deployment process takes the following approach:
            sudo apt-get update && \
            sudo apt-get install -y kubectl
          ```
-    - Install [Terraform 0.12.29](https://learn.hashicorp.com/tutorials/terraform/install-cli), for example:
+    - Install [Terraform 0.14.8](https://learn.hashicorp.com/tutorials/terraform/install-cli), for example:
          ```shell
          sudo apt-get install software-properties-common -y && \
            curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add - && \
@@ -129,7 +129,7 @@ The deployment process takes the following approach:
          ```
     - Install [Terraform Engine](https://github.com/GoogleCloudPlatform/healthcare-data-protection-suite/tree/master/docs/tfengine#installation), for example:
          ```shell
-         VERSION=v0.4.0 && \
+         VERSION=v0.9.3 && \
            sudo apt install wget -y && \
            sudo wget -O /usr/local/bin/tfengine https://github.com/GoogleCloudPlatform/healthcare-data-protection-suite/releases/download/${VERSION}/tfengine_${VERSION}_linux-amd64 && \
            sudo chmod +x /usr/local/bin/tfengine
