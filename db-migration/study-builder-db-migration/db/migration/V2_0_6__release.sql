@@ -142,19 +142,21 @@ UPDATE fda_hphc.active_task_list SET task_name = 'Spatial span memory' WHERE tas
 
 
 /* Added start time and end time in active task and questionnaire regular schedule*/
-
+/* in new db frequency_time cloumn is deleted
 UPDATE fda_hphc.active_task_custom_frequencies SET frequency_start_time = frequency_time
   WHERE frequency_time IS NOT NULL;
 
 UPDATE fda_hphc.active_task_custom_frequencies SET frequency_end_time = frequency_time
   WHERE frequency_time IS NOT NULL;
+*/
 
 ALTER TABLE fda_hphc.active_task_custom_frequencies  
   MODIFY frequency_start_time varchar(255) AFTER frequency_end_date;
 
 ALTER TABLE fda_hphc.active_task_custom_frequencies  
   MODIFY frequency_end_time varchar(255) AFTER frequency_start_time;
-
+  
+/*in new db frequency_time cloumn is deleted
 ALTER TABLE fda_hphc.active_task_custom_frequencies  
   DROP COLUMN frequency_time;
 
@@ -163,16 +165,18 @@ UPDATE fda_hphc.questionnaires_custom_frequencies SET frequency_start_time = fre
 
 UPDATE fda_hphc.questionnaires_custom_frequencies SET frequency_end_time = frequency_time
   WHERE frequency_time IS NOT NULL;
+*/
 
 ALTER TABLE fda_hphc.questionnaires_custom_frequencies  
 MODIFY frequency_start_time varchar(255) AFTER frequency_end_date;
 
 ALTER TABLE fda_hphc.questionnaires_custom_frequencies  
   MODIFY frequency_end_time varchar(255) AFTER frequency_start_time;
-
+  
+/*in new db frequency_time cloumn is deleted
 ALTER TABLE fda_hphc.questionnaires_custom_frequencies  
   DROP COLUMN frequency_time;
-
+*/
   
 /* #1020 Data integrity checks missing from WCP and WCP-WS codebase and
 #3114 Provision for import/export of studies*/
@@ -644,7 +648,7 @@ CHANGE COLUMN `id` `id` VARCHAR(255) NOT NULL ;
 
 
 -- PROCEDURE
-
+/*
 DROP PROCEDURE IF EXISTS `deleteInActiveActivity`;
 DELIMITER //
 CREATE PROCEDURE `deleteInActiveActivity`(
@@ -769,9 +773,10 @@ WHERE active=0 AND study_id=studyId;
 
 END//
 DELIMITER ;
-
+*/
 -- Dumping structure for procedure fda_hphc.deleteQuestionnaire
-DROP PROCEDURE IF EXISTS `deleteQuestionnaire`;
+-- DROP PROCEDURE IF EXISTS `deleteQuestionnaire`;
+/*
 DELIMITER //
 CREATE PROCEDURE `deleteQuestionnaire`(
 	IN `questionnaireId` VARCHAR(255),
@@ -798,7 +803,7 @@ END//
 DELIMITER ;
 
 -- Dumping structure for procedure fda_hphc.deleteQuestionnaireFrequencies
-DROP PROCEDURE IF EXISTS `deleteQuestionnaireFrequencies`;
+-- DROP PROCEDURE IF EXISTS `deleteQuestionnaireFrequencies`;
 DELIMITER //
 CREATE PROCEDURE `deleteQuestionnaireFrequencies`(
 	IN `questionnaireId` VARCHAR(255)
@@ -812,7 +817,7 @@ END//
 DELIMITER ;
 
 -- Dumping structure for procedure fda_hphc.deleteQuestionnaireStep
-DROP PROCEDURE IF EXISTS `deleteQuestionnaireStep`;
+-- DROP PROCEDURE IF EXISTS `deleteQuestionnaireStep`;
 DELIMITER //
 CREATE PROCEDURE `deleteQuestionnaireStep`(
 	IN `questionnaireId` VARCHAR(255),
@@ -843,3 +848,4 @@ END IF;
 END//
 DELIMITER ;
 
+*/

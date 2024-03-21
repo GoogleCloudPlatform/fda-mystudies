@@ -99,8 +99,10 @@ The deployment process takes the following approach:
     `{PREFIX}-{ENV}-devops-owners@{DOMAIN}` | Members of this group have owners access for the devops project, which is required to make changes to the CICD pipeline and Terraform state
     `{PREFIX}-{ENV}-auditors@{DOMAIN}` | Members of this group have the [`iam.securityReviewer`](https://cloud.google.com/iam/docs/understanding-roles#iam-roles) role for your deployment’s folder, and the `bigquery.user` and `storage.objectViewer` roles for your audit log project
     `{PREFIX}-{ENV}-cicd-viewers@{DOMAIN}` | Members of this group can view CICD results in Cloud Build, for example the results of the `terraform plan` presubmit and `terraform apply` postsubmit
+    `{PREFIX}-{ENV}-cicd-editors@{DOMAIN}` | Members of this group can edit CICD results in Cloud Build, for example the results of the `terraform plan` presubmit and `terraform apply` postsubmit
     `{PREFIX}-{ENV}-bastion-accessors@{DOMAIN}` | Members of this group have permission to access the [bastion host](https://cloud.google.com/solutions/connecting-securely#bastion) project, which provides access to the private Cloud SQL instance
     `{PREFIX}-{ENV}-project-owners@{DOMAIN}` | Members of this group have owners access to each of the deployment’s projects
+    `{PREFIX}-{ENV}-team-admins@{DOMAIN}` | Members of this group have team access to each of the deployment’s projects
 1. Add the user account that you will be using for deployment to these groups (if it is not already a member)
 
 ### Set up your environment
