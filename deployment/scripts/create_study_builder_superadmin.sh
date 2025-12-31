@@ -73,9 +73,9 @@ echo "INSERT INTO user_permission_mapping (user_id, permission_id) VALUES
 # Upload TMPFILE to GCS.
 GCS_FILE=gs://${SQL_IMPORT_BUCKET}/study_builder_superadmin.sql
 echo "Copying the sql file to ${GCS_FILE}"
-gsutil mv ${TMPFILE} ${GCS_FILE}
+gcloud storage mv ${TMPFILE} ${GCS_FILE}
 
 # Import the GCS file to CloudSQL.
 echo "Importing ${GCS_FILE} to CloudSQL."
 gcloud sql import sql --project=${DATA_PROJECT} mystudies ${GCS_FILE}
-gsutil rm ${GCS_FILE}
+gcloud storage rm ${GCS_FILE}

@@ -252,7 +252,7 @@ The deployment process takes the following approach:
 1. Initialize your MySQL databases by importing SQL scripts
     - Upload the necessary SQL script files to the `{PREFIX}-{ENV}-mystudies-sql-import` storage bucket that you created during Terraform deployment, for example:
          ```bash
-         gsutil cp \
+         gcloud storage cp \
            ${GIT_ROOT}/study-builder/sqlscript/* \
            ${GIT_ROOT}/response-datastore/sqlscript/mystudies_response_server_db_script.sql \
            ${GIT_ROOT}/participant-datastore/sqlscript/mystudies_participant_datastore_db_script.sql \
