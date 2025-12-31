@@ -58,12 +58,12 @@ echo "REPLACE into users (id, app_id, email, status, temp_reg_id, user_id, user_
 # Upload TMPFILE to GCS.
 GCS_FILE=gs://${SQL_IMPORT_BUCKET}/participant_manager_superadmin.sql
 echo "Copying the sql file to ${GCS_FILE}"
-gsutil mv ${TMPFILE} ${GCS_FILE}
+gcloud storage mv ${TMPFILE} ${GCS_FILE}
 
 # Import the GCS file to CloudSQL.
 echo "Importing ${GCS_FILE} to CloudSQL."
 gcloud sql import sql --project=${DATA_PROJECT} mystudies ${GCS_FILE}
-gsutil rm ${GCS_FILE}
+gcloud storage rm ${GCS_FILE}
 
 # Update second database
 echo "USE \`mystudies_participant_datastore\`;" >> ${TMPFILE}
@@ -86,9 +86,9 @@ VALUES
 # Upload TMPFILE to GCS.
 GCS_FILE=gs://${SQL_IMPORT_BUCKET}/participant_manager_superadmin.sql
 echo "Copying the sql file to ${GCS_FILE}"
-gsutil mv ${TMPFILE} ${GCS_FILE}
+gcloud storage mv ${TMPFILE} ${GCS_FILE}
 
 # Import the GCS file to CloudSQL.
 echo "Importing ${GCS_FILE} to CloudSQL."
 gcloud sql import sql --project=${DATA_PROJECT} mystudies ${GCS_FILE}
-gsutil rm ${GCS_FILE}
+gcloud storage rm ${GCS_FILE}
